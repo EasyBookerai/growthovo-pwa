@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd ascevo && npm install --legacy-peer-deps && npx expo export --platform web",
+  "buildCommand": "npm install --prefix ascevo --legacy-peer-deps && cd ascevo && npx expo export --platform web",
   "outputDirectory": "ascevo/dist",
-  "installCommand": "echo 'Skipping root install'",
+  "installCommand": "echo 'Install handled in buildCommand'",
   "headers": [
     {
       "source": "/static/(.*)",
