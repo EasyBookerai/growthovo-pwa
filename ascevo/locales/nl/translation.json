@@ -1,0 +1,333 @@
+{
+  "onboarding": {
+    "language_title": "Kies je taal",
+    "language_subtitle": "Je kunt dit altijd wijzigen in Instellingen.",
+    "pillars_title": "Waaraan wil je werken?",
+    "pillars_subtitle": "Kies je zwakke punten. Rex richt zich hier eerst op.",
+    "goal_title": "Hoeveel tijd per dag?",
+    "goal_subtitle": "Wees eerlijk. Consistentie verslaat intensiteit.",
+    "continue": "Doorgaan →",
+    "lets_go": "Laten we gaan 🔥",
+    "back": "← Terug",
+    "pillars": {
+      "mind": "Geest",
+      "discipline": "Discipline",
+      "communication": "Communicatie",
+      "money": "Geld",
+      "career": "Carrière",
+      "relationships": "Relaties"
+    },
+    "goals": {
+      "light": "Licht",
+      "steady": "Gestaag",
+      "serious": "Serieus"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "lessons": "Lessen",
+    "checkin": "Check-in",
+    "league": "Liga",
+    "settings": "Instellingen"
+  },
+  "home": {
+    "day_streak": "dagen op rij",
+    "at_risk": "In gevaar!",
+    "unlimited_hearts": "Onbeperkte harten",
+    "hearts_count": "{{count}}/5 harten",
+    "total_xp": "⚡ Totaal XP",
+    "todays_lesson": "LES VAN VANDAAG",
+    "all_done": "VANDAAG ALLES GEDAAN 🎉",
+    "all_lessons_complete": "Je hebt alle beschikbare lessen voltooid.",
+    "lesson_duration": "5 kaarten · ~3 min",
+    "your_league": "🏆 Jouw Liga",
+    "rex_weekly_report": "REX'S WEKELIJKS RAPPORT",
+    "week_of": "Week van {{date}}"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "language": "Taal",
+    "language_section": "Taal",
+    "streak_freezes": "Streak-bevriezingen",
+    "available_freezes": "🧊 Beschikbare bevriezingen",
+    "freezes_hint": "Verdien bevriezingen door bonusuitdagingen te voltooien.",
+    "notifications": "Meldingen",
+    "morning": "☀️ Ochtend (8:00)",
+    "afternoon": "🌤 Middag (14:00)",
+    "evening": "🌙 Avond (21:00)",
+    "subscription": "Abonnement",
+    "current_plan": "Huidig plan",
+    "plan_premium": "Premium",
+    "plan_trial": "Proef",
+    "plan_free": "Gratis",
+    "manage_subscription": "Abonnement beheren →",
+    "sign_out": "Uitloggen",
+    "sign_out_confirm_title": "Uitloggen",
+    "sign_out_confirm_message": "Weet je zeker dat je wilt uitloggen?",
+    "cancel": "Annuleren"
+  },
+  "errors": {
+    "generic": "Er is iets misgegaan. Probeer het opnieuw.",
+    "network": "Geen internetverbinding.",
+    "sign_in_failed": "Inloggen mislukt. Controleer je gegevens.",
+    "sign_up_failed": "Registratie mislukt. Probeer het opnieuw.",
+    "portal_failed": "Kon het abonnementsportaal niet openen."
+  },
+  "auth": {
+    "sign_in_title": "Welkom terug",
+    "sign_in_subtitle": "Ga verder waar je gebleven was.",
+    "sign_up_title": "Maak je account aan",
+    "sign_up_subtitle": "Begin je reis vandaag.",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "sign_in": "Inloggen",
+    "sign_up": "Registreren",
+    "no_account": "Geen account? Registreer je",
+    "have_account": "Al een account? Log in",
+    "forgot_password": "Wachtwoord vergeten?"
+  },
+  "rex": {
+    "fallback_checkin_success": "Solide. Je bent opgedaagd. Dat is het hele spel — blijf opdagen.",
+    "fallback_checkin_fail": "Vandaag gemist. Prima. De streak definieert je niet — wat je morgen doet wel.",
+    "fallback_streak_warning": "Je streak staat op het spel. Laat een luie avond geen goede week verpesten.",
+    "fallback_weekly_summary": "Nog een week in de boeken. Je bouwt iets echts — stop nu niet."
+  },
+  "streak": {
+    "days": "{{count}} dagen op rij",
+    "at_risk": "Je streak staat op het spel!",
+    "freeze_used": "Streak-bevriezing gebruikt 🧊",
+    "new_record": "Nieuw record! 🔥"
+  },
+  "xp": {
+    "earned": "+{{amount}} XP",
+    "total": "Totaal XP",
+    "level_up": "Level omhoog! 🎉"
+  },
+  "paywall": {
+    "title": "Ga Premium",
+    "subtitle": "Ontgrendel alles. Geen limieten.",
+    "monthly": "Maandelijks",
+    "annual": "Jaarlijks",
+    "cta": "Start Gratis Proef",
+    "restore": "Aankoop herstellen",
+    "terms": "Voorwaarden & Privacy",
+    "feature_unlimited_hearts": "Onbeperkte harten",
+    "feature_all_lessons": "Alle lessen ontgrendeld",
+    "feature_rex_full": "Volledig Rex AI-coaching",
+    "feature_no_ads": "Geen advertenties, ooit"
+  },
+  "lessons": {
+    "start": "Les starten",
+    "next": "Volgende →",
+    "finish": "Afronden",
+    "progress": "{{current}} / {{total}}",
+    "complete_title": "Les voltooid!",
+    "complete_subtitle": "Houd het momentum vast.",
+    "xp_earned": "+{{amount}} XP verdiend"
+  },
+  "checkin": {
+    "title": "Dagelijkse Check-in",
+    "question": "Heb je de uitdaging van vandaag voltooid?",
+    "yes": "Ja ✓",
+    "no": "Nog niet",
+    "submit": "Versturen",
+    "rex_thinking": "Rex denkt na...",
+    "streak_at_risk": "⚠️ Streak in gevaar"
+  },
+  "league": {
+    "title": "Liga",
+    "your_rank": "Jouw rang: #{{rank}}",
+    "weekly_xp": "{{xp}} XP deze week",
+    "top_players": "Topspelers",
+    "promoted": "Gepromoveerd! 🎉",
+    "demoted": "Gedegradeerd 😬",
+    "safe": "Veilige zone"
+  },
+  "notifications": {
+    "morning_title": "Ochtend check-in",
+    "morning_body": "Begin de dag sterk. Je les wacht op je.",
+    "afternoon_title": "Middagherinnering",
+    "afternoon_body": "Vergeet je dagelijkse les niet. 5 minuten is alles wat nodig is.",
+    "evening_title": "Avondherinnering",
+    "evening_body": "Eindig de dag goed. Voltooi je les voor middernacht.",
+    "streak_risk_title": "Streak in gevaar! 🔥",
+    "streak_risk_body": "Je hebt vandaag nog niet ingecheckt. Breek de keten niet."
+  },
+  "common": {
+    "loading": "Laden...",
+    "retry": "Opnieuw proberen",
+    "close": "Sluiten",
+    "save": "Opslaan",
+    "done": "Klaar",
+    "ok": "OK",
+    "yes": "Ja",
+    "no": "Nee",
+    "you": "Jij",
+    "unknown": "Onbekend"
+  },
+  "legal": {
+    "aiNotice": {
+      "title": "Maak kennis met Rex: Jouw AI-Coach",
+      "subtitle": "Voordat we beginnen, dit moet je weten:",
+      "canDo": {
+        "title": "Wat Rex Kan Doen",
+        "remember": "Je eerdere gesprekken en voortgang onthouden",
+        "personalize": "Gepersonaliseerde motivatie en suggesties bieden",
+        "reflect": "Je helpen nadenken over je doelen en uitdagingen",
+        "strategies": "Strategieën voor zelfverbetering aanbieden"
+      },
+      "cannotDo": {
+        "title": "Wat Rex Niet Kan Doen",
+        "replace": "Professionele therapie of medisch advies vervangen",
+        "guarantee": "Nauwkeurige antwoorden in alle situaties garanderen",
+        "understand": "Complexe emotionele nuances begrijpen zoals een mens",
+        "emergency": "Noodcrisisinterventie bieden"
+      },
+      "privacy": {
+        "title": "Jouw Privacy",
+        "description": "Je gesprekken met Rex worden veilig opgeslagen om je ervaring te personaliseren. Zie ons Privacybeleid voor details."
+      },
+      "crisis": {
+        "title": "In Crisis?",
+        "description": "Als je in nood bent, neem dan contact op met hulpdiensten of een crisislijn. Rex is niet uitgerust voor noodsituaties."
+      },
+      "acknowledgment": "Door verder te gaan, erken je dat je begrijpt dat Rex een AI-systeem is met beperkingen.",
+      "accept": "Ik Begrijp Het",
+      "learnMore": "Meer Informatie"
+    },
+    "crisisDisclaimer": {
+      "title": "BELANGRIJK: Growthovo is geen hulpdienst",
+      "description": "Als je in direct gevaar bent of een geestelijke gezondheidsnoodsituatie ervaart:",
+      "emergency": {
+        "title": "Hulpdiensten",
+        "eu": "Noodgeval: 112"
+      },
+      "helplines": {
+        "title": "Crisislijnen",
+        "mental": "Geestelijke Gezondheidscrisis",
+        "suicide": "Suïcidepreventie"
+      },
+      "viewResources": "Meer Bronnen Bekijken",
+      "footer": "Rex kan ondersteuning bieden, maar kan professionele hulp in een crisis niet vervangen."
+    },
+    "ageVerification": {
+      "label": "Ik bevestig dat ik ten minste 13 jaar oud ben",
+      "description": "Growthovo vereist dat gebruikers ten minste 13 jaar oud zijn. Als je jonger bent dan 13, gebruik deze app dan niet. Als je tussen 13 en 18 bent, zorg er dan voor dat je ouderlijke toestemming hebt om Growthovo te gebruiken.",
+      "learnMore": "Waarom hebben we leeftijdsbeperkingen?"
+    },
+    "subscriptionTerms": {
+      "title": "Abonnementsvoorwaarden",
+      "pricing": {
+        "title": "Prijzen en Facturering",
+        "description": "Prijzen zijn inclusief toepasselijke btw. Facturering via Stripe-betalingsverwerking."
+      },
+      "autoRenewal": {
+        "title": "Automatische Verlenging",
+        "description": "Je abonnement wordt automatisch verlengd aan het einde van elke factureringsperiode, tenzij het ten minste 24 uur voor verlenging wordt geannuleerd. Je wordt de dan geldende abonnementsprijs in rekening gebracht."
+      },
+      "cancellation": {
+        "title": "Annulering",
+        "anytime": "Annuleer op elk moment via Instellingen > Abonnement",
+        "access": "Toegang blijft tot het einde van de huidige factureringsperiode",
+        "noRefund": "Geen terugbetalingen voor gedeeltelijke periodes"
+      },
+      "refund": {
+        "title": "Terugbetalingsbeleid",
+        "guarantee": "14 dagen geld-terug-garantie voor nieuwe abonnees (EU-consumentenrecht)",
+        "period": "Vraag terugbetalingen aan binnen 14 dagen na de eerste aankoop",
+        "contact": "Neem contact op met support@growthovo.app voor terugbetalingsverzoeken",
+        "processing": "Terugbetalingen verwerkt binnen 5-10 werkdagen"
+      },
+      "features": {
+        "title": "Wat Je Krijgt",
+        "unlimited": "Onbeperkte toegang tot Rex AI-coach",
+        "premium": "Alle premium functies en inhoud",
+        "support": "Prioriteitsondersteuning",
+        "adFree": "Advertentievrije ervaring"
+      },
+      "afterCancellation": {
+        "title": "Na Annulering",
+        "data": "Je gegevens blijven toegankelijk",
+        "resubscribe": "Je kunt op elk moment opnieuw abonneren",
+        "freeTier": "Gratis functies blijven beschikbaar"
+      },
+      "payment": {
+        "title": "Betalingsverwerking",
+        "description": "Betalingen worden veilig verwerkt door Stripe. Growthovo slaat je betaalkaargegevens niet op."
+      },
+      "questions": {
+        "title": "Vragen?",
+        "description": "Neem contact op met support@growthovo.app of bezoek ons Helpcentrum."
+      },
+      "viewFullTerms": "Volledige Algemene Voorwaarden Bekijken"
+    },
+    "cookieConsent": {
+      "title": "Cookie- en Trackingmelding",
+      "description": "Growthovo gebruikt cookies en vergelijkbare technologieën om onze service te leveren en te verbeteren.",
+      "essential": {
+        "title": "Essentiële Cookies (Altijd Actief)",
+        "description": "Authenticatie, beveiliging, voorkeuren en basisfunctionaliteit van de app"
+      },
+      "analytics": {
+        "title": "Analytische Cookies (Optioneel)",
+        "description": "App-gebruik begrijpen, bugs identificeren en gebruikerservaring verbeteren"
+      },
+      "viewPolicy": "Zie ons Privacybeleid voor meer informatie",
+      "acceptAll": "Alles Accepteren",
+      "essentialOnly": "Alleen Essentieel",
+      "customize": "Aanpassen"
+    },
+    "viewer": {
+      "loading": "Document laden...",
+      "loadError": "Kan document niet laden. Probeer het opnieuw.",
+      "notFound": "Document niet gevonden.",
+      "version": "Versie",
+      "effectiveDate": "Ingangsdatum",
+      "tableOfContents": "Inhoudsopgave",
+      "accept": "Ik Accepteer",
+      "fallbackNotice": "Dit document is niet beschikbaar in jouw taal. De Engelse versie wordt weergegeven."
+    },
+    "documents": {
+      "title": "Juridische Documenten",
+      "subtitle": "Bekijk ons juridisch beleid en voorwaarden",
+      "view": "Bekijken",
+      "footer": "Deze documenten beschrijven je rechten en onze verantwoordelijkheden. Als je vragen hebt, neem dan contact met ons op via privacy@growthovo.app",
+      "privacyPolicy": {
+        "title": "Privacybeleid",
+        "description": "Hoe we je persoonlijke gegevens verzamelen, gebruiken en beschermen"
+      },
+      "termsConditions": {
+        "title": "Algemene Voorwaarden",
+        "description": "Je rechten en verantwoordelijkheden bij het gebruik van Growthovo"
+      },
+      "cookiePolicy": {
+        "title": "Cookiebeleid",
+        "description": "Hoe we cookies en trackingtechnologieën gebruiken"
+      },
+      "subscriptionTerms": {
+        "title": "Abonnementsvoorwaarden",
+        "description": "Facturering, annulering en terugbetalingsbeleid"
+      },
+      "aiTransparency": "AI-Transparantiemelding",
+      "crisisDisclaimer": "Crisisverklaring"
+    },
+    "updateNotification": {
+      "title": "Juridische Documenten Bijgewerkt",
+      "subtitleRequired": "We hebben onze juridische documenten bijgewerkt. Bekijk en bevestig de wijzigingen om Growthovo te blijven gebruiken.",
+      "subtitleOptional": "We hebben onze juridische documenten bijgewerkt. Bekijk de wijzigingen wanneer je tijd hebt.",
+      "version": "Versie {{version}}",
+      "whatsNew": "Wat is Nieuw:",
+      "viewDocument": "Document Bekijken",
+      "acknowledge": "Ik Bevestig",
+      "requirementNotice": "Je moet de update van de Algemene Voorwaarden bevestigen om Growthovo te blijven gebruiken.",
+      "dismiss": "Ik Bekijk Het Later"
+    },
+    "updateBanner": {
+      "title": "Juridische Documenten Bijgewerkt",
+      "subtitle": "{{count}} document bijgewerkt",
+      "subtitle_plural": "{{count}} documenten bijgewerkt",
+      "accessibilityLabel": "Bekijk updates van juridische documenten",
+      "dismiss": "Melding sluiten"
+    }
+  }
+}

@@ -1,0 +1,333 @@
+{
+  "onboarding": {
+    "language_title": "Choisissez votre langue",
+    "language_subtitle": "Vous pouvez changer cela à tout moment dans les Paramètres.",
+    "pillars_title": "Sur quoi voulez-vous travailler ?",
+    "pillars_subtitle": "Choisissez vos points faibles. Rex se concentrera ici en premier.",
+    "goal_title": "Combien de temps par jour ?",
+    "goal_subtitle": "Soyez honnête. La constance bat l'intensité.",
+    "continue": "Continuer →",
+    "lets_go": "C'est parti 🔥",
+    "back": "← Retour",
+    "pillars": {
+      "mind": "Esprit",
+      "discipline": "Discipline",
+      "communication": "Communication",
+      "money": "Argent",
+      "career": "Carrière",
+      "relationships": "Relations"
+    },
+    "goals": {
+      "light": "Léger",
+      "steady": "Régulier",
+      "serious": "Sérieux"
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "lessons": "Leçons",
+    "checkin": "Check-in",
+    "league": "Ligue",
+    "settings": "Paramètres"
+  },
+  "home": {
+    "day_streak": "jours d'affilée",
+    "at_risk": "En danger !",
+    "unlimited_hearts": "Cœurs illimités",
+    "hearts_count": "{{count}}/5 cœurs",
+    "total_xp": "⚡ XP Total",
+    "todays_lesson": "LEÇON DU JOUR",
+    "all_done": "TOUT FAIT AUJOURD'HUI 🎉",
+    "all_lessons_complete": "Vous avez complété toutes les leçons disponibles.",
+    "lesson_duration": "5 cartes · ~3 min",
+    "your_league": "🏆 Votre Ligue",
+    "rex_weekly_report": "RAPPORT HEBDOMADAIRE DE REX",
+    "week_of": "Semaine du {{date}}"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "language_section": "Langue",
+    "streak_freezes": "Gels de Série",
+    "available_freezes": "🧊 Gels disponibles",
+    "freezes_hint": "Gagnez des gels en complétant des défis bonus.",
+    "notifications": "Notifications",
+    "morning": "☀️ Matin (8h)",
+    "afternoon": "🌤 Après-midi (14h)",
+    "evening": "🌙 Soir (21h)",
+    "subscription": "Abonnement",
+    "current_plan": "Plan actuel",
+    "plan_premium": "Premium",
+    "plan_trial": "Essai",
+    "plan_free": "Gratuit",
+    "manage_subscription": "Gérer l'Abonnement →",
+    "sign_out": "Se déconnecter",
+    "sign_out_confirm_title": "Se déconnecter",
+    "sign_out_confirm_message": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "cancel": "Annuler"
+  },
+  "errors": {
+    "generic": "Quelque chose s'est mal passé. Veuillez réessayer.",
+    "network": "Pas de connexion internet.",
+    "sign_in_failed": "Connexion échouée. Vérifiez vos identifiants.",
+    "sign_up_failed": "Inscription échouée. Veuillez réessayer.",
+    "portal_failed": "Impossible d'ouvrir le portail d'abonnement."
+  },
+  "auth": {
+    "sign_in_title": "Bon retour",
+    "sign_in_subtitle": "Reprenez là où vous vous êtes arrêté.",
+    "sign_up_title": "Créez votre compte",
+    "sign_up_subtitle": "Commencez votre parcours aujourd'hui.",
+    "email": "Email",
+    "password": "Mot de passe",
+    "sign_in": "Se connecter",
+    "sign_up": "S'inscrire",
+    "no_account": "Pas de compte ? Inscrivez-vous",
+    "have_account": "Déjà un compte ? Connectez-vous",
+    "forgot_password": "Mot de passe oublié ?"
+  },
+  "rex": {
+    "fallback_checkin_success": "Solide. Tu t'es présenté. C'est tout le jeu — continue à te présenter.",
+    "fallback_checkin_fail": "Raté aujourd'hui. Pas grave. La série ne te définit pas — ce que tu fais demain, oui.",
+    "fallback_streak_warning": "Ta série est en danger. Ne laisse pas une soirée paresseuse gâcher une bonne semaine.",
+    "fallback_weekly_summary": "Une autre semaine dans les livres. Tu construis quelque chose de réel — n'arrête pas maintenant."
+  },
+  "streak": {
+    "days": "{{count}} jours d'affilée",
+    "at_risk": "Votre série est en danger !",
+    "freeze_used": "Gel de série utilisé 🧊",
+    "new_record": "Nouveau record ! 🔥"
+  },
+  "xp": {
+    "earned": "+{{amount}} XP",
+    "total": "XP Total",
+    "level_up": "Niveau supérieur ! 🎉"
+  },
+  "paywall": {
+    "title": "Passer Premium",
+    "subtitle": "Débloquez tout. Sans limites.",
+    "monthly": "Mensuel",
+    "annual": "Annuel",
+    "cta": "Commencer l'Essai Gratuit",
+    "restore": "Restaurer l'Achat",
+    "terms": "Conditions et Confidentialité",
+    "feature_unlimited_hearts": "Cœurs illimités",
+    "feature_all_lessons": "Toutes les leçons débloquées",
+    "feature_rex_full": "Coaching Rex AI complet",
+    "feature_no_ads": "Aucune publicité, jamais"
+  },
+  "lessons": {
+    "start": "Commencer la Leçon",
+    "next": "Suivant →",
+    "finish": "Terminer",
+    "progress": "{{current}} / {{total}}",
+    "complete_title": "Leçon terminée !",
+    "complete_subtitle": "Gardez l'élan.",
+    "xp_earned": "+{{amount}} XP gagnés"
+  },
+  "checkin": {
+    "title": "Check-in Quotidien",
+    "question": "Avez-vous complété le défi d'aujourd'hui ?",
+    "yes": "Oui ✓",
+    "no": "Pas encore",
+    "submit": "Soumettre",
+    "rex_thinking": "Rex réfléchit...",
+    "streak_at_risk": "⚠️ Série en danger"
+  },
+  "league": {
+    "title": "Ligue",
+    "your_rank": "Votre rang : #{{rank}}",
+    "weekly_xp": "{{xp}} XP cette semaine",
+    "top_players": "Meilleurs Joueurs",
+    "promoted": "Promu ! 🎉",
+    "demoted": "Rétrogradé 😬",
+    "safe": "Zone sûre"
+  },
+  "notifications": {
+    "morning_title": "Check-in matinal",
+    "morning_body": "Commencez la journée fort. Votre leçon vous attend.",
+    "afternoon_title": "Rappel de l'après-midi",
+    "afternoon_body": "N'oubliez pas votre leçon quotidienne. 5 minutes suffisent.",
+    "evening_title": "Rappel du soir",
+    "evening_body": "Terminez bien la journée. Complétez votre leçon avant minuit.",
+    "streak_risk_title": "Série en danger ! 🔥",
+    "streak_risk_body": "Vous n'avez pas fait de check-in aujourd'hui. Ne brisez pas la chaîne."
+  },
+  "common": {
+    "loading": "Chargement...",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "save": "Sauvegarder",
+    "done": "Terminé",
+    "ok": "OK",
+    "yes": "Oui",
+    "no": "Non",
+    "you": "Vous",
+    "unknown": "Inconnu"
+  },
+  "legal": {
+    "aiNotice": {
+      "title": "Rencontrez Rex : Votre Coach IA",
+      "subtitle": "Avant de commencer, voici ce que vous devez savoir :",
+      "canDo": {
+        "title": "Ce que Rex peut faire",
+        "remember": "Se souvenir de vos conversations et progrès passés",
+        "personalize": "Fournir des motivations et suggestions personnalisées",
+        "reflect": "Vous aider à réfléchir sur vos objectifs et défis",
+        "strategies": "Offrir des stratégies d'amélioration personnelle"
+      },
+      "cannotDo": {
+        "title": "Ce que Rex ne peut pas faire",
+        "replace": "Remplacer une thérapie professionnelle ou des conseils médicaux",
+        "guarantee": "Garantir des réponses exactes dans toutes les situations",
+        "understand": "Comprendre les nuances émotionnelles complexes comme un humain",
+        "emergency": "Fournir une intervention de crise d'urgence"
+      },
+      "privacy": {
+        "title": "Votre Confidentialité",
+        "description": "Vos conversations avec Rex sont stockées en toute sécurité pour personnaliser votre expérience. Consultez notre Politique de Confidentialité pour plus de détails."
+      },
+      "crisis": {
+        "title": "En Crise ?",
+        "description": "Si vous êtes en détresse, veuillez contacter les services d'urgence ou une ligne d'assistance en cas de crise. Rex n'est pas équipé pour les situations d'urgence."
+      },
+      "acknowledgment": "En continuant, vous reconnaissez comprendre que Rex est un système IA avec des limitations.",
+      "accept": "Je Comprends",
+      "learnMore": "En Savoir Plus"
+    },
+    "crisisDisclaimer": {
+      "title": "IMPORTANT : Growthovo n'est pas un service d'urgence",
+      "description": "Si vous êtes en danger immédiat ou vivez une urgence de santé mentale :",
+      "emergency": {
+        "title": "Services d'Urgence",
+        "eu": "Urgence : 112"
+      },
+      "helplines": {
+        "title": "Lignes d'Assistance en Cas de Crise",
+        "mental": "Crise de Santé Mentale",
+        "suicide": "Prévention du Suicide"
+      },
+      "viewResources": "Voir Plus de Ressources",
+      "footer": "Rex peut fournir un soutien, mais ne peut pas remplacer une aide professionnelle en cas de crise."
+    },
+    "ageVerification": {
+      "label": "Je confirme avoir au moins 13 ans",
+      "description": "Growthovo exige que les utilisateurs aient au moins 13 ans. Si vous avez moins de 13 ans, veuillez ne pas utiliser cette application. Si vous avez entre 13 et 18 ans, assurez-vous d'avoir l'autorisation parentale pour utiliser Growthovo.",
+      "learnMore": "Pourquoi avons-nous des restrictions d'âge ?"
+    },
+    "subscriptionTerms": {
+      "title": "Conditions d'Abonnement",
+      "pricing": {
+        "title": "Tarification et Facturation",
+        "description": "Les prix incluent la TVA applicable. Facturation via le traitement des paiements Stripe."
+      },
+      "autoRenewal": {
+        "title": "Renouvellement Automatique",
+        "description": "Votre abonnement se renouvelle automatiquement à la fin de chaque période de facturation, sauf annulation au moins 24 heures avant le renouvellement. Vous serez facturé au prix d'abonnement en vigueur."
+      },
+      "cancellation": {
+        "title": "Annulation",
+        "anytime": "Annulez à tout moment depuis Paramètres > Abonnement",
+        "access": "L'accès continue jusqu'à la fin de la période de facturation en cours",
+        "noRefund": "Pas de remboursement pour les périodes partielles"
+      },
+      "refund": {
+        "title": "Politique de Remboursement",
+        "guarantee": "Garantie satisfait ou remboursé de 14 jours pour les nouveaux abonnés (droit des consommateurs UE)",
+        "period": "Demandez un remboursement dans les 14 jours suivant l'achat initial",
+        "contact": "Contactez support@growthovo.app pour les demandes de remboursement",
+        "processing": "Remboursements traités sous 5 à 10 jours ouvrables"
+      },
+      "features": {
+        "title": "Ce Que Vous Obtenez",
+        "unlimited": "Accès illimité au coach IA Rex",
+        "premium": "Toutes les fonctionnalités et contenus premium",
+        "support": "Support prioritaire",
+        "adFree": "Expérience sans publicité"
+      },
+      "afterCancellation": {
+        "title": "Après l'Annulation",
+        "data": "Vos données restent accessibles",
+        "resubscribe": "Vous pouvez vous réabonner à tout moment",
+        "freeTier": "Les fonctionnalités gratuites restent disponibles"
+      },
+      "payment": {
+        "title": "Traitement des Paiements",
+        "description": "Les paiements sont traités en toute sécurité par Stripe. Growthovo ne stocke pas les détails de votre carte de paiement."
+      },
+      "questions": {
+        "title": "Questions ?",
+        "description": "Contactez support@growthovo.app ou visitez notre Centre d'Aide."
+      },
+      "viewFullTerms": "Voir les Conditions Générales Complètes"
+    },
+    "cookieConsent": {
+      "title": "Avis sur les Cookies et le Suivi",
+      "description": "Growthovo utilise des cookies et des technologies similaires pour fournir et améliorer notre service.",
+      "essential": {
+        "title": "Cookies Essentiels (Toujours Actifs)",
+        "description": "Authentification, sécurité, préférences et fonctionnalité de base de l'application"
+      },
+      "analytics": {
+        "title": "Cookies Analytiques (Optionnels)",
+        "description": "Comprendre l'utilisation de l'application, identifier les bugs et améliorer l'expérience utilisateur"
+      },
+      "viewPolicy": "Consultez notre Politique de Confidentialité pour plus d'informations",
+      "acceptAll": "Tout Accepter",
+      "essentialOnly": "Essentiels Uniquement",
+      "customize": "Personnaliser"
+    },
+    "viewer": {
+      "loading": "Chargement du document...",
+      "loadError": "Échec du chargement du document. Veuillez réessayer.",
+      "notFound": "Document introuvable.",
+      "version": "Version",
+      "effectiveDate": "Date d'Effet",
+      "tableOfContents": "Table des Matières",
+      "accept": "J'Accepte",
+      "fallbackNotice": "Ce document n'est pas disponible dans votre langue. La version anglaise est affichée."
+    },
+    "documents": {
+      "title": "Documents Juridiques",
+      "subtitle": "Consultez nos politiques et conditions juridiques",
+      "view": "Voir",
+      "footer": "Ces documents décrivent vos droits et nos responsabilités. Si vous avez des questions, contactez-nous à privacy@growthovo.app",
+      "privacyPolicy": {
+        "title": "Politique de Confidentialité",
+        "description": "Comment nous collectons, utilisons et protégeons vos données personnelles"
+      },
+      "termsConditions": {
+        "title": "Conditions Générales",
+        "description": "Vos droits et responsabilités lors de l'utilisation d'Growthovo"
+      },
+      "cookiePolicy": {
+        "title": "Politique des Cookies",
+        "description": "Comment nous utilisons les cookies et les technologies de suivi"
+      },
+      "subscriptionTerms": {
+        "title": "Conditions d'Abonnement",
+        "description": "Facturation, annulation et politiques de remboursement"
+      },
+      "aiTransparency": "Avis de Transparence IA",
+      "crisisDisclaimer": "Avertissement de Crise"
+    },
+    "updateNotification": {
+      "title": "Documents Juridiques Mis à Jour",
+      "subtitleRequired": "Nous avons mis à jour nos documents juridiques. Veuillez examiner et reconnaître les modifications pour continuer à utiliser Growthovo.",
+      "subtitleOptional": "Nous avons mis à jour nos documents juridiques. Veuillez examiner les modifications quand vous aurez un moment.",
+      "version": "Version {{version}}",
+      "whatsNew": "Quoi de Neuf :",
+      "viewDocument": "Voir le Document",
+      "acknowledge": "Je Reconnais",
+      "requirementNotice": "Vous devez reconnaître la mise à jour des Conditions Générales pour continuer à utiliser Growthovo.",
+      "dismiss": "Je Réviserai Plus Tard"
+    },
+    "updateBanner": {
+      "title": "Documents Juridiques Mis à Jour",
+      "subtitle": "{{count}} document mis à jour",
+      "subtitle_plural": "{{count}} documents mis à jour",
+      "accessibilityLabel": "Voir les mises à jour des documents juridiques",
+      "dismiss": "Fermer la notification"
+    }
+  }
+}

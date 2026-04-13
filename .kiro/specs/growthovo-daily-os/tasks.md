@@ -1,0 +1,411 @@
+# Implementation Plan: GROWTHOVO Daily OS
+
+## Overview
+
+Six features implemented in dependency order: Database migrations → TypeScript types → Rex Memory System → Morning Briefing → Evening Debrief → SOS Button → Rex Always-On Chat → Accountability Partner → Weekly Rex Report. Each feature builds on the previous, with Rex Memory as the shared foundation that all other features write to and read from.
+
+---
+
+## Tasks
+
+- [x] 1. Database migrations and schema
+  - [x] 1.1 Create migration for daily_checkins, evening_debriefs, and sos_events tables
+    - Create `daily_checkins` with columns: id, user_id, date, morning_state (CHECK constraint), morning_rex_response, briefing_viewed_at; UNIQUE(user_id, date)
+    - Create `evening_debriefs` with columns: id, user_id, date, q1_answer (CHECK constraint), q1_detail, q2_obstacle, q3_note, rex_verdict, xp_earned; UNIQUE(user_id, date)
+    - Create `sos_events` with columns: id, user_id, type (CHECK constraint), timestamp, duration_seconds, outcome (CHECK constraint), notes
+    - Enable RLS on all three tables; add "own rows only" policies
+    - _Requirements: 25.1, 25.2, 25.3, 25.8_
+  - [x] 1.2 Create migration for rex_memory table
+    - Create `rex_memory` with columns: id, user_id, memory_type (CHECK constraint), content, importance_score (CHECK 1–10), created_at, last_referenced_at
+    - Enable RLS; add "own rows only" policy
+    - _Requirements: 25.4_
+  - [x] 1.3 Create migration for accountability_pairs and partner_messages tables
+    - Create `accountability_pairs` with columns: id, user_id, partner_id, pillar, active, created_at; UNIQUE(user_id, partner_id)
+    - Create `partner_messages` with columns: id, pair_id, sender_id, message, message_type (CHECK constraint), created_at
+    - Enable RLS; add pair-member read policy for both tables; add owner-write policy for pairs; add sender-insert policy for messages
+    - _Requirements: 25.5, 25.6_
+  - [x] 1.4 Create migration for weekly_rex_reports table
+    - Create `weekly_rex_reports` with columns: id, user_id, week_start, numbers_json (JSONB), pattern_analysis, verdict_text, audio_url, next_week_focus_json (JSONB), created_at; UNIQUE(user_id, week_start)
+    - Enable RLS; add "own rows only" SELECT policy
+    - _Requirements: 25.7, 25.8_
+
+- [x] 2. TypeScript types and interfaces
+  - [x] 2.1 Add all Daily OS types to growthovo/src/types/index.ts
+    - Add type aliases: `MentalState`, `SOSType`, `SOSOutcome`, `MemoryType`, `MessageType`, `Q1Answer`
+    - Add interfaces: `DailyCheckin`, `EveningDebrief`, `SOSEvent`, `RexMemory`, `AccountabilityPair`, `PartnerMessage`, `WeeklyRexReport`, `WeeklyReportNumbers`, `NextWeekFocus`, `MorningBriefingData`, `PartnerStatus`, `ChatMessage`, `MemoryContext`, `HardConvPrep`, `OverwhelmedResponse`, `PartnerWeekStats`, `PartnerComparisonReport`
+    - _Requirements: 13.1, 13.2, 13.3, 16.6, 22.4_
+
+- [x] 3. Rex Memory Service — core
+  - [x] 3.1 Create growthovo/src/services/rexMemoryService.ts
+    - Implement `selectTopMemories(memories: RexMemory[], count: number): RexMemory[]` — sort by importance_score desc, then last_referenced_at desc, slice to count
+    - Implement `selectMemoryToEvict(memories: RexMemory[]): RexMemory` — sort by importance_score asc, then last_referenced_at asc, return first
+    - Implement `pruneMemoriesIfNeeded(userId: string): Promise<void>` — fetch count; if >= 200, evict lowest-scored oldest entry
+    - Implement `addMemory(userId, memory): Promise<void>` — calls pruneMemoriesIfNeeded first, then inserts
+    - Implement `markMemoryReferenced(memoryId: string): Promise<void>` — updates last_referenced_at
+    - Implement `getMemoryContext(userId: string): Promise<MemoryContext>` — fetches all memories, selects top 5, formats for prompt
+    - _Requirements: 13.1, 13.3, 13.5, 13.6, 13.7_
+  - [x]* 3.2 Write property tests for rexMemoryService pure functions
+    - **Property 8: Memory importance score invariant** — generate importance scores, assert all in [1,10]
+    - **Property 9: Memory cap enforcement** — generate 200-entry lists, assert add-one keeps count at 200
+    - **Property 11: Memory selection ordering** — generate RexMemory arrays, assert selectTopMemories ordering
+    - **Property 15: Memory eviction selects lowest importance then oldest** — generate arrays, assert evicted entry
+    - **Validates: Requirements 13.3, 13.7**
+
+- [x] 4. Rex Memory Service — extraction
+  - [x] 4.1 Create Supabase Edge Function growthovo/supabase/functions/extract-memories/index.ts
+    - Accept `{ userId, text, source }` payload
+    - Call `gpt-4o-mini` with extraction prompt: identify up to 3 memory-worthy facts, classify each as goal/struggle/win/pattern/promise/person, assign importance_score 1–10
+    - Max 200 tokens for extraction response
+    - Parse response and call `addMemory` for each extracted entry
+    - Return `{ extracted: number }` count
+    - _Requirements: 14.1, 14.4, 14.5_
+  - [x]* 4.2 Write property test for memory extraction upper bound
+    - **Property 10: Memory extraction upper bound** — mock Edge Function, generate text inputs, assert extracted count ≤ 3
+    - **Validates: Requirements 14.1**
+
+- [x] 5. Checkpoint — Memory system complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 6. Morning Briefing — service and Edge Function
+  - [x] 6.1 Create growthovo/src/services/briefingService.ts
+    - Implement `hasBriefingBeenShownToday(userId): Promise<boolean>` — queries daily_checkins for today's date
+    - Implement `selectMentalState(userId, state): Promise<string>` — upserts daily_checkins, calls gpt-4o-mini for Rex reaction (max 20 tokens), returns reaction
+    - Implement `dismissBriefing(userId): Promise<void>` — sets briefing_viewed_at, awards 10 XP via existing progressService
+    - Implement `getBriefingFallbackTruth(dayOfWeek: number): string` — returns from pool of 14 entries (2 per day)
+    - Implement `getBriefingFallbackFocus(pillar: string): string` — returns from pool of 6 entries per pillar
+    - _Requirements: 1.1, 1.4, 1.5, 1.7, 2.2, 2.3, 2.5, 2.6, 3.6_
+  - [x] 6.2 Create Supabase Edge Function growthovo/supabase/functions/generate-morning-briefing/index.ts
+    - Accept `{ userId }` payload
+    - Fetch: primary pillar, last 3 evening debrief Q2 answers, current streak, day of week, last 3 daily_checkins morning_state
+    - Determine weakest pillar (min XP in last 7 days across xp_transactions)
+    - Call `gpt-4o-mini` for Rex's Daily Truth (max 60 tokens, 2 sentences, day-of-week-aware prompt)
+    - Call `gpt-4o-mini` for Today's Single Focus (max 30 tokens, time-bound action for weakest pillar)
+    - Fetch streak, hearts, league position from existing tables
+    - Fetch partner check-in status from daily_checkins + accountability_pairs
+    - Return assembled `MorningBriefingData`
+    - Apply 5-second timeout; return fallback content on timeout
+    - _Requirements: 1.7, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4, 5.6_
+  - [x]* 6.3 Write property tests for briefingService pure functions
+    - **Property 2: Briefing shown-today flag is idempotent** — generate boolean states, assert idempotence
+    - **Property 4: Weakest pillar is the minimum XP pillar** — generate pillar→XP maps, assert minimum
+    - **Validates: Requirements 1.5, 4.2**
+
+- [x] 7. Morning Briefing — UI screen
+  - [x] 7.1 Create growthovo/src/screens/briefing/MorningBriefingScreen.tsx
+    - Full-screen dark card with 5 sections rendered sequentially
+    - Section 1: Mental state emoji selector (5 options); on tap: highlight selected, call selectMentalState, display Rex reaction inline
+    - Section 2: Rex's Daily Truth (loaded from Edge Function, fallback on timeout)
+    - Section 3: Today's Single Focus (loaded from Edge Function, fallback on timeout)
+    - Section 4: Streak count, hearts, league position; milestone message if applicable; partner status
+    - Section 5: "Let's go" dismiss button — only enabled after mental state selected
+    - Loading skeleton for AI-generated sections; error state with fallback content
+    - _Requirements: 1.2, 1.3, 1.6, 2.1, 2.2, 3.1, 4.1, 5.1, 5.2, 5.3, 5.4, 5.5_
+  - [x] 7.2 Create MorningBriefingGate component and wire into App.tsx navigation
+    - On app open: check `hasBriefingBeenShownToday`; if false and time is after configured morning time, show MorningBriefingScreen before HomeScreen
+    - After dismissal: navigate to HomeScreen
+    - Schedule daily push notification at user's configured time (default 07:30) via existing notificationService
+    - _Requirements: 1.1, 1.2, 1.5_
+  - [x]* 7.3 Write property test for mental state round-trip
+    - **Property 3: Mental state check-in round-trip and uniqueness**
+    - Mock Supabase; generate MentalState values; assert upsert creates exactly one record per day
+    - **Validates: Requirements 2.2, 2.6**
+
+- [x] 8. Checkpoint — Morning Briefing complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 9. Evening Debrief — service and Edge Function
+  - [x] 9.1 Create growthovo/src/services/debriefService.ts
+    - Implement `hasDebriefBeenShownToday(userId): Promise<boolean>` — queries evening_debriefs for today
+    - Implement `validateMinWordCount(text: string, minWords: number): boolean` — pure function, splits on whitespace, filters empty tokens
+    - Implement `getTomorrowFocusPreview(userId): Promise<string>` — returns next morning's focus based on weakest pillar
+    - _Requirements: 16.4, 17.4, 17.5, 16.7_
+  - [x] 9.2 Create Supabase Edge Function growthovo/supabase/functions/submit-evening-debrief/index.ts
+    - Accept `{ userId, debriefData }` payload
+    - Validate Q2 obstacle has ≥ 10 words; return 400 if not
+    - Call `gpt-4o-mini` for Q2 insight (max 40 tokens, 1 sentence)
+    - Call `gpt-4o-mini` for closing verdict (max 60 tokens, 2 sentences) using full debrief context + Rex system prompt
+    - Insert into `evening_debriefs`
+    - Trigger memory extraction async (call extract-memories Edge Function with Q2 + Q3 text)
+    - Award 20 XP via existing XP system
+    - Update streak via existing streak service
+    - Return completed `EveningDebrief`
+    - _Requirements: 16.5, 16.6, 17.4, 17.5, 17.6, 17.7, 17.8, 17.9, 18.1_
+  - [x]* 9.3 Write property test for validateMinWordCount
+    - **Property 12: Word count validation**
+    - Generate strings with fc.string() and minWord counts; assert return value matches manual word count comparison
+    - Include edge cases: empty string, all whitespace, exactly minWords, minWords-1
+    - **Validates: Requirements 17.4, 17.5**
+
+- [x] 10. Evening Debrief — UI screen
+  - [x] 10.1 Create growthovo/src/screens/debrief/EveningDebriefScreen.tsx
+    - Full-screen flow with 3 questions shown one at a time
+    - Q1: three tappable option cards; on selection show follow-up text input
+    - Q1 "No" follow-up: enforce min 10 words via validateMinWordCount before enabling Next
+    - Q2: free-text input with voice note option; enforce min 10 words; on submit call Edge Function for Q2 insight; display insight inline
+    - Q3: optional free-text input; "Skip" option available
+    - After Q3: call Edge Function for closing verdict; display verdict with animation
+    - Show streak update animation, +20 XP animation, tomorrow's focus preview
+    - Loading state while AI calls are in flight; error state with retry
+    - _Requirements: 16.3, 17.1, 17.2, 17.3, 17.4, 17.5, 17.6, 17.7, 17.8, 17.9_
+  - [x] 10.2 Create EveningDebriefGate and wire into App.tsx navigation
+    - On app open after configured evening time: check `hasDebriefBeenShownToday`; if false, show EveningDebriefScreen before HomeScreen
+    - Schedule daily push notification at user's configured time (default 21:00) via existing notificationService
+    - _Requirements: 16.1, 16.2, 16.4_
+
+- [x] 11. Checkpoint — Evening Debrief complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 12. SOS Button — service and Edge Functions
+  - [x] 12.1 Create growthovo/src/services/sosService.ts
+    - Implement `startSOSEvent(userId, type): Promise<SOSEvent>` — inserts sos_events with outcome='started', returns event
+    - Implement `completeSOSEvent(eventId, outcome, notes?): Promise<void>` — updates outcome and duration_seconds
+    - Implement `getAnxietyHistoryCount(userId, days): Promise<number>` — counts anxiety_spike events in last N days
+    - Implement `getSOSFallback(type: SOSType): string` — returns pre-written fallback for each SOS type
+    - Implement `isAnxietyPatternTriggered(count: number): boolean` — pure function, returns count >= 3
+    - _Requirements: 6.4, 6.5, 6.6, 7.6, 11.6_
+  - [x] 12.2 Create Supabase Edge Function growthovo/supabase/functions/sos-response/index.ts
+    - Accept `{ type, userId, subscriptionStatus, payload }` payload
+    - Dispatch to type-specific handler:
+      - `anxiety_spike`: generate closing line (25 tokens) using anxiety history count
+      - `about_to_react`: generate calm response draft (80 tokens) from situation description
+      - `zero_motivation`: generate reset message (100 tokens) using Rex_Memory goals
+      - `hard_conversation`: generate prep (150 tokens): opening line + avoid list + target outcome
+      - `overwhelmed`: generate structured response (120 tokens): top priority + ignore list + reset sentence
+    - All calls use `gpt-4o-mini`, Rex system prompt, 5-second timeout
+    - Return fallback on timeout or error
+    - _Requirements: 7.4, 7.5, 8.4, 8.5, 9.1, 9.3, 10.2, 10.3, 12.3, 12.4_
+  - [x] 12.3 Create Supabase Edge Function growthovo/supabase/functions/generate-urge-audio/index.ts
+    - Accept `{ userId, habit }` payload (Premium only)
+    - Generate 5-minute urge surfing script via `gpt-4o-mini` (max 600 tokens)
+    - Call OpenAI TTS API (model: tts-1-hd, voice: onyx) with the script
+    - Upload audio to Supabase Storage at `sos_audio/{userId}/{timestamp}.mp3`
+    - Return `{ audioUrl: string }`
+    - _Requirements: 11.3, 11.7_
+  - [x]* 12.4 Write property tests for sosService pure functions
+    - **Property 5: SOS event outcome state machine** — generate SOSType and outcome values, assert valid transitions
+    - **Property 7: Anxiety pattern flag threshold** — generate counts 0–10, assert flag = (count >= 3)
+    - **Validates: Requirements 6.4, 6.5, 7.6**
+
+- [x] 13. SOS Button — UI screens and flows
+  - [x] 13.1 Add SOS button to growthovo/src/screens/home/HomeScreen.tsx
+    - Large, always-visible button (not hidden behind scroll or tabs)
+    - On tap: open SOSBottomSheet within 300ms
+    - _Requirements: 6.1, 6.2_
+  - [x] 13.2 Create growthovo/src/screens/sos/SOSBottomSheet.tsx
+    - Bottom sheet with 6 situation option cards (emoji + label)
+    - On selection: call `startSOSEvent`, navigate to appropriate flow screen
+    - _Requirements: 6.3, 6.4_
+  - [x] 13.3 Create growthovo/src/screens/sos/AnxietySpikeScreen.tsx
+    - Animated 4-7-8 breathing exercise using react-native-reanimated (expand/contract circle)
+    - Phase labels: "Inhale 4s", "Hold 7s", "Exhale 8s"; minimum 3 cycles before Next enabled
+    - After breathing: cognitive reframe prompt "Name 3 things actually in your control right now."
+    - After reframe submission: display Rex closing line from Edge Function
+    - On complete: call `completeSOSEvent` with outcome='completed'
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+  - [x] 13.4 Create growthovo/src/screens/sos/AboutToReactScreen.tsx
+    - Display message + animated 90-second countdown (expanding circle, cannot skip)
+    - After timer: "Still want to send it?" prompt + situation text input
+    - On submit: display calm response draft from Edge Function
+    - On complete: call `completeSOSEvent`
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
+  - [x] 13.5 Create growthovo/src/screens/sos/ZeroMotivationScreen.tsx
+    - Display Rex reset message from Edge Function (references user's goals from memory)
+    - Display micro-action at the end
+    - On complete: call `completeSOSEvent`
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+  - [x] 13.6 Create growthovo/src/screens/sos/HardConversationScreen.tsx
+    - Text input for situation description (2–3 words)
+    - On submit: display prep response (opening line, avoid list, target outcome) from Edge Function
+    - Premium users: show "Rehearse with Rex" button → multi-turn chat mode (Rex plays other person)
+    - Free users: show paywall prompt for Rehearse feature
+    - On complete: call `completeSOSEvent`
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
+  - [x] 13.7 Create growthovo/src/screens/sos/HabitUrgeScreen.tsx
+    - Display user's tracked habits for selection
+    - Show urge surfing message + wave metaphor text
+    - Premium: play audio from generate-urge-audio Edge Function; Free: show text guide
+    - Display distraction challenge after urge surfing content
+    - On app return after 10+ minutes: update outcome to 'success', award 15 XP
+    - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7_
+  - [x] 13.8 Create growthovo/src/screens/sos/OverwhelmedScreen.tsx
+    - Free-text input (or voice note) for brain dump; enforce min 10 words
+    - On submit: display structured response from Edge Function (top priority + ignore list + reset sentence)
+    - Store brain dump in sos_events notes field
+    - On complete: call `completeSOSEvent`
+    - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6_
+  - [x]* 13.9 Write property test for breathing exercise duration
+    - **Property 6: Breathing exercise minimum duration**
+    - Generate cycle counts N ≥ 1; assert total duration = N × 19000ms; assert 3 cycles = 57000ms
+    - **Validates: Requirements 7.2**
+
+- [x] 14. Checkpoint — SOS system complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 15. Rex Always-On Chat — service and Edge Function
+  - [x] 15.1 Create growthovo/src/services/rexChatService.ts
+    - Implement `openChat(userId): Promise<ChatSession>` — loads recent session or creates new one; fetches memory context
+    - Implement `sendMessage(sessionId, userId, message): Promise<ChatMessage>` — calls rex-chat-v2 Edge Function; appends to session
+    - Implement `persistSession(session): Promise<void>` — upserts session to Supabase
+    - Implement `loadRecentSession(userId): Promise<ChatSession | null>` — fetches last session from Supabase
+    - Implement `buildChatPrompt(memoryContext, history): OpenAIMessage[]` — constructs system prompt with Rex personality + memory context + last 10 messages
+    - _Requirements: 15.1, 15.3, 15.4, 15.5, 15.6, 15.7, 15.9_
+  - [x] 15.2 Create Supabase Edge Function growthovo/supabase/functions/rex-chat-v2/index.ts
+    - Accept `{ userId, sessionId, message, subscriptionStatus, memoryContext, history }` payload
+    - Free_User: return fallback from pre-written pool (no OpenAI call)
+    - Premium_User: build system prompt with Rex personality + memory context; call `gpt-4o-mini` (max 80 tokens, temperature 0.85)
+    - Trigger async memory extraction from user's message (non-blocking)
+    - Return `{ message: string }`
+    - _Requirements: 15.5, 15.6, 15.7, 15.8, 15.10_
+  - [x] 15.3 Create growthovo/src/screens/chat/RexChatBottomSheet.tsx
+    - Bottom sheet that slides up from home screen within 300ms
+    - Scrollable message history (user messages right-aligned, Rex messages left-aligned with Rex avatar)
+    - Text input at bottom with send button
+    - Rex's opening message references a memory entry
+    - Loading indicator while waiting for Rex response
+    - On close: call `persistSession`
+    - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.9_
+  - [x] 15.4 Add Rex chat entry point to HomeScreen
+    - Persistent Rex avatar/button on home screen
+    - On tap: open RexChatBottomSheet
+    - _Requirements: 15.1_
+
+- [x] 16. Accountability Partner — service and notifications
+  - [x] 16.1 Create growthovo/src/services/partnerService.ts
+    - Implement `getActivePair(userId): Promise<AccountabilityPair | null>` — queries accountability_pairs where active=true
+    - Implement `createPair(userId, partnerId, pillar): Promise<AccountabilityPair>` — inserts pair record
+    - Implement `deactivatePair(pairId): Promise<void>` — sets active=false
+    - Implement `getPartnerCheckinStatus(pairId, partnerId): Promise<boolean>` — checks daily_checkins for partner today
+    - Implement `sendPartnerMessage(pairId, senderId, message, type): Promise<void>` — inserts partner_messages
+    - Implement `generateInviteMessage(pillar, inviteLink): string` — pure function, returns formatted invite string
+    - Implement `generateWeeklyComparison(pairId): Promise<PartnerComparisonReport>` — aggregates week stats for both users
+    - Implement `determineComparisonWinner(userStats, partnerStats): string` — pure function, challenges first, streak tiebreak
+    - _Requirements: 19.1, 19.2, 19.3, 19.5, 19.6, 20.4, 21.1, 21.2_
+  - [x] 16.2 Add Supabase Realtime subscription for partner check-in status
+    - Subscribe to `daily_checkins` changes filtered by partner's user_id
+    - Update partner status card on HomeScreen in real time
+    - Fall back to 60-second polling if Realtime disconnects
+    - _Requirements: 20.1, 20.7_
+  - [x] 16.3 Wire partner notifications into existing notification flows
+    - After morning briefing dismissal: send push to partner "[Name] checked in. They're going for day [X]."
+    - At 22:00 if no evening debrief: send push to partner with quick reply options
+    - On streak break: send push to partner before any other notification
+    - _Requirements: 20.2, 20.3, 20.5_
+  - [x]* 16.4 Write property tests for partnerService pure functions
+    - **Property 13: Weekly comparison winner is deterministic** — generate PartnerWeekStats pairs, assert winner is one of the two, assert determinism
+    - **Property 16: Partner comparison report covers both users** — generate AccountabilityPair data, assert both IDs in report
+    - **Validates: Requirements 21.2**
+
+- [x] 17. Accountability Partner — UI
+  - [x] 17.1 Add partner status card to growthovo/src/screens/home/HomeScreen.tsx
+    - Show partner name, check-in status (green/grey indicator), partner streak
+    - If no partner: show "Invite an accountability partner" CTA
+    - Update in real time via Realtime subscription
+    - _Requirements: 20.1, 20.4_
+  - [x] 17.2 Create growthovo/src/screens/partner/PartnerSetupScreen.tsx
+    - Display invite message with partner's pillar pre-filled
+    - Share button opens native share sheet (SMS, WhatsApp, etc.)
+    - Show current pair status if already paired; deactivate option
+    - _Requirements: 19.1, 19.2, 19.6, 19.7_
+  - [x] 17.3 Create Supabase Edge Function growthovo/supabase/functions/generate-partner-comparison/index.ts
+    - Triggered every Sunday at 20:00 UTC
+    - For each active accountability_pairs row: aggregate week stats for both users
+    - Determine winner via `determineComparisonWinner` logic
+    - Send push notifications to both users with comparison result
+    - _Requirements: 21.1, 21.2, 21.3_
+  - [x] 17.4 Display weekly comparison card on HomeScreen
+    - Show comparison report as a card on Monday morning
+    - Friendly competitive framing; no shaming
+    - _Requirements: 21.4, 21.5_
+
+- [x] 18. Checkpoint — Accountability Partner complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 19. Weekly Rex Report — service and Edge Function
+  - [x] 19.1 Create growthovo/src/services/reportService.ts
+    - Implement `getOrGenerateWeeklyReport(userId, weekStart): Promise<WeeklyRexReport>` — calls generate-weekly-report Edge Function; returns cached if exists
+    - Implement `getReportNumbers(userId, weekStart): Promise<WeeklyReportNumbers>` — aggregates from evening_debriefs, sos_events, daily_checkins, xp_transactions, challenge_completions
+    - Implement `generateShareCard(report): Promise<string>` — uses react-native-view-shot to capture off-screen view as PNG
+    - Implement `getReportFallbackVerdict(): string` — returns random entry from pool of 5
+    - Implement `getReportFallbackPatternAnalysis(): string` — returns random entry from pool of 5
+    - _Requirements: 22.5, 22.6, 23.1, 24.6, 24.7_
+  - [x] 19.2 Create Supabase Edge Function growthovo/supabase/functions/generate-weekly-report/index.ts
+    - Accept `{ userId, weekStart }` payload
+    - Check `weekly_rex_reports` for existing record — return cached immediately if found (idempotent)
+    - Aggregate `WeeklyReportNumbers` from all relevant tables for the week
+    - Fetch last 7 evening debriefs (Q2 + Q3) + SOS logs + morning states as context
+    - Call `gpt-4o` for Pattern Analysis (3 observations, max 200 tokens)
+    - Call `gpt-4o` for The Verdict (1 paragraph, max 150 tokens)
+    - Call `gpt-4o` for Next Week's Focus (max 100 tokens)
+    - Call OpenAI TTS (tts-1-hd, voice onyx) with verdict text; upload to Supabase Storage at `weekly_reports/{userId}/{weekStart}/verdict.mp3`
+    - Insert into `weekly_rex_reports`
+    - Apply 10-second timeout on gpt-4o calls; use fallback content on timeout
+    - _Requirements: 22.1, 22.4, 22.5, 23.1, 23.2, 23.3, 23.4, 23.5, 23.6, 24.1, 24.2_
+  - [x]* 19.3 Write property test for weekly report idempotency
+    - **Property 14: Weekly report idempotency**
+    - Mock Edge Function; call getOrGenerateWeeklyReport twice for same user+week; assert identical numbers_json, pattern_analysis, verdict_text, next_week_focus_json
+    - **Validates: Requirements 22.5**
+
+- [x] 20. Weekly Rex Report — UI screens
+  - [x] 20.1 Create growthovo/src/screens/report/WeeklyReportScreen.tsx
+    - Full-screen cinematic layout with 4 sections, scrollable
+    - Section 1 (The Numbers): animated stat counters for all WeeklyReportNumbers fields
+    - Section 2 (Pattern Analysis): 3 observations displayed as cards with staggered reveal animation
+    - Section 3 (The Verdict): verdict text with typewriter animation; auto-play audio via expo-av; play/pause control
+    - Section 4 (Next Week's Focus): pillar + habit + challenge displayed as action cards
+    - Loading skeleton while report generates; error state with retry
+    - _Requirements: 22.3, 23.1, 23.2, 23.3, 23.4, 23.5, 24.3, 24.4, 24.5_
+  - [x] 20.2 Add share functionality to WeeklyReportScreen
+    - Share button renders off-screen card via react-native-view-shot: Rex verdict quote + top stat + GROWTHOVO branding
+    - On tap: invoke native share sheet with card image + pre-written caption "Rex just read me in 3 sentences. @growthovo #growthovo"
+    - _Requirements: 24.6, 24.7, 24.8_
+  - [x] 20.3 Wire weekly report trigger into notification and home screen
+    - Schedule Sunday 20:00 push notification via existing notificationService
+    - On Monday morning: display weekly report card on HomeScreen if report exists for previous week
+    - _Requirements: 22.1, 22.2_
+
+- [x] 21. Checkpoint — Weekly Rex Report complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 22. Integration and wiring
+  - [x] 22.1 Wire morning briefing XP award into existing XP system
+    - Call existing `awardXP(userId, 10, 'morning_briefing')` from briefingService.dismissBriefing
+    - Verify XP transaction recorded in xp_transactions table
+    - _Requirements: 1.4_
+  - [x]* 22.2 Write property test for briefing XP award
+    - **Property 1: Morning briefing XP award is exactly 10**
+    - Mock progressService; generate user XP states; assert XP after dismiss = before + 10
+    - **Validates: Requirements 1.4**
+  - [x] 22.3 Wire evening debrief into streak and XP systems
+    - Verify debrief submission calls existing streakService to update streak
+    - Verify 20 XP awarded via existing progressService
+    - _Requirements: 16.5_
+  - [x] 22.4 Wire SOS anxiety pattern detection into evening debrief
+    - After evening debrief submission: check anxiety SOS count for the week
+    - If count >= 3: create rex_memory entry of type 'pattern' with importance_score 9
+    - Include pattern flag in next morning briefing generation context
+    - _Requirements: 7.6, 14.3_
+  - [x] 22.5 Wire partner comeback message into relapse screen
+    - When streak breaks: fetch latest comeback message from partner_messages for the pair
+    - Display partner message prominently on existing StreakBrokeScreen
+    - _Requirements: 20.5, 20.6_
+  - [x] 22.6 Add partner setup prompt to onboarding flow
+    - After existing onboarding completion: show PartnerSetupScreen as optional step
+    - "Skip for now" option available
+    - _Requirements: 19.7_
+
+- [x] 23. Final checkpoint — All features complete
+  - Ensure all tests pass, ask the user if questions arise.
+
+---
+
+## Notes
+
+- Tasks marked with `*` are optional and can be skipped for faster MVP
+- All property tests use **fast-check** with minimum 100 iterations each
+- Rex Memory System (tasks 3–4) must be complete before Morning Briefing, Evening Debrief, SOS, and Chat features
+- The `rex-chat-v2` Edge Function supersedes the existing `rex-chat` function — do not delete the old one until the new one is confirmed working
+- All OpenAI calls live in Edge Functions; client services never call OpenAI directly
+- TTS audio (urge surfing, weekly report verdict) is Premium-only; Free users receive text fallbacks
+- Migrations must be applied in order: 1.1 → 1.2 → 1.3 → 1.4
+- Supabase Realtime is used for partner check-in status; fall back to polling on disconnect
+- The `generate-partner-comparison` and `generate-weekly-report` Edge Functions are triggered by pg_cron jobs (Sunday 20:00 UTC)

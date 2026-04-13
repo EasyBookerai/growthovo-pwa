@@ -1,0 +1,276 @@
+# ============================================================================
+# GROWTHOVO - COMPREHENSIVE .gitignore
+# ============================================================================
+# Security-first configuration to prevent sensitive data exposure
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# 🔒 CRITICAL: Environment Variables & Secrets (NEVER COMMIT)
+# ----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+.env.staging
+
+# Backup env files
+*.env.backup
+*.env.bak
+.env.*.backup
+
+# Secret files
+secrets/
+secrets.json
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.crt
+
+# API keys and tokens
+api-keys.txt
+tokens.txt
+credentials.json
+service-account*.json
+
+# ----------------------------------------------------------------------------
+# 📦 Dependencies
+# ----------------------------------------------------------------------------
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# ----------------------------------------------------------------------------
+# 🏗️ Build Artifacts
+# ----------------------------------------------------------------------------
+dist/
+build/
+web-build/
+.expo/
+.expo-shared/
+
+# Native build artifacts
+ios/Pods/
+ios/build/
+android/app/build/
+android/.gradle/
+android/build/
+
+# Keep example env files and entitlements
+!ios/**/*.entitlements
+!android/**/*.xml
+
+# ----------------------------------------------------------------------------
+# 🧪 Testing & Coverage
+# ----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+junit.xml
+
+# Test output files (your temporary test files)
+test_output*.txt
+test-out*.txt
+rex_results.json
+
+# ----------------------------------------------------------------------------
+# 📝 Logs & Debug Files
+# ----------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Runtime logs
+logs/
+*.log.*
+combined.log
+error.log
+
+# ----------------------------------------------------------------------------
+# 💻 Operating System Files
+# ----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ----------------------------------------------------------------------------
+# 🛠️ IDE & Editor Files
+# ----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ----------------------------------------------------------------------------
+# 📱 Mobile Development
+# ----------------------------------------------------------------------------
+# iOS
+ios/Pods/
+ios/**/*.xcworkspace/xcuserdata/
+ios/**/*.xcodeproj/xcuserdata/
+ios/**/*.xcodeproj/project.xcworkspace/xcuserdata/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+*.apk
+*.aab
+local.properties
+*.jks
+*.keystore
+keystore.properties
+
+# Expo
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# ----------------------------------------------------------------------------
+# 🔐 Security & Compliance
+# ----------------------------------------------------------------------------
+# SSL/TLS certificates
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# Database dumps
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+*.temp
+
+# ----------------------------------------------------------------------------
+# 📊 Analytics & Monitoring
+# ----------------------------------------------------------------------------
+.sentryclirc
+sentry.properties
+
+# ----------------------------------------------------------------------------
+# 🚀 Deployment & CI/CD
+# ----------------------------------------------------------------------------
+.vercel
+.netlify
+.firebase/
+.firebaserc
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# ----------------------------------------------------------------------------
+# 📚 Documentation (Keep Examples)
+# ----------------------------------------------------------------------------
+# Keep all .md files and example configurations
+!*.md
+!*.example
+!*.sample
+!.env.example
+!.env.*.example
+
+# ----------------------------------------------------------------------------
+# 🧹 Temporary & Cache Files
+# ----------------------------------------------------------------------------
+*.cache
+.cache/
+.temp/
+.tmp/
+tmp/
+temp/
+
+# Package manager caches
+.npm/
+.eslintcache
+.stylelintcache
+
+# ----------------------------------------------------------------------------
+# 🎯 Project-Specific
+# ----------------------------------------------------------------------------
+# Task completion reports (optional - remove if you want to commit these)
+TASK_*_COMPLETION*.md
+TASK_*_IMPLEMENTATION*.md
+
+# Test outputs
+test-*.txt
+*_output*.txt
+
+# ----------------------------------------------------------------------------
+# ✅ SECURITY CHECKLIST
+# ----------------------------------------------------------------------------
+# Before pushing to GitHub:
+# ✓ No .env files committed
+# ✓ No API keys in code
+# ✓ No database credentials
+# ✓ No SSL certificates
+# ✓ No keystore files
+# ✓ No service account files
+# ✓ Run: git log --all --full-history -- "*.env" (should be empty)
+# ✓ Run: git secrets --scan (if installed)

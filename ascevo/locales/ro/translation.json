@@ -1,0 +1,342 @@
+{
+  "onboarding": {
+    "language_title": "Alege limba ta",
+    "language_subtitle": "Poți schimba oricând din Setări.",
+    "pillars_title": "Pe ce vrei să lucrezi?",
+    "pillars_subtitle": "Alege punctele slabe. Rex se va concentra aici primul.",
+    "goal_title": "Cât timp pe zi?",
+    "goal_subtitle": "Fii sincer. Consecvența bate intensitatea.",
+    "continue": "Continuă →",
+    "lets_go": "Hai să mergem 🔥",
+    "back": "← Înapoi",
+    "pillars": {
+      "mind": "Minte",
+      "discipline": "Disciplină",
+      "communication": "Comunicare",
+      "money": "Bani",
+      "career": "Carieră",
+      "relationships": "Relații"
+    },
+    "goals": {
+      "light": "Ușor",
+      "steady": "Constant",
+      "serious": "Serios"
+    }
+  },
+  "navigation": {
+    "home": "Acasă",
+    "lessons": "Lecții",
+    "checkin": "Check-in",
+    "league": "Ligă",
+    "settings": "Setări"
+  },
+  "home": {
+    "day_streak": "zile la rând",
+    "at_risk": "În pericol!",
+    "unlimited_hearts": "Inimi nelimitate",
+    "hearts_count": "{{count}}/5 inimi",
+    "total_xp": "⚡ XP Total",
+    "todays_lesson": "LECȚIA DE AZI",
+    "all_done": "GATA AZI 🎉",
+    "all_lessons_complete": "Ai completat toate lecțiile disponibile.",
+    "lesson_duration": "5 carduri · ~3 min",
+    "your_league": "🏆 Liga Ta",
+    "rex_weekly_report": "RAPORTUL SĂPTĂMÂNAL REX",
+    "week_of": "Săptămâna {{date}}"
+  },
+  "settings": {
+    "title": "Setări",
+    "language": "Limbă",
+    "language_section": "Limbă",
+    "streak_freezes": "Înghețări Streak",
+    "available_freezes": "🧊 Înghețări disponibile",
+    "freezes_hint": "Câștigă înghețări completând provocări bonus.",
+    "notifications": "Notificări",
+    "morning": "☀️ Dimineață (8:00)",
+    "afternoon": "🌤 Prânz (14:00)",
+    "evening": "🌙 Seară (21:00)",
+    "subscription": "Abonament",
+    "current_plan": "Plan curent",
+    "plan_premium": "Premium",
+    "plan_trial": "Trial",
+    "plan_free": "Gratuit",
+    "manage_subscription": "Gestionează Abonamentul →",
+    "sign_out": "Deconectare",
+    "sign_out_confirm_title": "Deconectare",
+    "sign_out_confirm_message": "Ești sigur că vrei să te deconectezi?",
+    "cancel": "Anulează"
+  },
+  "errors": {
+    "generic": "Ceva a mers greșit. Încearcă din nou.",
+    "network": "Fără conexiune la internet.",
+    "sign_in_failed": "Autentificare eșuată. Verifică datele.",
+    "sign_up_failed": "Înregistrare eșuată. Încearcă din nou.",
+    "portal_failed": "Nu s-a putut deschide portalul de abonament."
+  },
+  "auth": {
+    "sign_in_title": "Bine ai revenit",
+    "sign_in_subtitle": "Continuă de unde ai rămas.",
+    "sign_up_title": "Creează-ți contul",
+    "sign_up_subtitle": "Începe călătoria ta astăzi.",
+    "email": "Email",
+    "password": "Parolă",
+    "sign_in": "Autentificare",
+    "sign_up": "Înregistrare",
+    "no_account": "Nu ai cont? Înregistrează-te",
+    "have_account": "Ai deja cont? Autentifică-te",
+    "forgot_password": "Ai uitat parola?"
+  },
+  "rex": {
+    "fallback_checkin_success": "Solid. Ai apărut. Ăsta e tot jocul — continuă să apari.",
+    "fallback_checkin_fail": "Ai ratat azi. Bine. Streak-ul nu te definește — ce faci mâine contează.",
+    "fallback_streak_warning": "Streak-ul tău e în pericol. Nu lăsa o seară leneșă să distrugă o săptămână bună.",
+    "fallback_weekly_summary": "Încă o săptămână în cărți. Construiești ceva real — nu te opri acum."
+  },
+  "streak": {
+    "days": "{{count}} zile la rând",
+    "at_risk": "Streak-ul tău e în pericol!",
+    "freeze_used": "Înghețare streak folosită 🧊",
+    "new_record": "Record nou! 🔥"
+  },
+  "xp": {
+    "earned": "+{{amount}} XP",
+    "total": "XP Total",
+    "level_up": "Nivel nou! 🎉"
+  },
+  "paywall": {
+    "title": "Treci la Premium",
+    "subtitle": "Deblochează totul. Fără limite.",
+    "monthly": "Lunar",
+    "annual": "Anual",
+    "cta": "Începe Perioada de Probă",
+    "restore": "Restaurează Achiziția",
+    "terms": "Termeni și Confidențialitate",
+    "feature_unlimited_hearts": "Inimi nelimitate",
+    "feature_all_lessons": "Toate lecțiile deblocate",
+    "feature_rex_full": "Coaching complet Rex AI",
+    "feature_no_ads": "Fără reclame, niciodată"
+  },
+  "lessons": {
+    "start": "Începe Lecția",
+    "next": "Următor →",
+    "finish": "Finalizează",
+    "progress": "{{current}} / {{total}}",
+    "complete_title": "Lecție completă!",
+    "complete_subtitle": "Menține impulsul.",
+    "xp_earned": "+{{amount}} XP câștigat"
+  },
+  "checkin": {
+    "title": "Check-in Zilnic",
+    "question": "Ai completat provocarea de azi?",
+    "yes": "Da ✓",
+    "no": "Încă nu",
+    "submit": "Trimite",
+    "rex_thinking": "Rex se gândește...",
+    "streak_at_risk": "⚠️ Streak în pericol"
+  },
+  "league": {
+    "title": "Ligă",
+    "your_rank": "Locul tău: #{{rank}}",
+    "weekly_xp": "{{xp}} XP săptămâna aceasta",
+    "top_players": "Top Jucători",
+    "promoted": "Promovat! 🎉",
+    "demoted": "Retrogradat 😬",
+    "safe": "Zonă sigură"
+  },
+  "notifications": {
+    "morning_title": "Check-in de dimineață",
+    "morning_body": "Începe ziua puternic. Lecția ta te așteaptă.",
+    "afternoon_title": "Reminder de prânz",
+    "afternoon_body": "Nu uita lecția zilnică. 5 minute e tot ce trebuie.",
+    "evening_title": "Reminder de seară",
+    "evening_body": "Termină ziua bine. Completează lecția înainte de miezul nopții.",
+    "streak_risk_title": "Streak în pericol! 🔥",
+    "streak_risk_body": "Nu ai făcut check-in azi. Nu rupe lanțul."
+  },
+  "common": {
+    "loading": "Se încarcă...",
+    "retry": "Reîncearcă",
+    "close": "Închide",
+    "save": "Salvează",
+    "done": "Gata",
+    "ok": "OK",
+    "yes": "Da",
+    "no": "Nu",
+    "you": "Tu",
+    "unknown": "Necunoscut"
+  },
+  "legal": {
+    "aiNotice": {
+      "title": "Cunoaște-l pe Rex: Antrenorul Tău AI",
+      "intro": "Înainte de a începe, iată ce trebuie să știi:",
+      "isAI": {
+        "title": "Rex este Inteligență Artificială",
+        "description": "Rex este alimentat de tehnologie AI avansată, nu un antrenor uman. Deși Rex poate oferi ghidare și suport util, AI are limitări."
+      },
+      "canDo": {
+        "title": "Ce Poate Face Rex:",
+        "remember": "Să-și amintească conversațiile și progresul tău trecut",
+        "provide": "Să ofere motivație și sugestii personalizate",
+        "help": "Să te ajute să reflectezi asupra obiectivelor și provocărilor tale",
+        "offer": "Să ofere strategii pentru auto-îmbunătățire"
+      },
+      "cannotDo": {
+        "title": "Ce NU Poate Face Rex:",
+        "replace": "Să înlocuiască terapia profesională sau sfaturile medicale",
+        "guarantee": "Să garanteze răspunsuri exacte în toate situațiile",
+        "understand": "Să înțeleagă nuanțe emoționale complexe ca un om",
+        "emergency": "Să ofere intervenție în situații de criză"
+      },
+      "privacy": {
+        "title": "Confidențialitatea Ta:",
+        "description": "Conversațiile tale cu Rex sunt stocate în siguranță pentru a personaliza experiența ta. Vezi Politica de Confidențialitate pentru detalii."
+      },
+      "crisis": {
+        "title": "În Criză?",
+        "description": "Dacă ești în suferință, te rugăm să contactezi serviciile de urgență sau o linie de ajutor pentru crize. Rex nu este echipat pentru situații de urgență."
+      },
+      "acknowledgment": "Continuând, confirmi că înțelegi că Rex este un sistem AI cu limitări.",
+      "accept": "Am Înțeles",
+      "learnMore": "Află Mai Multe"
+    },
+    "crisisDisclaimer": {
+      "title": "IMPORTANT: Growthovo nu este un serviciu de urgență",
+      "description": "Dacă ești în pericol imediat sau experimentezi o urgență de sănătate mintală:",
+      "emergency": {
+        "title": "Servicii de Urgență",
+        "number": "112 (UE)"
+      },
+      "helplines": {
+        "title": "Linii de Ajutor pentru Crize",
+        "mental": "Criză Sănătate Mintală",
+        "mentalNumber": "0800 801 200 (Telefonul Sufletului)",
+        "suicide": "Prevenirea Sinuciderii",
+        "suicideNumber": "116 123"
+      },
+      "viewResources": "Vezi Mai Multe Resurse",
+      "footer": "Rex poate oferi suport, dar nu poate înlocui ajutorul profesional într-o criză."
+    },
+    "ageVerification": {
+      "label": "Confirm că am cel puțin 13 ani",
+      "explanation": "Growthovo necesită ca utilizatorii să aibă cel puțin 13 ani. Dacă ai între 13-18 ani, te rugăm să te asiguri că ai permisiunea părinților pentru a utiliza această aplicație.",
+      "learnMore": "De ce avem restricții de vârstă?",
+      "learnMoreText": "Restricțiile de vârstă ne ajută să protejăm confidențialitatea copiilor și să respectăm legile de protecție a datelor precum GDPR. Utilizatorii sub 13 ani necesită protecții speciale pe care nu le putem oferi în prezent."
+    },
+    "subscriptionTerms": {
+      "title": "Termeni de Abonament",
+      "pricing": {
+        "title": "Prețuri și Facturare",
+        "monthly": "Plan Lunar: {{price}} pe lună",
+        "annual": "Plan Anual: {{price}} pe an (economisești {{savings}}%)",
+        "vat": "Prețurile includ TVA aplicabil",
+        "processor": "Facturat prin procesarea plăților Stripe"
+      },
+      "renewal": {
+        "title": "Reînnoire Automată",
+        "description": "Abonamentul tău se reînnoiește automat la sfârșitul fiecărei perioade de facturare, cu excepția cazului în care este anulat cu cel puțin 24 de ore înainte de reînnoire. Vei fi taxat cu prețul curent al abonamentului."
+      },
+      "cancellation": {
+        "title": "Anulare",
+        "anytime": "Anulează oricând din Setări > Abonament",
+        "access": "Accesul continuă până la sfârșitul perioadei curente de facturare",
+        "noRefund": "Fără rambursări pentru perioade parțiale"
+      },
+      "refund": {
+        "title": "Politica de Rambursare",
+        "guarantee": "Garanție de returnare a banilor de 14 zile pentru abonații noi (drept consumator UE)",
+        "request": "Solicită rambursări în termen de 14 zile de la achiziția inițială",
+        "contact": "Contactează support@growthovo.app pentru solicitări de rambursare",
+        "processing": "Rambursările procesate în 5-10 zile lucrătoare"
+      },
+      "features": {
+        "title": "Ce Primești",
+        "unlimited": "Acces nelimitat la antrenorul AI Rex",
+        "premium": "Toate caracteristicile și conținutul premium",
+        "support": "Suport prioritar",
+        "adfree": "Experiență fără reclame"
+      },
+      "afterCancellation": {
+        "title": "După Anulare",
+        "data": "Datele tale rămân accesibile",
+        "resubscribe": "Poți reabona oricând",
+        "free": "Caracteristicile nivelului gratuit rămân disponibile"
+      },
+      "payment": {
+        "title": "Procesarea Plăților",
+        "description": "Plățile sunt procesate în siguranță de Stripe. Growthovo nu stochează detaliile cardului tău de plată."
+      },
+      "questions": "Întrebări? Contactează support@growthovo.app sau vizitează Centrul nostru de Ajutor.",
+      "viewFull": "Vezi Termenii și Condițiile Complete"
+    },
+    "cookieConsent": {
+      "title": "Notificare despre Cookie-uri și Urmărire",
+      "description": "Growthovo folosește cookie-uri și tehnologii similare pentru a furniza și îmbunătăți serviciul nostru.",
+      "essential": {
+        "title": "Cookie-uri Esențiale (Întotdeauna Active)",
+        "auth": "Autentificare și securitate",
+        "preferences": "Reține preferințele tale",
+        "functionality": "Activează funcționalitatea de bază a aplicației"
+      },
+      "analytics": {
+        "title": "Cookie-uri de Analiză (Opționale)",
+        "usage": "Înțelege cum folosești aplicația",
+        "bugs": "Identifică bug-uri și probleme",
+        "improve": "Îmbunătățește experiența utilizatorului"
+      },
+      "manage": "Poți gestiona preferințele tale de cookie-uri în Setări > Confidențialitate.",
+      "moreInfo": "Pentru mai multe informații, vezi Politica noastră de Confidențialitate.",
+      "acceptAll": "Acceptă Toate",
+      "essentialOnly": "Doar Esențiale",
+      "customize": "Personalizează"
+    },
+    "viewer": {
+      "loading": "Se încarcă documentul...",
+      "loadError": "Nu s-a putut încărca documentul. Te rugăm să încerci din nou.",
+      "notFound": "Documentul nu a fost găsit.",
+      "version": "Versiune",
+      "effectiveDate": "Data intrării în vigoare",
+      "tableOfContents": "Cuprins",
+      "accept": "Accept",
+      "fallbackNotice": "Acest document nu este disponibil în limba ta. Este afișată versiunea în engleză."
+    },
+    "documents": {
+      "title": "Documente Legale",
+      "subtitle": "Vezi politicile și termenii noștri legali",
+      "privacyPolicy": "Politica de Confidențialitate",
+      "termsConditions": "Termeni și Condiții",
+      "cookiePolicy": "Politica Cookie-urilor",
+      "subscriptionTerms": "Termeni de Abonament",
+      "medicalDisclaimer": "Declinare de Răspundere Medicală",
+      "view": "Vezi",
+      "footer": "Aceste documente prezintă drepturile tale și responsabilitățile noastre. Dacă ai întrebări, contactează-ne la privacy@growthovo.app",
+      "version": "Versiune {{version}}",
+      "effectiveDate": "Data intrării în vigoare: {{date}}",
+      "lastUpdated": "Ultima actualizare: {{date}}",
+      "accept": "Accept",
+      "decline": "Refuz",
+      "close": "Închide",
+      "aiTransparency": "Notificare de Transparență AI",
+      "crisisDisclaimer": "Declinare de Răspundere pentru Crize"
+    },
+    "updateNotification": {
+      "title": "Documente Legale Actualizate",
+      "subtitleRequired": "Am actualizat documentele noastre legale. Te rugăm să revizuiești și să confirmi modificările pentru a continua să folosești Growthovo.",
+      "subtitleOptional": "Am actualizat documentele noastre legale. Te rugăm să revizuiești modificările când ai un moment.",
+      "viewChanges": "Vezi Modificările",
+      "version": "Versiune {{version}}",
+      "whatsNew": "Ce este Nou:",
+      "acknowledge": "Am Citit și Înțeles",
+      "viewDocument": "Vezi Documentul",
+      "dismiss": "Respinge"
+    },
+    "updateBanner": {
+      "title": "Documente Legale Actualizate",
+      "review": "Revizuiește Modificările",
+      "subtitle": "{{count}} document actualizat",
+      "subtitle_plural": "{{count}} documente actualizate",
+      "accessibilityLabel": "Vezi actualizările documentelor legale",
+      "close": "Închide",
+      "dismiss": "Respinge notificarea"
+    }
+  }
+}

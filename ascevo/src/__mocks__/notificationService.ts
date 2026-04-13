@@ -1,0 +1,9 @@
+export const registerPushToken = jest.fn().mockResolvedValue(undefined);
+export const scheduleDefaultNotifications = jest.fn().mockResolvedValue(undefined);
+export const sendRexStreakWarning = jest.fn().mockResolvedValue(undefined);
+export const scheduleDangerWindow = jest.fn().mockResolvedValue(undefined);
+export const cancelAllNotifications = jest.fn().mockResolvedValue(undefined);
+export const disableNotifications = jest.fn().mockResolvedValue(undefined);
+export const scheduleCapsuleUnlockNotification = jest.fn().mockResolvedValue(undefined);
+export const scheduleMonthlyWrappedNotification = jest.fn().mockResolvedValue(undefined);
+export const scheduleYearlyWrappedNotification = jest.fn().mockResolvedValue(undefined);

@@ -1,0 +1,125 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  security-scan:
+    name: Security Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for secret scanning
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: ascevo/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd ascevo
+          npm ci
+
+      - name: Run npm audit
+        run: |
+          cd ascevo
+          npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for secrets in code
+        run: |
+          echo "Scanning for potential secrets..."
+          
+          # Check for common secret patterns
+          if git grep -E "(sk_live_|sk_test_|pk_live_|pk_test_|whsec_)" -- "*.ts" "*.tsx" "*.js" "*.jsx"; then
+            echo "❌ ERROR: Found potential Stripe secrets in code!"
+            exit 1
+          fi
+          
+          if git grep -E "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+" -- "*.ts" "*.tsx" "*.js" "*.jsx"; then
+            echo "❌ ERROR: Found potential JWT tokens in code!"
+            exit 1
+          fi
+          
+          if git grep -E "sk-proj-[A-Za-z0-9]{48,}" -- "*.ts" "*.tsx" "*.js" "*.jsx"; then
+            echo "❌ ERROR: Found potential OpenAI API keys in code!"
+            exit 1
+          fi
+          
+          echo "✅ No secrets found in code"
+
+      - name: Check for .env files
+        run: |
+          echo "Checking for committed .env files..."
+          
+          if git ls-files | grep -E "^\.env$|^\.env\.local$|^\.env\.production$"; then
+            echo "❌ ERROR: Found .env files in repository!"
+            exit 1
+          fi
+          
+          echo "✅ No .env files found"
+
+      - name: Verify .gitignore
+        run: |
+          echo "Verifying .gitignore configuration..."
+          
+          if ! grep -q "^\.env$" ascevo/.gitignore; then
+            echo "❌ ERROR: .gitignore missing .env exclusion!"
+            exit 1
+          fi
+          
+          if ! grep -q "^\*\.secret$" ascevo/.gitignore; then
+            echo "❌ ERROR: .gitignore missing *.secret exclusion!"
+            exit 1
+          fi
+          
+          echo "✅ .gitignore properly configured"
+
+      - name: Check for hardcoded URLs with credentials
+        run: |
+          echo "Checking for database URLs with credentials..."
+          
+          if git grep -E "(postgres|mongodb|mysql|redis)://[^:]+:[^@]+@" -- "*.ts" "*.tsx" "*.js" "*.jsx"; then
+            echo "❌ ERROR: Found database URLs with credentials in code!"
+            exit 1
+          fi
+          
+          echo "✅ No hardcoded database credentials found"
+
+      - name: Security Summary
+        if: success()
+        run: |
+          echo "🔒 Security Scan Complete"
+          echo "=========================="
+          echo "✅ No secrets found in code"
+          echo "✅ No .env files committed"
+          echo "✅ .gitignore properly configured"
+          echo "✅ No hardcoded credentials"
+          echo ""
+          echo "Repository is secure for public/private hosting"
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate

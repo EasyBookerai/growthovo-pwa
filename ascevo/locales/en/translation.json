@@ -1,0 +1,390 @@
+{
+  "onboarding": {
+    "language_title": "Choose your language",
+    "language_subtitle": "You can change this anytime in Settings.",
+    "pillars_title": "What do you want to work on?",
+    "pillars_subtitle": "Pick your weak spots. Rex will focus here first.",
+    "goal_title": "How much time per day?",
+    "goal_subtitle": "Be honest. Consistency beats intensity.",
+    "continue": "Continue →",
+    "lets_go": "Let's go 🔥",
+    "back": "← Back",
+    "pillars": {
+      "mind": "Mind",
+      "discipline": "Discipline",
+      "communication": "Communication",
+      "money": "Money",
+      "career": "Career",
+      "relationships": "Relationships"
+    },
+    "goals": {
+      "light": "Light",
+      "steady": "Steady",
+      "serious": "Serious"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "lessons": "Lessons",
+    "checkin": "Check-in",
+    "league": "League",
+    "settings": "Settings"
+  },
+  "home": {
+    "day_streak": "day streak",
+    "at_risk": "At risk!",
+    "unlimited_hearts": "Unlimited hearts",
+    "hearts_count": "{{count}}/5 hearts",
+    "total_xp": "⚡ Total XP",
+    "streak_freezes": "Streak Freezes",
+    "freeze_hint": "Auto-protect your streak when you miss a day",
+    "todays_lesson": "TODAY'S LESSON",
+    "all_done": "ALL DONE TODAY 🎉",
+    "all_lessons_complete": "You've completed all available lessons.",
+    "lesson_duration": "5 cards · ~3 min",
+    "your_league": "🏆 Your League",
+    "rex_weekly_report": "REX'S WEEKLY REPORT",
+    "week_of": "Week of {{date}}"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "language_section": "Language",
+    "streak_freezes": "Streak Freezes",
+    "available_freezes": "🧊 Available freezes",
+    "freezes_hint": "Earn freezes by completing bonus challenges.",
+    "notifications": "Notifications",
+    "morning": "☀️ Morning (8am)",
+    "afternoon": "🌤 Afternoon (2pm)",
+    "evening": "🌙 Evening (9pm)",
+    "subscription": "Subscription",
+    "current_plan": "Current plan",
+    "plan_premium": "Premium",
+    "plan_trial": "Trial",
+    "plan_free": "Free",
+    "manage_subscription": "Manage Subscription →",
+    "data_management": "Data Management",
+    "export_my_data": "Export My Data",
+    "export_my_data_hint": "Download all your personal data in JSON format",
+    "exporting_data": "Exporting your data...",
+    "export_success": "Data exported successfully!",
+    "export_error": "Failed to export data",
+    "delete_account": "Delete My Account",
+    "delete_account_hint": "Permanently delete your account and all data",
+    "deletion_scheduled": "Account deletion scheduled",
+    "deletion_scheduled_hint": "Your account will be deleted on {{date}}",
+    "cancel_deletion": "Cancel Deletion",
+    "privacy_preferences": "Privacy Preferences",
+    "analytics": "Analytics",
+    "analytics_hint": "Help us improve by sharing usage data",
+    "marketing_emails": "Marketing Emails",
+    "marketing_emails_hint": "Receive updates and offers",
+    "data_sharing": "Data Sharing",
+    "data_sharing_hint": "Share anonymized data with partners",
+    "legal_documents": "Legal Documents",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "cookie_policy": "Cookie Policy",
+    "sign_out": "Sign Out",
+    "sign_out_confirm_title": "Sign out",
+    "sign_out_confirm_message": "Are you sure you want to sign out?",
+    "cancel": "Cancel",
+    "delete_confirm_title": "Delete Account?",
+    "delete_confirm_message": "This will permanently delete your account after a 30-day grace period. You can cancel anytime during this period.\n\nWhat will be deleted:\n• Your profile and account\n• All chat history with Rex\n• Your progress and XP\n• Subscription information\n\nAre you sure?",
+    "delete_confirm_button": "Yes, Delete My Account",
+    "deletion_cancelled": "Account deletion cancelled"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "No internet connection.",
+    "sign_in_failed": "Sign in failed. Check your credentials.",
+    "sign_up_failed": "Sign up failed. Please try again.",
+    "portal_failed": "Could not open subscription portal."
+  },
+  "auth": {
+    "sign_in_title": "Welcome back",
+    "sign_in_subtitle": "Pick up where you left off.",
+    "sign_up_title": "Create your account",
+    "sign_up_subtitle": "Start your journey today.",
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "no_account": "Don't have an account? Sign up",
+    "have_account": "Already have an account? Sign in",
+    "forgot_password": "Forgot password?"
+  },
+  "rex": {
+    "fallback_checkin_success": "Solid. You showed up. That's the whole game — just keep showing up.",
+    "fallback_checkin_fail": "Missed today. Fine. The streak doesn't define you — what you do tomorrow does.",
+    "fallback_streak_warning": "Your streak is on the line. Don't let a lazy evening undo a good week.",
+    "fallback_weekly_summary": "Another week in the books. You're building something real here — don't stop now."
+  },
+  "streak": {
+    "days": "{{count}} day streak",
+    "at_risk": "Your streak is at risk!",
+    "freeze_used": "Streak freeze used 🧊",
+    "new_record": "New record! 🔥"
+  },
+  "xp": {
+    "earned": "+{{amount}} XP",
+    "total": "Total XP",
+    "level_up": "Level up! 🎉"
+  },
+  "paywall": {
+    "title": "Go Premium",
+    "subtitle": "Unlock everything. No limits.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "cta": "Start Free Trial",
+    "restore": "Restore Purchase",
+    "terms": "Terms & Privacy",
+    "feature_unlimited_hearts": "Unlimited hearts",
+    "feature_all_lessons": "All lessons unlocked",
+    "feature_rex_full": "Full Rex AI coaching",
+    "feature_no_ads": "No ads, ever"
+  },
+  "lessons": {
+    "start": "Start Lesson",
+    "next": "Next →",
+    "finish": "Finish",
+    "progress": "{{current}} / {{total}}",
+    "complete_title": "Lesson complete!",
+    "complete_subtitle": "Keep the momentum going.",
+    "xp_earned": "+{{amount}} XP earned"
+  },
+  "checkin": {
+    "title": "Daily Check-in",
+    "question": "Did you complete today's challenge?",
+    "yes": "Yes ✓",
+    "no": "Not yet",
+    "submit": "Submit",
+    "rex_thinking": "Rex is thinking...",
+    "streak_at_risk": "⚠️ Streak at risk"
+  },
+  "league": {
+    "title": "League",
+    "your_rank": "Your rank: #{{rank}}",
+    "weekly_xp": "{{xp}} XP this week",
+    "top_players": "Top Players",
+    "promoted": "Promoted! 🎉",
+    "demoted": "Demoted 😬",
+    "safe": "Safe zone"
+  },
+  "notifications": {
+    "morning_title": "Morning check-in",
+    "morning_body": "Start your day strong. Your lesson is waiting.",
+    "afternoon_title": "Afternoon reminder",
+    "afternoon_body": "Don't forget your daily lesson. 5 minutes is all it takes.",
+    "evening_title": "Evening reminder",
+    "evening_body": "End the day right. Complete your lesson before midnight.",
+    "streak_risk_title": "Streak at risk! 🔥",
+    "streak_risk_body": "You haven't checked in today. Don't break the chain."
+  },
+  "relapse": {
+    "day_streak": "day streak",
+    "rex_says": "REX SAYS",
+    "partner_says": "YOUR PARTNER SAYS",
+    "one_chance_cta": "You get one chance",
+    "comeback_challenge_title": "Comeback Challenge",
+    "comeback_challenge_subtitle": "Complete this within 24 hours to restore 50% of your streak",
+    "accept_challenge": "Accept Challenge",
+    "start_fresh": "I'll start fresh instead",
+    "time_remaining": "Time remaining",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "streak_restored": "STREAK RESTORED",
+    "share_comeback": "Share My Comeback"
+  },
+  "relapse": {
+    "day_streak": "day streak",
+    "rex_says": "REX SAYS",
+    "partner_says": "YOUR PARTNER SAYS",
+    "one_chance_cta": "You get one chance",
+    "comeback_challenge_title": "Comeback Challenge",
+    "comeback_challenge_subtitle": "Complete this challenge within 24 hours to restore 50% of your streak",
+    "time_remaining": "Time Remaining",
+    "accept_challenge": "Accept Challenge",
+    "start_fresh": "I'll start fresh instead",
+    "streak_restored": "Streak Restored",
+    "share_comeback": "Share My Comeback"
+  },
+  "common": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "close": "Close",
+    "save": "Save",
+    "done": "Done",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "you": "You",
+    "unknown": "Unknown"
+  },
+  "legal": {
+    "aiNotice": {
+      "title": "Meet Rex: Your AI Coach",
+      "subtitle": "Before we begin, here's what you should know:",
+      "canDo": {
+        "title": "What Rex Can Do",
+        "remember": "Remember your past conversations and progress",
+        "personalize": "Provide personalized motivation and suggestions",
+        "reflect": "Help you reflect on your goals and challenges",
+        "strategies": "Offer strategies for self-improvement"
+      },
+      "cannotDo": {
+        "title": "What Rex Cannot Do",
+        "replace": "Replace professional therapy or medical advice",
+        "guarantee": "Guarantee accurate responses in all situations",
+        "understand": "Understand complex emotional nuances like a human",
+        "emergency": "Provide emergency crisis intervention"
+      },
+      "privacy": {
+        "title": "Your Privacy",
+        "description": "Your conversations with Rex are stored securely to personalize your experience. See our Privacy Policy for details."
+      },
+      "crisis": {
+        "title": "In Crisis?",
+        "description": "If you're in distress, please contact emergency services or a crisis helpline. Rex is not equipped for emergency situations."
+      },
+      "acknowledgment": "By continuing, you acknowledge that you understand Rex is an AI system with limitations.",
+      "accept": "I Understand",
+      "learnMore": "Learn More"
+    },
+    "crisisDisclaimer": {
+      "title": "IMPORTANT: Growthovo is not an emergency service",
+      "description": "If you are in immediate danger or experiencing a mental health emergency:",
+      "emergency": {
+        "title": "Emergency Services",
+        "eu": "Emergency: 112"
+      },
+      "helplines": {
+        "title": "Crisis Helplines",
+        "mental": "Mental Health Crisis",
+        "suicide": "Suicide Prevention"
+      },
+      "viewResources": "View More Resources",
+      "footer": "Rex can provide support, but cannot replace professional help in a crisis."
+    },
+    "ageVerification": {
+      "label": "I confirm that I am at least 13 years old",
+      "description": "Growthovo requires users to be at least 13 years of age. If you are under 13, please do not use this app. If you are between 13 and 18, please ensure you have parental permission to use Growthovo.",
+      "learnMore": "Why do we have age restrictions?"
+    },
+    "subscriptionTerms": {
+      "title": "Subscription Terms",
+      "pricing": {
+        "title": "Pricing and Billing",
+        "description": "Prices include applicable VAT. Billed through Stripe payment processing."
+      },
+      "autoRenewal": {
+        "title": "Auto-Renewal",
+        "description": "Your subscription automatically renews at the end of each billing period unless cancelled at least 24 hours before renewal. You will be charged the then-current subscription price."
+      },
+      "cancellation": {
+        "title": "Cancellation",
+        "anytime": "Cancel anytime from Settings > Subscription",
+        "access": "Access continues until end of current billing period",
+        "noRefund": "No refunds for partial periods"
+      },
+      "refund": {
+        "title": "Refund Policy",
+        "guarantee": "14-day money-back guarantee for first-time subscribers (EU consumer right)",
+        "period": "Request refunds within 14 days of initial purchase",
+        "contact": "Contact support@growthovo.app for refund requests",
+        "processing": "Refunds processed within 5-10 business days"
+      },
+      "features": {
+        "title": "What You Get",
+        "unlimited": "Unlimited access to Rex AI coach",
+        "premium": "All premium features and content",
+        "support": "Priority support",
+        "adFree": "Ad-free experience"
+      },
+      "afterCancellation": {
+        "title": "After Cancellation",
+        "data": "Your data remains accessible",
+        "resubscribe": "You can resubscribe anytime",
+        "freeTier": "Free tier features remain available"
+      },
+      "payment": {
+        "title": "Payment Processing",
+        "description": "Payments are securely processed by Stripe. Growthovo does not store your payment card details."
+      },
+      "questions": {
+        "title": "Questions?",
+        "description": "Contact support@growthovo.app or visit our Help Center."
+      },
+      "viewFullTerms": "View Full Terms & Conditions"
+    },
+    "cookieConsent": {
+      "title": "Cookie and Tracking Notice",
+      "description": "Growthovo uses cookies and similar technologies to provide and improve our service.",
+      "essential": {
+        "title": "Essential Cookies (Always Active)",
+        "description": "Authentication, security, preferences, and core app functionality"
+      },
+      "analytics": {
+        "title": "Analytics Cookies (Optional)",
+        "description": "Understand app usage, identify bugs, and improve user experience"
+      },
+      "viewPolicy": "View our Privacy Policy for more information",
+      "acceptAll": "Accept All",
+      "essentialOnly": "Essential Only",
+      "customize": "Customize"
+    },
+    "viewer": {
+      "loading": "Loading document...",
+      "loadError": "Failed to load document. Please try again.",
+      "notFound": "Document not found.",
+      "version": "Version",
+      "effectiveDate": "Effective Date",
+      "tableOfContents": "Table of Contents",
+      "accept": "I Accept",
+      "fallbackNotice": "This document is not available in your language. English version is displayed."
+    },
+    "documents": {
+      "title": "Legal Documents",
+      "subtitle": "View our legal policies and terms",
+      "view": "View",
+      "footer": "These documents outline your rights and our responsibilities. If you have questions, contact us at privacy@growthovo.app",
+      "privacyPolicy": {
+        "title": "Privacy Policy",
+        "description": "How we collect, use, and protect your personal data"
+      },
+      "termsConditions": {
+        "title": "Terms & Conditions",
+        "description": "Your rights and responsibilities when using Growthovo"
+      },
+      "cookiePolicy": {
+        "title": "Cookie Policy",
+        "description": "How we use cookies and tracking technologies"
+      },
+      "subscriptionTerms": {
+        "title": "Subscription Terms",
+        "description": "Billing, cancellation, and refund policies"
+      },
+      "aiTransparency": "AI Transparency Notice",
+      "crisisDisclaimer": "Crisis Disclaimer"
+    },
+    "updateNotification": {
+      "title": "Legal Documents Updated",
+      "subtitleRequired": "We've updated our legal documents. Please review and acknowledge the changes to continue using Growthovo.",
+      "subtitleOptional": "We've updated our legal documents. Please review the changes when you have a moment.",
+      "version": "Version {{version}}",
+      "whatsNew": "What's New:",
+      "viewDocument": "View Document",
+      "acknowledge": "I Acknowledge",
+      "requirementNotice": "You must acknowledge the Terms & Conditions update to continue using Growthovo.",
+      "dismiss": "I'll Review Later"
+    },
+    "updateBanner": {
+      "title": "Legal Documents Updated",
+      "subtitle": "{{count}} document updated",
+      "subtitle_plural": "{{count}} documents updated",
+      "accessibilityLabel": "View legal document updates",
+      "dismiss": "Dismiss notification"
+    }
+  }
+}
