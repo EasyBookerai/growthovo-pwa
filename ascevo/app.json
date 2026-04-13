@@ -28,7 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
-      "output": "static",
       "name": "Growthovo",
       "shortName": "Growthovo",
       "description": "Your personal growth companion with AI coaching, habit tracking, and daily challenges",
