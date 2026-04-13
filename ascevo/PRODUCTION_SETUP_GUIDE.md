@@ -143,8 +143,8 @@ psql -h db.your-project.supabase.co -U postgres -d postgres -f supabase/rls.sql
 
 1. Go to **Products** in Stripe Dashboard
 2. Create two products:
-   - **Growthovo Monthly** - $9.99/month
-   - **Growthovo Annual** - $99.99/year
+   - **Growthovo Monthly** - $14.99/month
+   - **Growthovo Annual** - $119.99/year
 3. Copy Price IDs:
    - Monthly → `EXPO_PUBLIC_STRIPE_PRICE_MONTHLY`
    - Annual → `EXPO_PUBLIC_STRIPE_PRICE_ANNUAL`

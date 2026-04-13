@@ -93,23 +93,23 @@ Monthly subscribers: ___________
 Average subscription price: $___________
 ```
 
-**Example (100 subscribers at $9.99/month):**
+**Example (100 subscribers at $14.99/month):**
 
 ```
-Gross revenue: 100 × $9.99 = $999
-Stripe fees: (999 × 0.029) + (100 × 0.30) = $28.97 + $30 = $58.97
-Net revenue: $999 - $58.97 = $940.03
+Gross revenue: 100 × $14.99 = $1,499
+Stripe fees: (1,499 × 0.029) + (100 × 0.30) = $43.47 + $30 = $73.47
+Net revenue: $1,499 - $73.47 = $1,425.53
 
-Effective fee rate: 5.9%
+Effective fee rate: 4.9%
 ```
 
 **Annual subscriptions have lower effective fees:**
 
 ```
-Annual subscribers: 100 at $99.99/year
-Gross revenue: 100 × $99.99 = $9,999
-Stripe fees: (9,999 × 0.029) + (100 × 0.30) = $289.97 + $30 = $319.97
-Net revenue: $9,999 - $319.97 = $9,679.03
+Annual subscribers: 100 at $119.99/year
+Gross revenue: 100 × $119.99 = $11,999
+Stripe fees: (11,999 × 0.029) + (100 × 0.30) = $347.97 + $30 = $377.97
+Net revenue: $11,999 - $377.97 = $11,621.03
 
 Effective fee rate: 3.2%
 ```
@@ -130,7 +130,7 @@ Effective fee rate: 3.2%
 | Resend (Free tier) | $0 |
 | **Total** | **$34/month** |
 
-**Revenue needed to break even:** 4 subscribers at $9.99/month
+**Revenue needed to break even:** 3 subscribers at $14.99/month
 
 ---
 
@@ -146,7 +146,7 @@ Effective fee rate: 3.2%
 | Resend | $20 |
 | **Total** | **$132/month** |
 
-**Revenue needed to break even:** 14 subscribers at $9.99/month
+**Revenue needed to break even:** 9 subscribers at $14.99/month
 
 ---
 
@@ -162,7 +162,7 @@ Effective fee rate: 3.2%
 | Resend | $20 |
 | **Total** | **$172/month** |
 
-**Revenue needed to break even:** 18 subscribers at $9.99/month
+**Revenue needed to break even:** 12 subscribers at $14.99/month
 
 ---
 
@@ -178,7 +178,7 @@ Effective fee rate: 3.2%
 | Resend | $80 |
 | **Total** | **$615/month** |
 
-**Revenue needed to break even:** 65 subscribers at $9.99/month
+**Revenue needed to break even:** 42 subscribers at $14.99/month
 
 ---
 
@@ -197,27 +197,27 @@ Effective fee rate: 3.2%
 ```
 Paying users: 1,000 × 5% = 50 subscribers
 
-Monthly plan (70%): 35 × $9.99 = $349.65
-Annual plan (30%): 15 × $99.99 = $1,499.85
-Total monthly revenue: $349.65 + ($1,499.85 / 12) = $474.64
+Monthly plan (70%): 35 × $14.99 = $524.65
+Annual plan (30%): 15 × $119.99 = $1,799.85
+Total monthly revenue: $524.65 + ($1,799.85 / 12) = $674.64
 
 Monthly costs: $172
-Monthly profit: $474.64 - $172 = $302.64
+Monthly profit: $674.64 - $172 = $502.64
 
-Annual profit: $302.64 × 12 = $3,631.68
+Annual profit: $502.64 × 12 = $6,031.68
 ```
 
 ### Break-Even Analysis
 
 **At 1,000 DAU with 5% conversion:**
-- Revenue: $474.64/month
+- Revenue: $674.64/month
 - Costs: $172/month
-- **Profit: $302.64/month** ✅
+- **Profit: $502.64/month** ✅
 
 **Minimum subscribers needed to break even:**
 - Monthly costs: $172
-- Average revenue per user: $9.49 (mix of monthly/annual)
-- **Break-even: 19 subscribers**
+- Average revenue per user: $13.49 (mix of monthly/annual)
+- **Break-even: 13 subscribers**
 
 ---
 
@@ -240,7 +240,7 @@ Annual profit: $302.64 × 12 = $3,631.68
 ### 3. Reduce Stripe Fees
 
 - Encourage annual subscriptions (lower effective fee)
-- Consider higher price points ($14.99 vs $9.99)
+- Consider tiered pricing if needed ($9.99 basic, $14.99 premium)
 - Offer discounts for annual plans
 
 ### 4. Monitor Everything

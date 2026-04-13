@@ -6,13 +6,13 @@
 
 **Product 1: Monthly Subscription**
 - Name: Growthovo Premium Monthly
-- Price: $9.99/month
+- Price: $14.99/month
 - Billing: Monthly
 - **You get:** `price_1ABC...` → `EXPO_PUBLIC_STRIPE_PRICE_MONTHLY`
 
 **Product 2: Annual Subscription**
 - Name: Growthovo Premium Annual
-- Price: $99.99/year
+- Price: $119.99/year
 - Billing: Yearly
 - **You get:** `price_0987...` → `EXPO_PUBLIC_STRIPE_PRICE_ANNUAL`
 
@@ -103,8 +103,8 @@ Use these in test mode:
 
 ## ✅ Quick Checklist
 
-- [ ] Created monthly product ($9.99/month)
-- [ ] Created annual product ($99.99/year)
+- [ ] Created monthly product ($14.99/month)
+- [ ] Created annual product ($119.99/year)
 - [ ] Copied both Price IDs
 - [ ] Copied Publishable Key
 - [ ] Copied Secret Key

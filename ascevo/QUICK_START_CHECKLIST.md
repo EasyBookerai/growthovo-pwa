@@ -28,8 +28,8 @@ Use this checklist to track your production setup progress. Check off items as y
 - [ ] Complete business verification
 - [ ] Copy Publishable Key → `.env.production`
 - [ ] Copy Secret Key → `.env.production` (keep secret!)
-- [ ] Create Monthly product ($9.99/month)
-- [ ] Create Annual product ($99.99/year)
+- [ ] Create Monthly product ($14.99/month)
+- [ ] Create Annual product ($119.99/year)
 - [ ] Copy Price IDs → `.env.production`
 - [ ] Set up webhook endpoint
 - [ ] Copy Webhook Secret → `.env.production`
@@ -404,6 +404,6 @@ Once all items are checked, your Growthovo PWA is production-ready!
 
 **Estimated Total Setup Time:** 5-7 days
 **Estimated Monthly Cost:** $34-172 (depending on scale)
-**Break-even Point:** 4-18 subscribers
+**Break-even Point:** 3-12 subscribers at $14.99/month
 
 Good luck with your launch! 🚀

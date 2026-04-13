@@ -40,15 +40,15 @@ I've created comprehensive documentation to help you make your PWA production-re
 
 ### Minimum to Start
 - **$34/month** (Supabase + Domain + OpenAI for 100 users)
-- Break-even: 4 subscribers at $9.99/month
+- Break-even: 3 subscribers at $14.99/month
 
 ### Recommended for Growth
 - **$132/month** (All services, 500 users)
-- Break-even: 14 subscribers at $9.99/month
+- Break-even: 9 subscribers at $14.99/month
 
 ### At Scale
 - **$172/month** (1,000 users)
-- Break-even: 18 subscribers at $9.99/month
+- Break-even: 12 subscribers at $14.99/month
 
 ### Key Cost Drivers
 1. **OpenAI API** - $50-500/month (use GPT-4o-mini to save 10x)
@@ -375,7 +375,7 @@ With these documents, you have everything you need to:
 
 **Estimated Setup Time:** 5-7 days
 **Minimum Monthly Cost:** $34
-**Break-even Point:** 4 subscribers
+**Break-even Point:** 3 subscribers at $14.99/month
 
 ---
 

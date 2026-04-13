@@ -102,7 +102,7 @@ export default function PaywallScreen({ userId, reason = 'general', onClose, onS
             accessibilityState={{ checked: selectedPlan === 'monthly' }}
           >
             <Text style={styles.planName}>{t('paywall.monthly')}</Text>
-            <Text style={styles.planPrice}>€8/month</Text>
+            <Text style={styles.planPrice}>$14.99/month</Text>
             <Text style={styles.planTrial}>3 days free</Text>
           </TouchableOpacity>
 
@@ -116,8 +116,8 @@ export default function PaywallScreen({ userId, reason = 'general', onClose, onS
               <Text style={styles.bestValueText}>BEST VALUE</Text>
             </View>
             <Text style={styles.planName}>{t('paywall.annual')}</Text>
-            <Text style={styles.planPrice}>€59/year</Text>
-            <Text style={styles.planSaving}>Save €37 vs monthly</Text>
+            <Text style={styles.planPrice}>$119.99/year</Text>
+            <Text style={styles.planSaving}>Save $59.88 vs monthly</Text>
             <Text style={styles.planTrial}>3 days free</Text>
           </TouchableOpacity>
         </View>

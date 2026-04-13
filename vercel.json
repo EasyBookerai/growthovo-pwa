@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd ascevo && npm install && npx expo export:web",
+  "outputDirectory": "ascevo/dist",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

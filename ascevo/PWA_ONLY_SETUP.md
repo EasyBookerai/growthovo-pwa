@@ -104,8 +104,8 @@ supabase functions deploy
 # 1. Go to stripe.com
 # 2. Complete business verification
 # 3. Create products:
-#    - Monthly: $9.99/month
-#    - Annual: $99.99/year
+#    - Monthly: $14.99/month
+#    - Annual: $119.99/year
 # 4. Copy keys to .env.production
 # 5. Set up webhook:
 #    URL: https://your-project.supabase.co/functions/v1/stripe-webhook
@@ -262,7 +262,7 @@ You now have everything you need for a production-ready PWA. No native app compl
 
 **Estimated setup time:** 1-2 hours
 **Monthly cost:** $34-152
-**Break-even:** 4-18 subscribers at $9.99/month
+**Break-even:** 3-11 subscribers at $14.99/month
 
 ---
 

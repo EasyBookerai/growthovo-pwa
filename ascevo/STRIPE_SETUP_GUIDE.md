@@ -60,7 +60,7 @@ Description: Monthly subscription to Growthovo Premium features
 4. Under **Pricing**:
    - Click **+ Add another price**
    - Pricing model: **Standard pricing**
-   - Price: **$9.99** (or your chosen price)
+   - Price: **$14.99**
    - Billing period: **Monthly**
    - Currency: **USD** (or your currency)
 
@@ -83,7 +83,7 @@ Description: Annual subscription to Growthovo Premium features (save 17%)
 3. Under **Pricing**:
    - Click **+ Add another price**
    - Pricing model: **Standard pricing**
-   - Price: **$99.99** (or your chosen price)
+   - Price: **$119.99**
    - Billing period: **Yearly**
    - Currency: **USD** (or your currency)
 
@@ -97,8 +97,8 @@ Description: Annual subscription to Growthovo Premium features (save 17%)
 
 1. Go to **Products** page
 2. You should see:
-   - ✅ Growthovo Premium Monthly - $9.99/month
-   - ✅ Growthovo Premium Annual - $99.99/year
+   - ✅ Growthovo Premium Monthly - $14.99/month
+   - ✅ Growthovo Premium Annual - $119.99/year
 
 ---
 
@@ -238,13 +238,13 @@ Before going live, test with test mode:
 ### Pricing Strategy
 
 **Monthly vs Annual:**
-- Monthly: $9.99/month = $119.88/year
-- Annual: $99.99/year = **17% discount**
+- Monthly: $14.99/month = $179.88/year
+- Annual: $119.99/year = **33% discount**
 - This encourages annual subscriptions (better for cash flow!)
 
 **Alternative Pricing:**
-- Budget: $4.99/month or $49.99/year
-- Standard: $9.99/month or $99.99/year
+- Budget: $9.99/month or $99.99/year
+- Standard: $14.99/month or $119.99/year
 - Premium: $19.99/month or $199.99/year
 
 ### Free Trial
