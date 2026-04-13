@@ -3,29 +3,103 @@
 <head>
   <meta charset="utf-8" />
   <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
   
-  <title>Growthovo - Your Personal Growth Companion</title>
-  <meta name="description" content="Your personal growth companion with AI coaching, habit tracking, and daily challenges" />
+  <title>Growthovo - Turn Self-Improvement Into An Adventure</title>
+  <meta name="description" content="Your AI growth companion with Rex coaching, gamification (XP, streaks, leagues), and 6 life pillars: Mental Health, Relationships, Career, Fitness, Finance, Hobbies." />
   
+  <!-- PWA Meta Tags -->
   <meta name="theme-color" content="#7C3AED" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Growthovo" />
+  <meta name="format-detection" content="telephone=no" />
   
+  <!-- Open Graph / Social Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Growthovo - Turn Self-Improvement Into An Adventure" />
+  <meta property="og:description" content="Your AI growth companion with Rex coaching, gamification, and 6 life pillars." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  
+  <!-- PWA Links -->
   <link rel="manifest" href="/manifest.json" />
   <link rel="shortcut icon" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  
+  <!-- Preload splash screen for instant display -->
+  <link rel="preload" href="/splash.html" as="document" />
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body, #root { width: 100%; height: 100%; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0A0A0A; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: #08080F;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
     #root { display: flex; align-items: center; justify-content: center; }
-    .loading { color: #7C3AED; font-size: 18px; }
+    
+    /* Inline splash screen styles for instant display */
+    #splash-inline {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #08080F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+    #splash-inline.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .splash-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 40px;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
   </style>
 </head>
 <body>
+  <!-- Inline splash for instant feedback -->
+  <div id="splash-inline">
+    <div class="splash-logo">Growthovo</div>
+  </div>
+  
   <div id="root">
     <div class="loading">Loading Growthovo...</div>
   </div>
+  
+  <script>
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('SW registered:', reg))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+    
+    // Hide inline splash when app loads
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-inline');
+        if (splash) {
+          splash.classList.add('hidden');
+          setTimeout(() => splash.remove(), 500);
+        }
+      }, 500);
+    });
+  </script>
 </body>
 </html>

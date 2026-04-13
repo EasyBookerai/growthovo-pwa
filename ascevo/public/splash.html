@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#08080F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Growthovo - Loading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #splash-container {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #08080F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #splash-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 {
+      width: 340px;
+      height: 340px;
+      background: #6C63FF;
+      opacity: 0.18;
+      filter: blur(90px);
+      top: -100px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 280px;
+      height: 280px;
+      background: #1DB88A;
+      opacity: 0.14;
+      filter: blur(80px);
+      bottom: -80px;
+      right: -80px;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: #A78BFA;
+      opacity: 0.10;
+      filter: blur(70px);
+      top: 50%;
+      right: -50px;
+      transform: translateY(-50%);
+    }
+
+    /* Content wrapper */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 390px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Logo block */
+    .logo-block {
+      text-align: center;
+      margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+    }
+
+    .app-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 40px;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 0.01em;
+    }
+
+    /* Glass card base */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 24px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Main card */
+    .main-card {
+      width: 100%;
+      padding: 28px;
+      border-radius: 28px;
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7C3AED, #34D399);
+      border-radius: 100px;
+      width: 0%;
+      animation: progressAnimation 2.5s ease-in-out forwards;
+    }
+
+    /* Loading message */
+    .loading-message {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.45);
+      text-align: center;
+      min-height: 20px;
+      margin-bottom: 20px;
+    }
+
+    .loading-text {
+      opacity: 0;
+      position: absolute;
+      transition: opacity 0.4s ease;
+    }
+
+    .loading-text.active {
+      opacity: 1;
+      position: relative;
+    }
+
+    /* Separator */
+    .separator {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 20px 0;
+    }
+
+    /* Pillar grid */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .pillar-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .pillar-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .pillar-emoji {
+      font-size: 18px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .pillar-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Install card */
+    .install-card {
+      width: 100%;
+      padding: 22px 24px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
+    }
+
+    .install-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .install-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(124, 58, 237, 0.2);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .install-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .install-text {
+      flex: 1;
+    }
+
+    .install-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: #FFFFFF;
+      margin-bottom: 2px;
+    }
+
+    .install-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Button */
+    .install-button {
+      width: 100%;
+      background: rgba(124, 58, 237, 0.85);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      border-radius: 100px;
+      padding: 16px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #FFFFFF;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .install-button:hover {
+      background: rgba(124, 58, 237, 1);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    .install-button:active {
+      transform: translateY(0);
+    }
+
+    /* iOS instructions */
+    .ios-instructions {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.45);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .share-icon {
+      display: inline-block;
+      margin: 0 2px;
+    }
+
+    /* Success state */
+    .success-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 100px;
+    }
+
+    .success-checkmark {
+      width: 20px;
+      height: 20px;
+      color: #34D399;
+    }
+
+    .success-text {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: #34D399;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes progressAnimation {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* Hidden state */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Performance optimizations */
+    .orb, .glass-card {
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    /* Safe area support for notched devices */
+    @supports (padding: max(0px)) {
+      .content-wrapper {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Dark mode optimization */
+    @media (prefers-color-scheme: dark) {
+      #splash-container {
+        background: #08080F;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="splash-container">
+    <!-- Ambient orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+      <!-- Logo block -->
+      <div class="logo-block">
+        <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="24" cy="24" rx="16" ry="20" fill="rgba(124, 58, 237, 0.7)"/>
+          <ellipse cx="24" cy="24" rx="12" ry="16" fill="rgba(167, 139, 250, 0.4)"/>
+          <circle cx="24" cy="20" r="3" fill="rgba(255, 255, 255, 0.9)"/>
+        </svg>
+        <h1 class="app-name">Growthovo</h1>
+        <p class="tagline">Your AI growth companion</p>
+      </div>
+
+      <!-- Main card -->
+      <div class="glass-card main-card">
+        <!-- Progress bar -->
+        <div class="progress-container">
+          <div class="progress-fill"></div>
+        </div>
+
+        <!-- Loading message -->
+        <div class="loading-message">
+          <span class="loading-text active" data-message="0">Waking up Rex, your AI coach...</span>
+          <span class="loading-text" data-message="1">Loading your 6 growth pillars...</span>
+          <span class="loading-text" data-message="2">Preparing today's mission...</span>
+          <span class="loading-text" data-message="3">Almost ready...</span>
+        </div>
+
+        <!-- Separator -->
+        <div class="separator"></div>
+
+        <!-- Pillar grid -->
+        <div class="pillar-grid">
+          <div class="pillar-pill">
+            <span class="pillar-emoji">🧠</span>
+            <div class="pillar-label">Mental</div>
+          </div>
+          <div class="pillar-pill">
+            <span class="pillar-emoji">💬</span>
+            <div class="pillar-label">Relations</div>
+          </div>
+          <div class="pillar-pill">
+            <span class="pillar-emoji">💼</span>
+            <div class="pillar-label">Career</div>
+          </div>
+          <div class="pillar-pill">
+            <span class="pillar-emoji">💪</span>
+            <div class="pillar-label">Fitness</div>
+          </div>
+          <div class="pillar-pill">
+            <span class="pillar-emoji">💰</span>
+            <div class="pillar-label">Finance</div>
+          </div>
+          <div class="pillar-pill">
+            <span class="pillar-emoji">🎨</span>
+            <div class="pillar-label">Hobbies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Install card -->
+      <div class="glass-card install-card" id="install-card">
+        <div class="install-header">
+          <div class="install-icon-wrapper">
+            <svg class="install-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="2" width="14" height="20" rx="2" stroke="#A78BFA" stroke-width="2"/>
+              <path d="M9 6H15" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="install-text">
+            <div class="install-title">Add to home screen</div>
+            <div class="install-subtitle">Instant access, no App Store</div>
+          </div>
+        </div>
+        <button class="install-button" id="install-button">
+          Add to home screen →
+        </button>
+        <div class="ios-instructions hidden" id="ios-instructions">
+          Tap <span class="share-icon">⎋</span> Share, then "Add to Home Screen"
+        </div>
+        <div class="success-state hidden" id="success-state">
+          <svg class="success-checkmark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="success-text">Added! Find Growthovo on your home screen.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Performance monitoring
+    const perfStart = performance.now();
+    
+    // Check if already splashed in this session
+    if (sessionStorage.getItem('growthovo_splashed')) {
+      document.getElementById('splash-container').style.display = 'none';
+    }
+
+    // Preload critical resources
+    const preloadFont = () => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'font';
+      link.type = 'font/woff2';
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    };
+
+    // Loading message rotation
+    let currentMessage = 0;
+    const messages = document.querySelectorAll('.loading-text');
+    const messageInterval = setInterval(() => {
+      messages[currentMessage].classList.remove('active');
+      currentMessage = (currentMessage + 1) % messages.length;
+      messages[currentMessage].classList.add('active');
+    }, 600);
+
+    // PWA install prompt handling
+    let deferredPrompt = null;
+    const installButton = document.getElementById('install-button');
+    const installCard = document.getElementById('install-card');
+    const iosInstructions = document.getElementById('ios-instructions');
+    const successState = document.getElementById('success-state');
+
+    // Capture beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    // Detect iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+    // Show iOS instructions if on iOS and not installed
+    if (isIOS && !isInStandaloneMode && !deferredPrompt) {
+      installButton.classList.add('hidden');
+      iosInstructions.classList.remove('hidden');
+    }
+
+    // Install button click handler
+    installButton.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        return;
+      }
+
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+
+      if (outcome === 'accepted') {
+        installButton.classList.add('hidden');
+        iosInstructions.classList.add('hidden');
+        successState.classList.remove('hidden');
+      }
+
+      deferredPrompt = null;
+    });
+
+    // Hide splash after loading
+    const hideSplash = () => {
+      clearInterval(messageInterval);
+      const splashContainer = document.getElementById('splash-container');
+      splashContainer.classList.add('fade-out');
+      
+      setTimeout(() => {
+        splashContainer.style.display = 'none';
+        splashContainer.remove(); // Clean up DOM
+        sessionStorage.setItem('growthovo_splashed', 'true');
+        
+        // Log performance metrics
+        const perfEnd = performance.now();
+        console.log(`Splash screen displayed for ${Math.round(perfEnd - perfStart)}ms`);
+      }, 500);
+    };
+
+    // Auto-hide after 2.5s or when app signals ready
+    const autoHideTimer = setTimeout(hideSplash, 2500);
+
+    // Listen for app ready signal (optional)
+    window.addEventListener('app-ready', () => {
+      clearTimeout(autoHideTimer);
+      hideSplash();
+    });
+
+    // Error handling - hide splash if something goes wrong
+    window.addEventListener('error', (e) => {
+      console.error('Splash screen error:', e);
+      clearTimeout(autoHideTimer);
+      hideSplash();
+    });
+
+    // Visibility change handling
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearTimeout(autoHideTimer);
+        clearInterval(messageInterval);
+      }
+    });
+
+    // Analytics tracking (placeholder for production analytics)
+    const trackSplashView = () => {
+      if (window.gtag) {
+        window.gtag('event', 'splash_view', {
+          event_category: 'engagement',
+          event_label: 'splash_screen'
+        });
+      }
+    };
+    trackSplashView();
+  </script>
+</body>
+</html>
