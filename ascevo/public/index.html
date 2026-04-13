@@ -90,16 +90,24 @@
       });
     }
     
-    // Hide inline splash when app loads
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash-inline');
-        if (splash) {
-          splash.classList.add('hidden');
-          setTimeout(() => splash.remove(), 500);
+    // Immediate redirect to splash screen
+    (function() {
+      // Check if we've already shown splash in this session
+      const hasSeenSplash = sessionStorage.getItem('growthovo_splashed');
+      
+      if (!hasSeenSplash) {
+        // First visit - show splash
+        window.location.href = '/splash.html';
+      } else {
+        // Returning user - check onboarding status
+        const hasOnboarded = localStorage.getItem('growthovo_onboarded');
+        if (hasOnboarded === 'true') {
+          window.location.href = '/app.html';
+        } else {
+          window.location.href = '/onboarding.html';
         }
-      }, 500);
-    });
+      }
+    })();
   </script>
 </body>
 </html>

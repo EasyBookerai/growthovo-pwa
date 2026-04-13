@@ -381,6 +381,14 @@
       alert('🎉 Check-in feature coming soon!\n\nYou\'ll be able to:\n• Reflect on your day\n• Set daily intentions\n• Track your mood\n• Earn XP and level up\n\nStay tuned!');
     }
 
+    // Debug: Reset onboarding (remove in production)
+    window.resetOnboarding = function() {
+      localStorage.removeItem('growthovo_onboarded');
+      localStorage.removeItem('growthovo_user');
+      sessionStorage.removeItem('growthovo_splashed');
+      alert('Onboarding reset! Refresh to see splash screen again.');
+    };
+
     // Track page view
     if (window.gtag) {
       window.gtag('event', 'page_view', {
