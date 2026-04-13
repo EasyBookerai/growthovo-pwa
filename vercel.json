@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ascevo && npm ci && npx expo export:web",
+  "buildCommand": "cd ascevo && npm install && npx expo export:web",
   "outputDirectory": "ascevo/dist",
   "installCommand": "npm install",
   "headers": [
@@ -38,3 +38,4 @@
     }
   ]
 }
+
