@@ -590,7 +590,7 @@
       deferredPrompt = null;
     });
 
-    // Hide splash after loading
+    // Hide splash and route to appropriate screen
     const hideSplash = () => {
       clearInterval(messageInterval);
       const splashContainer = document.getElementById('splash-container');
@@ -604,6 +604,14 @@
         // Log performance metrics
         const perfEnd = performance.now();
         console.log(`Splash screen displayed for ${Math.round(perfEnd - perfStart)}ms`);
+        
+        // Route based on onboarding status
+        const hasOnboarded = localStorage.getItem('growthovo_onboarded');
+        if (hasOnboarded === 'true') {
+          window.location.href = '/app.html';
+        } else {
+          window.location.href = '/onboarding.html';
+        }
       }, 500);
     };
 

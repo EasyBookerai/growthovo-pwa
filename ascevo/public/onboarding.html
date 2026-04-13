@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#08080F">
+  <title>Welcome to Growthovo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #08080F;
+      color: #FFFFFF;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Container */
+    .onboarding-container {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      transition: all 1s ease;
+    }
+
+    .orb-1 {
+      width: 340px;
+      height: 340px;
+      background: #6C63FF;
+      opacity: 0.18;
+      filter: blur(90px);
+      top: -100px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 280px;
+      height: 280px;
+      background: #1DB88A;
+      opacity: 0.14;
+      filter: blur(80px);
+      bottom: -80px;
+      right: -80px;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: #A78BFA;
+      opacity: 0.10;
+      filter: blur(70px);
+      top: 50%;
+      right: -50px;
+      transform: translateY(-50%);
+    }
+
+    /* Content wrapper */
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Screens */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Welcome Screen */
+    .welcome-content {
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .welcome-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .welcome-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .welcome-subtitle {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .welcome-tagline {
+      font-size: 16px;
+      color: #A78BFA;
+      margin-bottom: 48px;
+      font-weight: 500;
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: 24px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 18px 32px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+      color: #FFFFFF;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Pillar Selection */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 24px 0;
+      width: 100%;
+    }
+
+    .pillar-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .pillar-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .pillar-card.selected {
+      background: rgba(124, 58, 237, 0.15);
+      border-color: #7C3AED;
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.3) inset;
+    }
+
+    .pillar-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      background: #7C3AED;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: white;
+    }
+
+    .pillar-emoji {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .pillar-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Progress indicator */
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .progress-dot.active {
+      background: #7C3AED;
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    /* Screen titles */
+    .screen-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .screen-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    /* Name input */
+    .input-wrapper {
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .input-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      color: #FFFFFF;
+      transition: all 0.2s ease;
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: #7C3AED;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    }
+
+    .text-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Goal selection */
+    .goal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .goal-option {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .goal-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .goal-option.selected {
+      background: rgba(124, 58, 237, 0.15);
+      border-color: #7C3AED;
+    }
+
+    .goal-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .goal-option.selected .goal-radio {
+      border-color: #7C3AED;
+    }
+
+    .goal-option.selected .goal-radio::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #7C3AED;
+    }
+
+    .goal-text {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+    }
+
+    /* Final screen */
+    .final-content {
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+
+    .final-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .final-subtitle {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #A78BFA;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Skip button */
+    .skip-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-container">
+    <!-- Ambient orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Skip button -->
+    <button class="skip-btn" onclick="skipToApp()">Skip →</button>
+
+    <!-- Screen 1: Welcome -->
+    <div class="screen active" id="screen-1">
+      <div class="welcome-content">
+        <svg class="welcome-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="40" cy="40" rx="26" ry="32" fill="url(#grad1)"/>
+          <ellipse cx="40" cy="40" rx="20" ry="26" fill="url(#grad2)"/>
+          <circle cx="40" cy="34" r="5" fill="rgba(255, 255, 255, 0.9)"/>
+          <defs>
+            <linearGradient id="grad1" x1="40" y1="8" x2="40" y2="72" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#7C3AED"/>
+              <stop offset="1" stop-color="#A78BFA"/>
+            </linearGradient>
+            <linearGradient id="grad2" x1="40" y1="14" x2="40" y2="66" gradientUnits="userSpaceOnUse">
+              <stop stop-color="rgba(167, 139, 250, 0.6)"/>
+              <stop offset="1" stop-color="rgba(124, 58, 237, 0.3)"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <h1 class="welcome-title">Welcome to<br>Growthovo</h1>
+        <p class="welcome-subtitle">Your AI growth companion</p>
+        <p class="welcome-tagline">Turn self-improvement into an adventure</p>
+        <button class="btn btn-primary" onclick="nextScreen(2)">
+          Let's Begin →
+        </button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Name -->
+    <div class="screen" id="screen-2">
+      <div class="progress-dots">
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <h2 class="screen-title">What's your name?</h2>
+      <p class="screen-subtitle">Let's personalize your experience</p>
+      <div class="glass-card">
+        <div class="input-wrapper">
+          <label class="input-label">Your name</label>
+          <input type="text" class="text-input" id="name-input" placeholder="Enter your name" />
+        </div>
+        <button class="btn btn-primary" onclick="saveName()">
+          Continue →
+        </button>
+      </div>
+    </div>
+
+    <!-- Screen 3: Pillars -->
+    <div class="screen" id="screen-3">
+      <div class="progress-dots">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <h2 class="screen-title">Choose Your Focus</h2>
+      <p class="screen-subtitle">Select 2-3 areas you want to improve</p>
+      <div class="pillar-grid">
+        <div class="pillar-card" onclick="togglePillar(this, 'mental')">
+          <span class="pillar-emoji">🧠</span>
+          <div class="pillar-name">Mental Health</div>
+        </div>
+        <div class="pillar-card" onclick="togglePillar(this, 'relationships')">
+          <span class="pillar-emoji">💬</span>
+          <div class="pillar-name">Relationships</div>
+        </div>
+        <div class="pillar-card" onclick="togglePillar(this, 'career')">
+          <span class="pillar-emoji">💼</span>
+          <div class="pillar-name">Career</div>
+        </div>
+        <div class="pillar-card" onclick="togglePillar(this, 'fitness')">
+          <span class="pillar-emoji">💪</span>
+          <div class="pillar-name">Fitness</div>
+        </div>
+        <div class="pillar-card" onclick="togglePillar(this, 'finance')">
+          <span class="pillar-emoji">💰</span>
+          <div class="pillar-name">Finance</div>
+        </div>
+        <div class="pillar-card" onclick="togglePillar(this, 'hobbies')">
+          <span class="pillar-emoji">🎨</span>
+          <div class="pillar-name">Hobbies</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="savePillars()" id="pillars-btn" disabled style="opacity: 0.5;">
+        Continue →
+      </button>
+    </div>
+
+    <!-- Screen 4: Goal -->
+    <div class="screen" id="screen-4">
+      <div class="progress-dots">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot active"></div>
+      </div>
+      <h2 class="screen-title">Daily Commitment</h2>
+      <p class="screen-subtitle">How much time can you dedicate each day?</p>
+      <div class="goal-options">
+        <div class="goal-option" onclick="selectGoal(this, '5')">
+          <div class="goal-radio"></div>
+          <div class="goal-text">5 minutes - Quick wins</div>
+        </div>
+        <div class="goal-option" onclick="selectGoal(this, '15')">
+          <div class="goal-radio"></div>
+          <div class="goal-text">15 minutes - Steady progress</div>
+        </div>
+        <div class="goal-option" onclick="selectGoal(this, '30')">
+          <div class="goal-radio"></div>
+          <div class="goal-text">30 minutes - Deep work</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="saveGoal()" id="goal-btn" disabled style="opacity: 0.5;">
+        Complete Setup →
+      </button>
+    </div>
+
+    <!-- Screen 5: Success -->
+    <div class="screen" id="screen-5">
+      <div class="final-content">
+        <div class="success-icon">🎉</div>
+        <h1 class="final-title">You're All Set!</h1>
+        <p class="final-subtitle">Your personalized growth journey starts now. Rex, your AI coach, is ready to guide you.</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">0</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0</div>
+            <div class="stat-label">XP Points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Level</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="goToApp()">
+          Start Your Journey →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let userData = {
+      name: '',
+      pillars: [],
+      dailyGoal: ''
+    };
+
+    function nextScreen(screenNum) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`screen-${screenNum}`).classList.add('active');
+    }
+
+    function saveName() {
+      const name = document.getElementById('name-input').value.trim();
+      if (!name) {
+        alert('Please enter your name');
+        return;
+      }
+      userData.name = name;
+      nextScreen(3);
+    }
+
+    function togglePillar(element, pillar) {
+      const isSelected = element.classList.contains('selected');
+      
+      if (isSelected) {
+        element.classList.remove('selected');
+        userData.pillars = userData.pillars.filter(p => p !== pillar);
+      } else {
+        if (userData.pillars.length >= 3) {
+          return; // Max 3 pillars
+        }
+        element.classList.add('selected');
+        userData.pillars.push(pillar);
+      }
+
+      // Enable button if 2-3 pillars selected
+      const btn = document.getElementById('pillars-btn');
+      if (userData.pillars.length >= 2) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      } else {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+      }
+    }
+
+    function savePillars() {
+      if (userData.pillars.length < 2) {
+        alert('Please select at least 2 areas');
+        return;
+      }
+      nextScreen(4);
+    }
+
+    function selectGoal(element, minutes) {
+      document.querySelectorAll('.goal-option').forEach(opt => opt.classList.remove('selected'));
+      element.classList.add('selected');
+      userData.dailyGoal = minutes;
+
+      // Enable button
+      const btn = document.getElementById('goal-btn');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+
+    function saveGoal() {
+      if (!userData.dailyGoal) {
+        alert('Please select a daily goal');
+        return;
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('growthovo_user', JSON.stringify(userData));
+      localStorage.setItem('growthovo_onboarded', 'true');
+      
+      nextScreen(5);
+    }
+
+    function skipToApp() {
+      localStorage.setItem('growthovo_onboarded', 'true');
+      goToApp();
+    }
+
+    function goToApp() {
+      // Track completion
+      if (window.gtag) {
+        window.gtag('event', 'onboarding_complete', {
+          event_category: 'engagement',
+          event_label: 'onboarding'
+        });
+      }
+      
+      // Redirect to main app
+      window.location.href = '/app.html';
+    }
+
+    // Auto-focus name input
+    setTimeout(() => {
+      const nameInput = document.getElementById('name-input');
+      if (nameInput) {
+        nameInput.focus();
+      }
+    }, 500);
+
+    // Enter key support
+    document.getElementById('name-input')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        saveName();
+      }
+    });
+  </script>
+</body>
+</html>

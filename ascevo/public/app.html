@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#08080F">
+  <title>Growthovo - Your Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #08080F;
+      color: #FFFFFF;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      min-height: 100vh;
+      padding: 20px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-top: 20px;
+    }
+
+    .greeting {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .greeting-name {
+      color: #A78BFA;
+    }
+
+    .profile-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* Stats */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(24px);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #A78BFA;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Daily Mission */
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+    }
+
+    .mission-card {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(167, 139, 250, 0.10) 100%);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    }
+
+    .mission-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+
+    .mission-desc {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 16px;
+    }
+
+    .mission-reward {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 100px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #34D399;
+    }
+
+    /* Pillars */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .pillar-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pillar-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .pillar-emoji {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .pillar-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 4px;
+    }
+
+    .pillar-progress {
+      font-size: 12px;
+      color: #A78BFA;
+    }
+
+    /* CTA Button */
+    .cta-btn {
+      width: 100%;
+      padding: 18px 32px;
+      background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+      border: none;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+      color: #FFFFFF;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8, 8, 15, 0.95);
+      backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 20px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: #A78BFA;
+    }
+
+    .nav-icon {
+      font-size: 24px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .nav-item.active .nav-label {
+      color: #A78BFA;
+    }
+
+    /* Ambient orb */
+    .orb {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      background: #6C63FF;
+      opacity: 0.12;
+      filter: blur(80px);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      top: -100px;
+      right: -100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="orb"></div>
+  
+  <div class="app-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="greeting">
+        Hey, <span class="greeting-name" id="user-name">Champion</span>! 👋
+      </div>
+      <div class="profile-btn">👤</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">XP Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Level</div>
+      </div>
+    </div>
+
+    <!-- Daily Mission -->
+    <h2 class="section-title">Today's Mission</h2>
+    <div class="mission-card">
+      <div class="mission-title">🎯 Complete Your First Check-in</div>
+      <div class="mission-desc">Take 2 minutes to reflect on your day and set your intentions</div>
+      <span class="mission-reward">+50 XP 💎</span>
+    </div>
+
+    <!-- CTA -->
+    <button class="cta-btn" onclick="startCheckin()">
+      Start Daily Check-in →
+    </button>
+
+    <!-- Pillars -->
+    <h2 class="section-title">Your Growth Pillars</h2>
+    <div class="pillars-grid" id="pillars-grid">
+      <!-- Dynamically populated -->
+    </div>
+
+    <!-- Bottom padding for nav -->
+    <div style="height: 80px;"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">🎯</div>
+      <div class="nav-label">Pillars</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">💬</div>
+      <div class="nav-label">Rex</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">League</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </div>
+  </div>
+
+  <script>
+    // Load user data
+    const userData = JSON.parse(localStorage.getItem('growthovo_user') || '{}');
+    
+    // Set user name
+    if (userData.name) {
+      document.getElementById('user-name').textContent = userData.name;
+    }
+
+    // Populate pillars
+    const pillarData = {
+      mental: { emoji: '🧠', name: 'Mental Health' },
+      relationships: { emoji: '💬', name: 'Relationships' },
+      career: { emoji: '💼', name: 'Career' },
+      fitness: { emoji: '💪', name: 'Fitness' },
+      finance: { emoji: '💰', name: 'Finance' },
+      hobbies: { emoji: '🎨', name: 'Hobbies' }
+    };
+
+    const pillarsGrid = document.getElementById('pillars-grid');
+    const userPillars = userData.pillars || ['mental', 'relationships', 'career'];
+
+    userPillars.forEach(pillarKey => {
+      const pillar = pillarData[pillarKey];
+      if (pillar) {
+        const card = document.createElement('div');
+        card.className = 'pillar-card';
+        card.innerHTML = `
+          <span class="pillar-emoji">${pillar.emoji}</span>
+          <div class="pillar-name">${pillar.name}</div>
+          <div class="pillar-progress">Level 1</div>
+        `;
+        pillarsGrid.appendChild(card);
+      }
+    });
+
+    function startCheckin() {
+      alert('🎉 Check-in feature coming soon!\n\nYou\'ll be able to:\n• Reflect on your day\n• Set daily intentions\n• Track your mood\n• Earn XP and level up\n\nStay tuned!');
+    }
+
+    // Track page view
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_title: 'Dashboard',
+        page_location: window.location.href
+      });
+    }
+  </script>
+</body>
+</html>
