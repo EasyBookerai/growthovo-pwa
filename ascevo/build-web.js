@@ -7,11 +7,12 @@ const path = require('path');
 console.log('Building Growthovo PWA for web...');
 
 try {
-  // Use expo export with web platform
-  console.log('Running expo export for web...');
-  execSync('npx expo export --platform web --output-dir web-build', {
+  // Use webpack directly via expo CLI
+  console.log('Running webpack build via expo...');
+  execSync('EXPO_USE_STATIC=true npx expo export:web --output-dir web-build', {
     stdio: 'inherit',
-    cwd: __dirname
+    cwd: __dirname,
+    env: { ...process.env, NODE_ENV: 'production' }
   });
   
   console.log('✅ Build completed successfully!');
