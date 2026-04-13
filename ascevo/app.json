@@ -27,7 +27,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "name": "Growthovo",
+      "shortName": "Growthovo",
+      "description": "Your personal growth companion with AI coaching, habit tracking, and daily challenges",
+      "themeColor": "#7C3AED",
+      "backgroundColor": "#0A0A0A",
+      "display": "standalone",
+      "orientation": "portrait",
+      "startUrl": "/",
+      "scope": "/",
+      "lang": "en",
+      "dir": "ltr"
     },
     "plugins": [
       "expo-router",
