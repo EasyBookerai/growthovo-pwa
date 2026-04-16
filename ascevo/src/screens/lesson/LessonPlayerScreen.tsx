@@ -7,8 +7,12 @@ import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { completeLesson } from '../../services/lessonService';
 import { deductHeart } from '../../services/heartService';
 import { incrementStreak, checkMilestone } from '../../services/streakService';
+import { checkAchievements, ACHIEVEMENT_DEFINITIONS } from '../../services/gamificationService';
+import { useCelebration } from '../../hooks/useCelebration';
+import CelebrationModal from '../../components/gamification/CelebrationModal';
+import GlassCard from '../../components/glass/GlassCard';
 import { colors, typography, spacing, radius } from '../../theme';
-import type { Lesson } from '../../types';
+import type { Lesson, AchievementEvent } from '../../types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.3;
@@ -36,6 +40,9 @@ export default function LessonPlayerScreen({ lesson, userId, pillarColour, onCom
   const [cardIndex, setCardIndex] = useState(0);
   const translateX = useRef(new Animated.Value(0)).current;
   const [completing, setCompleting] = useState(false);
+  
+  // 🎉 Celebration hook for managing celebration queue
+  const { trigger, isPlaying, currentCelebration, skip } = useCelebration();
 
   const cards: { type: CardType; content: string }[] = [
     { type: 'concept',   content: lesson.cardConcept },
@@ -51,18 +58,37 @@ export default function LessonPlayerScreen({ lesson, userId, pillarColour, onCom
   const isFirst = cardIndex === 0;
 
   function animateOut(direction: 'left' | 'right', callback: () => void) {
-    Animated.timing(translateX, {
-      toValue: direction === 'left' ? -SCREEN_WIDTH : SCREEN_WIDTH,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      translateX.setValue(direction === 'left' ? SCREEN_WIDTH : -SCREEN_WIDTH);
-      callback();
+    // Add fade out effect for smooth glass transition
+    const fadeAnim = new Animated.Value(1);
+    
+    Animated.parallel([
       Animated.timing(translateX, {
+        toValue: direction === 'left' ? -SCREEN_WIDTH : SCREEN_WIDTH,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 200,
         useNativeDriver: true,
-      }).start();
+      }),
+    ]).start(() => {
+      translateX.setValue(direction === 'left' ? SCREEN_WIDTH : -SCREEN_WIDTH);
+      callback();
+      
+      // Fade in new card
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
     });
   }
 
@@ -71,11 +97,59 @@ export default function LessonPlayerScreen({ lesson, userId, pillarColour, onCom
     if (isLast) {
       setCompleting(true);
       try {
+        // Complete the lesson and get XP earned
         const xp = await completeLesson(userId, lesson.id);
+        
+        // Increment streak and check for milestone
         const newStreak = await incrementStreak(userId);
         const milestone = checkMilestone(newStreak);
+        
+        // 🎉 Trigger lesson completion celebration
+        trigger('lesson_complete', {
+          title: 'Lesson Complete!',
+          subtitle: lesson.title,
+          xpEarned: xp,
+          intensity: 'medium',
+        });
+        
+        // 🎉 Check for streak milestone celebration
+        if (milestone.isMilestone) {
+          trigger('streak_milestone', {
+            title: 'Streak Milestone!',
+            subtitle: `${milestone.days} days in a row!`,
+            streakMilestone: milestone.days,
+            xpEarned: milestone.xpBonus,
+            intensity: 'high',
+          });
+        }
+        
+        // 🎉 Check for newly unlocked achievements
+        const newAchievements = await checkAchievements(userId, {
+          type: 'lesson_complete',
+          lessonId: lesson.id,
+        } as AchievementEvent);
+        
+        // Trigger achievement celebrations
+        for (const achievement of newAchievements) {
+          const achievementDef = ACHIEVEMENT_DEFINITIONS[achievement.achievementId];
+          if (achievementDef) {
+            trigger('achievement', {
+              title: 'Achievement Unlocked!',
+              subtitle: achievementDef.title,
+              achievements: [{
+                id: achievementDef.id,
+                title: achievementDef.title,
+                icon: achievementDef.icon,
+              }],
+              intensity: achievementDef.category === 'special' ? 'high' : 'medium',
+            });
+          }
+        }
+        
+        // Call onComplete callback after celebrations are queued
         onComplete(xp, milestone.isMilestone ? { days: milestone.days, xpBonus: milestone.xpBonus } : undefined);
       } catch (e) {
+        console.error('Failed to complete lesson:', e);
         setCompleting(false);
       }
       return;
@@ -134,15 +208,20 @@ export default function LessonPlayerScreen({ lesson, userId, pillarColour, onCom
       {/* Card */}
       <PanGestureHandler onHandlerStateChange={onGestureEvent}>
         <Animated.View style={[styles.cardWrapper, { transform: [{ translateX }] }]}>
-          <View style={[styles.card, { borderTopColor: meta.accent }]}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardEmoji}>{meta.emoji}</Text>
-              <Text style={[styles.cardLabel, { color: meta.accent }]}>{meta.label}</Text>
+          <GlassCard
+            intensity="medium"
+            style={styles.card}
+          >
+            <View style={[styles.cardInner, { borderTopColor: meta.accent }]}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardEmoji}>{meta.emoji}</Text>
+                <Text style={[styles.cardLabel, { color: meta.accent }]}>{meta.label}</Text>
+              </View>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.cardContent}>{currentCard.content}</Text>
+              </ScrollView>
             </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={styles.cardContent}>{currentCard.content}</Text>
-            </ScrollView>
-          </View>
+          </GlassCard>
         </Animated.View>
       </PanGestureHandler>
 
@@ -169,6 +248,16 @@ export default function LessonPlayerScreen({ lesson, userId, pillarColour, onCom
       </View>
 
       <Text style={styles.swipeHint}>Swipe left/right to navigate</Text>
+      
+      {/* 🎉 Celebration Modal */}
+      {currentCelebration && (
+        <CelebrationModal
+          visible={isPlaying}
+          data={currentCelebration}
+          onComplete={skip}
+          achievementDefinitions={Object.values(ACHIEVEMENT_DEFINITIONS)}
+        />
+      )}
     </View>
   );
 }
@@ -202,8 +291,11 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: colors.surface,
     borderRadius: radius.xl,
+    padding: 0, // Remove padding from GlassCard, add to inner
+  },
+  cardInner: {
+    flex: 1,
     padding: spacing.lg,
     borderTopWidth: 4,
   },

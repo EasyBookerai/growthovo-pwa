@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   View, Text, ScrollView, StyleSheet,
-  ActivityIndicator, TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { supabase } from '../../services/supabaseClient';
 import { assignUserToLeague, getLeagueRankings } from '../../services/leagueService';
-import { colors, typography, spacing, radius } from '../../theme';
+import { colors, typography, spacing } from '../../theme';
 import type { LeagueMember } from '../../types';
+import LeaderboardCard from '../../components/gamification/LeaderboardCard';
+import GlassCard from '../../components/glass/GlassCard';
 
 interface Props {
   userId: string;
@@ -67,54 +69,43 @@ export default function LeagueScreen({ userId }: Props) {
 
   return (
     <View style={styles.root}>
-      <View style={styles.header}>
+      {/* Glass header with league info */}
+      <GlassCard intensity="medium" style={styles.header}>
         <Text style={styles.title}>🏆 Weekly League</Text>
         <Text style={styles.subtitle}>{daysLeft} day{daysLeft !== 1 ? 's' : ''} until reset</Text>
-      </View>
+        
+        {/* User's current position */}
+        {userMember && (
+          <View style={styles.userPosition}>
+            <Text style={styles.positionLabel}>Your Position</Text>
+            <View style={styles.positionInfo}>
+              <Text style={styles.positionRank}>{getRankEmoji(userMember.rank)}</Text>
+              <Text style={styles.positionXp}>{userMember.weeklyXp} XP</Text>
+            </View>
+          </View>
+        )}
+      </GlassCard>
 
       <ScrollView contentContainerStyle={styles.list}>
-        {members.map((m, i) => {
-          const isUser = m.userId === userId;
-          const isPromotion = i < 5;
-          const isRelegation = i >= members.length - 5;
+        {/* Enhanced leaderboard with glassmorphism */}
+        <LeaderboardCard
+          members={members}
+          currentUserId={userId}
+          variant="full"
+        />
 
-          return (
-            <View
-              key={m.userId}
-              style={[
-                styles.row,
-                isUser && styles.rowSelf,
-                isPromotion && styles.rowPromotion,
-                isRelegation && !isPromotion && styles.rowRelegation,
-              ]}
-            >
-              <Text style={[styles.rank, isPromotion && { color: colors.promotionGreen }]}>
-                {getRankEmoji(i + 1)}
-              </Text>
-              <View style={styles.userInfo}>
-                <Text style={[styles.username, isUser && { color: colors.primary }]}>
-                  {m.username}{isUser ? ' (you)' : ''}
-                </Text>
-                {isPromotion && <Text style={styles.promotionTag}>↑ Promotion zone</Text>}
-                {isRelegation && !isPromotion && <Text style={styles.relegationTag}>↓ Relegation zone</Text>}
-              </View>
-              <Text style={styles.xp}>{m.weeklyXp} XP</Text>
-            </View>
-          );
-        })}
+        {/* Zone legend */}
+        <GlassCard intensity="light" style={styles.legend}>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: colors.promotionGreen }]} />
+            <Text style={styles.legendText}>Top 5 promote to next league</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: colors.relegationRed }]} />
+            <Text style={styles.legendText}>Bottom 5 relegate to previous league</Text>
+          </View>
+        </GlassCard>
       </ScrollView>
-
-      {/* Zone legend */}
-      <View style={styles.legend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: colors.promotionGreen }]} />
-          <Text style={styles.legendText}>Top 5 promote</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: colors.relegationRed }]} />
-          <Text style={styles.legendText}>Bottom 5 relegate</Text>
-        </View>
-      </View>
     </View>
   );
 }
@@ -135,28 +126,52 @@ function getDaysUntilMonday(): number {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
-  header: { padding: spacing.lg, paddingTop: 60, borderBottomWidth: 1, borderBottomColor: colors.border },
-  title: { ...typography.h2, color: colors.text },
-  subtitle: { ...typography.small, color: colors.textMuted, marginTop: 4 },
-  list: { padding: spacing.md, gap: 8, paddingBottom: 80 },
-  row: {
-    flexDirection: 'row', alignItems: 'center', gap: spacing.sm,
-    backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md,
+  header: { 
+    margin: spacing.md,
+    marginTop: 60,
+    padding: spacing.lg,
   },
-  rowSelf: { borderWidth: 1, borderColor: colors.primary },
-  rowPromotion: { borderLeftWidth: 3, borderLeftColor: colors.promotionGreen },
-  rowRelegation: { borderLeftWidth: 3, borderLeftColor: colors.relegationRed },
-  rank: { ...typography.bodyBold, color: colors.text, width: 36, textAlign: 'center' },
-  userInfo: { flex: 1 },
-  username: { ...typography.body, color: colors.text },
-  promotionTag: { ...typography.small, color: colors.promotionGreen },
-  relegationTag: { ...typography.small, color: colors.relegationRed },
-  xp: { ...typography.bodyBold, color: colors.xpGold },
+  title: { ...typography.h2, color: colors.text, textAlign: 'center' },
+  subtitle: { ...typography.small, color: colors.textMuted, marginTop: 4, textAlign: 'center' },
+  userPosition: {
+    marginTop: spacing.md,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+  },
+  positionLabel: {
+    ...typography.small,
+    color: colors.textMuted,
+    marginBottom: spacing.xs,
+  },
+  positionInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  positionRank: {
+    ...typography.h2,
+    fontSize: 32,
+  },
+  positionXp: {
+    ...typography.h3,
+    color: colors.xpGold,
+  },
+  list: { 
+    padding: spacing.md, 
+    gap: spacing.md, 
+    paddingBottom: 80,
+  },
   legend: {
-    flexDirection: 'row', justifyContent: 'center', gap: spacing.xl,
-    padding: spacing.md, borderTopWidth: 1, borderTopColor: colors.border,
+    padding: spacing.md,
+    gap: spacing.sm,
   },
-  legendItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  legendItem: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    gap: spacing.sm,
+  },
   legendDot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { ...typography.small, color: colors.textMuted },
 });

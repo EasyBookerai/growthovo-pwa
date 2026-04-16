@@ -7,10 +7,10 @@ Production-ready Apple-grade glassmorphism splash screen with PWA support, offli
 ## ✅ What's Included
 
 ### Core Files
-- `ascevo/public/splash.html` - Main splash screen (self-contained)
-- `ascevo/public/index.html` - Updated with PWA meta tags and inline splash
-- `ascevo/public/manifest.json` - Enhanced PWA manifest with shortcuts
-- `ascevo/public/service-worker.js` - Offline support and caching
+- `growthovo/public/splash.html` - Main splash screen (self-contained)
+- `growthovo/public/index.html` - Updated with PWA meta tags and inline splash
+- `growthovo/public/manifest.json` - Enhanced PWA manifest with shortcuts
+- `growthovo/public/service-worker.js` - Offline support and caching
 
 ### Features Implemented
 
@@ -78,15 +78,15 @@ You need to create actual PNG icons. Use these specifications:
 # - https://www.pwabuilder.com/imageGenerator
 
 # Option 2: Use ImageMagick (if you have a source SVG)
-convert icon.svg -resize 192x192 ascevo/public/icon-192.png
-convert icon.svg -resize 512x512 ascevo/public/icon-512.png
-convert icon.svg -resize 32x32 ascevo/public/favicon.png
+convert icon.svg -resize 192x192 growthovo/public/icon-192.png
+convert icon.svg -resize 512x512 growthovo/public/icon-512.png
+convert icon.svg -resize 32x32 growthovo/public/favicon.png
 ```
 
 ### 2. Test Locally
 
 ```bash
-cd ascevo
+cd growthovo
 npm install
 npm run build:web
 npm run serve  # or use a local server

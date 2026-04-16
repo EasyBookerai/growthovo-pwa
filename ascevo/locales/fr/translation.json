@@ -92,6 +92,62 @@
     "fallback_streak_warning": "Ta série est en danger. Ne laisse pas une soirée paresseuse gâcher une bonne semaine.",
     "fallback_weekly_summary": "Une autre semaine dans les livres. Tu construis quelque chose de réel — n'arrête pas maintenant."
   },
+  "gamification": {
+    "streak": {
+      "title": "Série",
+      "day_streak": "jours d'affilée",
+      "at_risk": "En danger !",
+      "milestone": "Étape de série !",
+      "milestone_desc": "Tu as tenu pendant {{days}} jours !",
+      "freeze_available": "{{count}} gel disponible",
+      "freezes_available": "{{count}} gels disponibles"
+    },
+    "achievements": {
+      "title": "Succès",
+      "unlocked": "Débloqué",
+      "locked": "Verrouillé",
+      "unlocked_at": "Débloqué le {{date}}",
+      "requirements": "Exigences",
+      "categories": {
+        "all": "Tous",
+        "streak": "Série",
+        "lessons": "Leçons",
+        "social": "Social",
+        "special": "Spécial"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Leçon terminée !",
+      "level_up": "Niveau supérieur !",
+      "streak_milestone": "Étape de série !",
+      "achievement_unlocked": "Succès débloqué !",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Niveau {{level}}",
+      "continue": "Continuer",
+      "skip": "Passer"
+    },
+    "daily_goals": {
+      "title": "Objectifs quotidiens",
+      "complete": "Terminé",
+      "in_progress": "En cours",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Facile",
+        "medium": "Moyen",
+        "hard": "Difficile"
+      }
+    },
+    "leaderboard": {
+      "title": "Classement",
+      "your_league": "Votre Ligue",
+      "rank": "Rang {{rank}}",
+      "promotion": "Zone de promotion",
+      "relegation": "Zone de relégation",
+      "view_all": "Tout voir",
+      "you": "Vous"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} jours d'affilée",
     "at_risk": "Votre série est en danger !",

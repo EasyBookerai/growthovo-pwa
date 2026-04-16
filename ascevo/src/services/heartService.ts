@@ -1,3 +1,9 @@
+/**
+ * Heart Service — manages the "hearts" health system.
+ * Local: AsyncStorage under '@growthovo:hearts'
+ * Remote: Supabase hearts table
+ */
+
 import { supabase } from './supabaseClient';
 
 const MAX_HEARTS = 5;

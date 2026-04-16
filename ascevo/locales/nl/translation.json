@@ -92,6 +92,64 @@
     "fallback_streak_warning": "Je streak staat op het spel. Laat een luie avond geen goede week verpesten.",
     "fallback_weekly_summary": "Nog een week in de boeken. Je bouwt iets echts — stop nu niet."
   },
+  "gamification": {
+    "streak": {
+      "title": "Streak",
+      "day_streak": "dagen op rij",
+      "at_risk": "In gevaar!",
+      "milestone": "Streak-mijlpaal!",
+      "milestone_desc": "Je hebt het al {{days}} dagen volgehouden!",
+      "freeze_available": "{{count}} bevriezing beschikbaar",
+      "freezes_available": "{{count}} bevriezingen beschikbaar",
+      "accessibility_label": "{{streak}} dagen streak{{atRisk}}, {{freezes}}",
+      "accessibility_hint": "Tik om streakdetails te bekijken"
+    },
+    "achievements": {
+      "title": "Prestaties",
+      "unlocked": "Ontgrendeld",
+      "locked": "Vergrendeld",
+      "unlocked_at": "Ontgrendeld op {{date}}",
+      "requirements": "Vereisten",
+      "categories": {
+        "all": "Alle",
+        "streak": "Streak",
+        "lessons": "Lessen",
+        "social": "Sociaal",
+        "special": "Speciaal"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Les voltooid!",
+      "level_up": "Niveau omhoog!",
+      "streak_milestone": "Streak-mijlpaal!",
+      "achievement_unlocked": "Prestatie ontgrendeld!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Niveau {{level}}",
+      "continue": "Doorgaan",
+      "skip": "Overslaan"
+    },
+    "daily_goals": {
+      "title": "Dagelijkse doelen",
+      "complete": "Voltooid",
+      "in_progress": "In uitvoering",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Makkelijk",
+        "medium": "Gemiddeld",
+        "hard": "Moeilijk"
+      }
+    },
+    "leaderboard": {
+      "title": "Scorebord",
+      "your_league": "Jouw Liga",
+      "rank": "Rang {{rank}}",
+      "promotion": "Promotiezone",
+      "relegation": "Degradatiezone",
+      "view_all": "Alles bekijken",
+      "you": "Jij"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} dagen op rij",
     "at_risk": "Je streak staat op het spel!",

@@ -98,6 +98,33 @@ export const useXPStore = create<XPSlice>((set) => ({
     })),
 }));
 
+// ─── Performance Slice ────────────────────────────────────────────────────────
+
+interface PerformanceSettings {
+  glassmorphismEnabled: boolean;
+  animationsEnabled: boolean;
+  blurIntensity: 'light' | 'medium' | 'heavy';
+  autoDegrade: boolean;
+}
+
+interface PerformanceSlice {
+  settings: PerformanceSettings;
+  updateSettings: (updates: Partial<PerformanceSettings>) => void;
+}
+
+export const usePerformanceStore = create<PerformanceSlice>((set) => ({
+  settings: {
+    glassmorphismEnabled: true,
+    animationsEnabled: true,
+    blurIntensity: 'medium',
+    autoDegrade: true,
+  },
+  updateSettings: (updates) =>
+    set((state) => ({
+      settings: { ...state.settings, ...updates },
+    })),
+}));
+
 // ─── League Slice ─────────────────────────────────────────────────────────────
 
 interface LeagueSlice {
@@ -149,5 +176,79 @@ export const useLanguageStore = create<LanguageSlice>((set, get) => ({
     } finally {
       set({ isChangingLanguage: false });
     }
+  },
+}));
+
+// ─── Theme Slice ──────────────────────────────────────────────────────────────
+
+import type { ThemeMode, ResolvedTheme, ColorScheme, GlassmorphismTheme } from '../services/themeService';
+import {
+  initializeTheme,
+  setThemeMode as persistThemeMode,
+  toggleTheme as toggleThemeMode,
+  getColors,
+  getGlassTheme,
+  subscribeToTheme,
+} from '../services/themeService';
+
+interface ThemeSlice {
+  mode: ThemeMode;
+  resolved: ResolvedTheme;
+  colors: ColorScheme;
+  glass: GlassmorphismTheme;
+  isInitialized: boolean;
+  initialize: () => Promise<void>;
+  setMode: (mode: ThemeMode, userId?: string) => Promise<void>;
+  toggle: (userId?: string) => Promise<void>;
+}
+
+export const useThemeStore = create<ThemeSlice>((set, get) => ({
+  mode: 'auto',
+  resolved: 'dark',
+  colors: getColors('dark'),
+  glass: getGlassTheme('dark'),
+  isInitialized: false,
+
+  initialize: async () => {
+    if (get().isInitialized) return;
+
+    const resolved = await initializeTheme();
+    
+    // Subscribe to theme changes
+    subscribeToTheme((newTheme) => {
+      set({
+        resolved: newTheme,
+        colors: getColors(newTheme),
+        glass: getGlassTheme(newTheme),
+      });
+    });
+
+    set({
+      resolved,
+      colors: getColors(resolved),
+      glass: getGlassTheme(resolved),
+      isInitialized: true,
+    });
+  },
+
+  setMode: async (mode: ThemeMode, userId?: string) => {
+    const resolved = await persistThemeMode(mode, userId);
+    set({
+      mode,
+      resolved,
+      colors: getColors(resolved),
+      glass: getGlassTheme(resolved),
+    });
+  },
+
+  toggle: async (userId?: string) => {
+    const resolved = await toggleThemeMode(userId);
+    const currentMode = get().resolved === 'dark' ? 'light' : 'dark';
+    set({
+      mode: currentMode,
+      resolved,
+      colors: getColors(resolved),
+      glass: getGlassTheme(resolved),
+    });
   },
 }));

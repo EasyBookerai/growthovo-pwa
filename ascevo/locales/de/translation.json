@@ -92,6 +92,62 @@
     "fallback_streak_warning": "Dein Streak ist gefährdet. Lass einen faulen Abend keine gute Woche ruinieren.",
     "fallback_weekly_summary": "Noch eine Woche in den Büchern. Du baust etwas Echtes auf — hör jetzt nicht auf."
   },
+  "gamification": {
+    "streak": {
+      "title": "Streak",
+      "day_streak": "Tage in Folge",
+      "at_risk": "Gefährdet!",
+      "milestone": "Streak-Meilenstein!",
+      "milestone_desc": "Du hast {{days}} Tage durchgehalten!",
+      "freeze_available": "{{count}} Einfrierung verfügbar",
+      "freezes_available": "{{count}} Einfrierungen verfügbar"
+    },
+    "achievements": {
+      "title": "Erfolge",
+      "unlocked": "Freigeschaltet",
+      "locked": "Gesperrt",
+      "unlocked_at": "Freigeschaltet am {{date}}",
+      "requirements": "Anforderungen",
+      "categories": {
+        "all": "Alle",
+        "streak": "Streak",
+        "lessons": "Lektionen",
+        "social": "Soziales",
+        "special": "Spezial"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Lektion abgeschlossen!",
+      "level_up": "Levelaufstieg!",
+      "streak_milestone": "Streak-Meilenstein!",
+      "achievement_unlocked": "Erfolg freigeschaltet!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Level {{level}}",
+      "continue": "Weiter",
+      "skip": "Überspringen"
+    },
+    "daily_goals": {
+      "title": "Tagesziele",
+      "complete": "Abgeschlossen",
+      "in_progress": "In Bearbeitung",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Leicht",
+        "medium": "Mittel",
+        "hard": "Schwer"
+      }
+    },
+    "leaderboard": {
+      "title": "Bestenliste",
+      "your_league": "Deine Liga",
+      "rank": "Rang {{rank}}",
+      "promotion": "Aufstiegszone",
+      "relegation": "Abstiegszone",
+      "view_all": "Alle ansehen",
+      "you": "Du"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} Tage in Folge",
     "at_risk": "Dein Streak ist gefährdet!",

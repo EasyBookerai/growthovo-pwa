@@ -3,6 +3,8 @@ import { awardXP } from './progressService';
 import { XP_AWARDS } from '../types';
 import type { Lesson } from '../types';
 import type { SupportedLanguage } from './i18nService';
+import { storeCelebrationEvent } from './celebrationService';
+import type { CelebrationData } from './animationService';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -75,7 +77,11 @@ export async function getLessonsForUnit(
 // Complete Lesson
 // ---------------------------------------------------------------------------
 
-export async function completeLesson(userId: string, lessonId: string): Promise<number> {
+export async function completeLesson(
+  userId: string,
+  lessonId: string,
+  onCelebration?: (data: CelebrationData) => void
+): Promise<number> {
   const xpAmount = XP_AWARDS.LESSON_COMPLETE;
 
   const { data: existing } = await supabase
@@ -101,7 +107,25 @@ export async function completeLesson(userId: string, lessonId: string): Promise<
 
   if (error) throw new Error('Failed to record lesson completion.');
 
-  await awardXP(userId, xpAmount, 'lesson', lessonId);
+  await awardXP(userId, xpAmount, 'lesson', lessonId, onCelebration);
+  
+  // 🎉 Trigger lesson completion celebration
+  const celebrationData: CelebrationData = {
+    type: 'lesson_complete',
+    title: 'Lesson Complete!',
+    subtitle: 'Great job!',
+    xpEarned: xpAmount,
+    intensity: 'medium',
+  };
+  
+  // Store celebration event in database
+  await storeCelebrationEvent(userId, celebrationData);
+  
+  // Trigger celebration callback if provided
+  if (onCelebration) {
+    onCelebration(celebrationData);
+  }
+  
   return xpAmount;
 }
 

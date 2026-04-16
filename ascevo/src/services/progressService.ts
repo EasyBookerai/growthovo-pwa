@@ -1,6 +1,8 @@
 import { supabase } from './supabaseClient';
 import type { XPSource } from '../types';
 import { PILLAR_LEVEL_THRESHOLDS, XP_AWARDS } from '../types';
+import { storeCelebrationEvent } from './celebrationService';
+import type { CelebrationData } from './animationService';
 
 // ─── Award XP ─────────────────────────────────────────────────────────────────
 
@@ -8,8 +10,32 @@ export async function awardXP(
   userId: string,
   amount: number,
   source: XPSource,
-  referenceId?: string
+  referenceId?: string,
+  onCelebration?: (data: CelebrationData) => void
 ): Promise<void> {
+  // Get pillar ID if this is a lesson-based XP award
+  let pillarId: string | undefined;
+  let previousXP = 0;
+  
+  if (source === 'lesson' && referenceId) {
+    try {
+      const { data: lesson } = await supabase
+        .from('lessons')
+        .select('units!inner(pillar_id)')
+        .eq('id', referenceId)
+        .single();
+      
+      if (lesson) {
+        pillarId = (lesson.units as any).pillar_id;
+        // Get previous XP for level-up check
+        previousXP = await getPillarXP(userId, pillarId);
+      }
+    } catch (err) {
+      // If we can't get pillar info, just skip level-up check
+      console.warn('Could not fetch pillar info for level-up check:', err);
+    }
+  }
+  
   const { error } = await supabase.from('xp_transactions').insert({
     user_id: userId,
     amount,
@@ -18,6 +44,36 @@ export async function awardXP(
   });
 
   if (error) throw new Error('Failed to record XP transaction.');
+  
+  // 🎉 Check for level-up and trigger celebration
+  if (pillarId) {
+    try {
+      const didLevelUp = await checkLevelUp(userId, pillarId, previousXP);
+      
+      if (didLevelUp) {
+        const newLevel = await getPillarLevel(userId, pillarId);
+        
+        const celebrationData: CelebrationData = {
+          type: 'level_up',
+          title: 'Level Up!',
+          subtitle: `You reached level ${newLevel}!`,
+          newLevel,
+          intensity: newLevel >= 10 ? 'high' : newLevel >= 5 ? 'medium' : 'low',
+        };
+        
+        // Store celebration event in database
+        await storeCelebrationEvent(userId, celebrationData);
+        
+        // Trigger celebration callback if provided
+        if (onCelebration) {
+          onCelebration(celebrationData);
+        }
+      }
+    } catch (err) {
+      // Don't fail the XP award if celebration fails
+      console.warn('Could not trigger level-up celebration:', err);
+    }
+  }
 }
 
 // ─── Get Total XP ─────────────────────────────────────────────────────────────

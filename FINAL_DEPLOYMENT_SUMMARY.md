@@ -11,7 +11,7 @@
 - Performance monitoring
 - Auto-routing to onboarding or app
 
-**File:** `ascevo/public/splash.html`
+**File:** `growthovo/public/splash.html`
 
 ### 2. Interactive Onboarding (60-90s)
 4-screen personalization flow:
@@ -29,7 +29,7 @@
 - LocalStorage persistence
 - Analytics tracking ready
 
-**File:** `ascevo/public/onboarding.html`
+**File:** `growthovo/public/onboarding.html`
 
 ### 3. Dashboard MVP
 - Personalized greeting
@@ -39,7 +39,7 @@
 - Bottom navigation
 - Clear CTA (Start Check-in)
 
-**File:** `ascevo/public/app.html`
+**File:** `growthovo/public/app.html`
 
 ### 4. Complete Retention Strategy
 - Comprehensive retention playbook

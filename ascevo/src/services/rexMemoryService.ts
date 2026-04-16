@@ -1,3 +1,9 @@
+/**
+ * Rex Memory Service — manages the long-term memory system.
+ * Local: AsyncStorage under '@growthovo:rex_memory'
+ * Remote: Supabase rex_memory table
+ */
+
 import { supabase } from './supabaseClient';
 import { RexMemory, MemoryContext, MemoryType } from '../types';
 

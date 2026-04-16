@@ -92,11 +92,11 @@ fi
 echo ""
 
 echo "7. Verifying .gitignore..."
-if [ ! -f "ascevo/.gitignore" ]; then
+if [ ! -f "growthovo/.gitignore" ]; then
     error ".gitignore file not found!"
-elif ! grep -q "^\.env$" ascevo/.gitignore; then
+elif ! grep -q "^\.env$" growthovo/.gitignore; then
     error ".gitignore missing .env exclusion!"
-elif ! grep -q "^\*\.secret$" ascevo/.gitignore; then
+elif ! grep -q "^\*\.secret$" growthovo/.gitignore; then
     error ".gitignore missing *.secret exclusion!"
 else
     success ".gitignore properly configured"

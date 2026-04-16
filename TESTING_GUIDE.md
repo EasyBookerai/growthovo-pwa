@@ -6,7 +6,7 @@
 
 1. **Start a local server:**
 ```bash
-cd ascevo/public
+cd growthovo/public
 python -m http.server 8000
 # or
 npx serve

@@ -21,7 +21,7 @@ Your repository has been comprehensively secured with multiple layers of protect
    - Excludes all sensitive files
    - Protects environment variables
 
-2. **`ascevo/.gitignore` (enhanced)**
+2. **`growthovo/.gitignore` (enhanced)**
    - Comprehensive security-first configuration
    - 200+ lines of protection rules
    - Covers all common security risks

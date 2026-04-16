@@ -92,6 +92,62 @@
     "fallback_streak_warning": "Tu racha está en riesgo. No dejes que una noche perezosa arruine una buena semana.",
     "fallback_weekly_summary": "Otra semana en los libros. Estás construyendo algo real — no te detengas ahora."
   },
+  "gamification": {
+    "streak": {
+      "title": "Racha",
+      "day_streak": "días seguidos",
+      "at_risk": "¡En riesgo!",
+      "milestone": "¡Hito de racha!",
+      "milestone_desc": "¡Has mantenido la racha por {{days}} días!",
+      "freeze_available": "{{count}} congelación disponible",
+      "freezes_available": "{{count}} congelaciones disponibles"
+    },
+    "achievements": {
+      "title": "Logros",
+      "unlocked": "Desbloqueado",
+      "locked": "Bloqueado",
+      "unlocked_at": "Desbloqueado el {{date}}",
+      "requirements": "Requisitos",
+      "categories": {
+        "all": "Todos",
+        "streak": "Racha",
+        "lessons": "Lecciones",
+        "social": "Social",
+        "special": "Especial"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "¡Lección completada!",
+      "level_up": "¡Subida de nivel!",
+      "streak_milestone": "¡Hito de racha!",
+      "achievement_unlocked": "¡Logro desbloqueado!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Nivel {{level}}",
+      "continue": "Continuar",
+      "skip": "Omitir"
+    },
+    "daily_goals": {
+      "title": "Objetivos diarios",
+      "complete": "Completado",
+      "in_progress": "En progreso",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Fácil",
+        "medium": "Medio",
+        "hard": "Difícil"
+      }
+    },
+    "leaderboard": {
+      "title": "Clasificación",
+      "your_league": "Tu Liga",
+      "rank": "Rango {{rank}}",
+      "promotion": "Zona de ascenso",
+      "relegation": "Zona de descenso",
+      "view_all": "Ver todo",
+      "you": "Tú"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} días seguidos",
     "at_risk": "¡Tu racha está en riesgo!",

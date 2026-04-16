@@ -92,6 +92,64 @@
     "fallback_streak_warning": "Il tuo streak è a rischio. Non lasciare che una serata pigra rovini una buona settimana.",
     "fallback_weekly_summary": "Un'altra settimana nei libri. Stai costruendo qualcosa di reale — non fermarti ora."
   },
+  "gamification": {
+    "streak": {
+      "title": "Streak",
+      "day_streak": "giorni di fila",
+      "at_risk": "A rischio!",
+      "milestone": "Traguardo streak!",
+      "milestone_desc": "Hai mantenuto la costanza per {{days}} giorni!",
+      "freeze_available": "{{count}} blocco disponibile",
+      "freezes_available": "{{count}} blocchi disponibili",
+      "accessibility_label": "{{streak}} giorni di streak{{atRisk}}, {{freezes}}",
+      "accessibility_hint": "Tocca per vedere i dettagli dello streak"
+    },
+    "achievements": {
+      "title": "Traguardi",
+      "unlocked": "Sbloccato",
+      "locked": "Bloccato",
+      "unlocked_at": "Sbloccato il {{date}}",
+      "requirements": "Requisiti",
+      "categories": {
+        "all": "Tutti",
+        "streak": "Streak",
+        "lessons": "Lezioni",
+        "social": "Social",
+        "special": "Speciale"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Lezione completata!",
+      "level_up": "Nuovo livello!",
+      "streak_milestone": "Traguardo streak!",
+      "achievement_unlocked": "Traguardo sbloccato!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Livello {{level}}",
+      "continue": "Continua",
+      "skip": "Salta"
+    },
+    "daily_goals": {
+      "title": "Obiettivi giornalieri",
+      "complete": "Completato",
+      "in_progress": "In corso",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Facile",
+        "medium": "Medio",
+        "hard": "Difficile"
+      }
+    },
+    "leaderboard": {
+      "title": "Classifica",
+      "your_league": "La tua Lega",
+      "rank": "Grado {{rank}}",
+      "promotion": "Zona promozione",
+      "relegation": "Zona retrocessione",
+      "view_all": "Vedi tutto",
+      "you": "Tu"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} giorni di fila",
     "at_risk": "Il tuo streak è a rischio!",

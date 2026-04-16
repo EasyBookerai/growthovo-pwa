@@ -92,6 +92,64 @@
     "fallback_streak_warning": "Streak-ul tău e în pericol. Nu lăsa o seară leneșă să distrugă o săptămână bună.",
     "fallback_weekly_summary": "Încă o săptămână în cărți. Construiești ceva real — nu te opri acum."
   },
+  "gamification": {
+    "streak": {
+      "title": "Streak",
+      "day_streak": "zile la rând",
+      "at_risk": "În pericol!",
+      "milestone": "Reușită streak!",
+      "milestone_desc": "Ai menținut consecvența timp de {{days}} zile!",
+      "freeze_available": "{{count}} înghețare disponibilă",
+      "freezes_available": "{{count}} înghețări disponibile",
+      "accessibility_label": "{{streak}} zile de streak{{atRisk}}, {{freezes}}",
+      "accessibility_hint": "Apasă pentru a vedea detaliile streak-ului"
+    },
+    "achievements": {
+      "title": "Realizări",
+      "unlocked": "Deblocat",
+      "locked": "Blocat",
+      "unlocked_at": "Deblocat la {{date}}",
+      "requirements": "Cerințe",
+      "categories": {
+        "all": "Toate",
+        "streak": "Streak",
+        "lessons": "Lecții",
+        "social": "Social",
+        "special": "Special"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Lecție completă!",
+      "level_up": "Nivel nou!",
+      "streak_milestone": "Reușită streak!",
+      "achievement_unlocked": "Realizare deblocată!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Nivel {{level}}",
+      "continue": "Continuă",
+      "skip": "Sari"
+    },
+    "daily_goals": {
+      "title": "Obiective zilnice",
+      "complete": "Finalizat",
+      "in_progress": "În curs",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Ușor",
+        "medium": "Mediu",
+        "hard": "Greu"
+      }
+    },
+    "leaderboard": {
+      "title": "Clasament",
+      "your_league": "Liga Ta",
+      "rank": "Locul {{rank}}",
+      "promotion": "Zonă de promovare",
+      "relegation": "Zonă de retrogradare",
+      "view_all": "Vezi tot",
+      "you": "Tu"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} zile la rând",
     "at_risk": "Streak-ul tău e în pericol!",

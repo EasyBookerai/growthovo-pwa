@@ -7,16 +7,23 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../services/supabaseClient';
 import { getNextLesson } from '../../services/lessonService';
 import { refillHearts } from '../../services/heartService';
-import { getTotalXP } from '../../services/progressService';
+import { getTotalXP, getPillarLevel, getPillarXP, xpForNextLevel } from '../../services/progressService';
 import { getActivePair, getPartnerCheckinStatus, subscribeToPartnerCheckin, generateWeeklyComparison } from '../../services/partnerService';
 import { getOrGenerateWeeklyReport } from '../../services/reportService';
+import { getDailyGoals } from '../../services/gamificationService';
+import { getAllAchievements, getUserAchievements } from '../../services/gamificationService';
 import LessonPlayerScreen from '../lesson/LessonPlayerScreen';
 import WeeklyReportScreen from '../report/WeeklyReportScreen';
 import RelapseDetectionGate from '../../components/RelapseDetectionGate';
 import { colors, typography, spacing, radius } from '../../theme';
-import type { Lesson, LeagueMember, WeeklySummaryRecord, PartnerComparisonReport, WeeklyRexReport } from '../../types';
+import type { Lesson, LeagueMember, WeeklySummaryRecord, PartnerComparisonReport, WeeklyRexReport, DailyGoal, AchievementDefinition } from '../../types';
 import SOSBottomSheet from '../../screens/sos/SOSBottomSheet';
 import RexChatBottomSheet from '../../screens/chat/RexChatBottomSheet';
+import GlassCard from '../../components/glass/GlassCard';
+import StreakDisplay from '../../components/gamification/StreakDisplay';
+import XPBar from '../../components/gamification/XPBar';
+import DailyGoalCard from '../../components/gamification/DailyGoalCard';
+import AchievementBadge from '../../components/gamification/AchievementBadge';
 
 interface Props {
   userId: string;
@@ -29,6 +36,9 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
   const [streak, setStreak] = useState(0);
   const [hearts, setHearts] = useState(5);
   const [totalXP, setTotalXP] = useState(0);
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [currentXP, setCurrentXP] = useState(0);
+  const [requiredXP, setRequiredXP] = useState(100);
   const [freezeCount, setFreezeCount] = useState(0);
   const [nextLesson, setNextLesson] = useState<Lesson | null>(null);
   const [leagueTop, setLeagueTop] = useState<LeagueMember[]>([]);
@@ -43,6 +53,9 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
   const [weeklyComparison, setWeeklyComparison] = useState<PartnerComparisonReport | null>(null);
   const [weeklyReport, setWeeklyReport] = useState<WeeklyRexReport | null>(null);
   const [reportVisible, setReportVisible] = useState(false);
+  const [dailyGoals, setDailyGoals] = useState<DailyGoal[]>([]);
+  const [achievements, setAchievements] = useState<AchievementDefinition[]>([]);
+  const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<Set<string>>(new Set());
   const unsubscribePartnerRef = useRef<(() => void) | null>(null);
 
   const isPremium = subscriptionStatus === 'active' || subscriptionStatus === 'trialing';
@@ -56,6 +69,8 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
     loadWeeklySummary();
     loadWeeklyReport();
     loadPartnerStatus();
+    loadDailyGoals();
+    loadAchievements();
     return () => {
       unsubscribePartnerRef.current?.();
     };
@@ -66,7 +81,7 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
     try {
       await refillHearts(userId).catch(() => {});
 
-      const [streakData, heartsData, xp, lesson, leagueData] = await Promise.all([
+      const [streakData, heartsData, xp, lesson, leagueData, disciplinePillar] = await Promise.all([
         supabase.from('streaks').select('current_streak, last_activity_date, freeze_count').eq('user_id', userId).single(),
         supabase.from('hearts').select('count').eq('user_id', userId).single(),
         getTotalXP(userId),
@@ -74,6 +89,7 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
           data ? getNextLesson(userId, data.id) : null
         ),
         loadLeague(),
+        supabase.from('pillars').select('id').eq('name', 'Discipline').single(),
       ]);
 
       if (streakData.data) {
@@ -85,6 +101,17 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
       if (heartsData.data) setHearts(heartsData.data.count);
       setTotalXP(xp);
       setNextLesson(lesson);
+
+      // Load level and XP progress for Discipline pillar
+      if (disciplinePillar.data) {
+        const pillarId = disciplinePillar.data.id;
+        const pillarXP = await getPillarXP(userId, pillarId);
+        const xpData = xpForNextLevel(pillarXP);
+        
+        setCurrentLevel(xpData.level);
+        setCurrentXP(xpData.current);
+        setRequiredXP(xpData.required);
+      }
     } finally {
       setLoading(false);
     }
@@ -236,6 +263,44 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
     }
   }
 
+  async function loadDailyGoals() {
+    try {
+      const goals = await getDailyGoals(userId);
+      setDailyGoals(goals);
+    } catch (error) {
+      console.error('Failed to load daily goals:', error);
+      // Non-critical — silently ignore
+    }
+  }
+
+  async function loadAchievements() {
+    try {
+      // Get all achievement definitions
+      const allAchievements = getAllAchievements();
+      
+      // Get user's unlocked achievements
+      const unlockedAchievements = await getUserAchievements(userId);
+      const unlockedIds = new Set(unlockedAchievements.map(a => a.achievementId));
+      
+      // Show first 3 unlocked achievements (most recent) or first 3 locked achievements
+      const recentUnlocked = allAchievements
+        .filter(a => unlockedIds.has(a.id))
+        .slice(0, 3);
+      
+      const lockedToShow = allAchievements
+        .filter(a => !unlockedIds.has(a.id))
+        .slice(0, 3);
+      
+      const achievementsToShow = recentUnlocked.length > 0 ? recentUnlocked : lockedToShow;
+      
+      setAchievements(achievementsToShow);
+      setUnlockedAchievementIds(unlockedIds);
+    } catch (error) {
+      console.error('Failed to load achievements:', error);
+      // Non-critical — silently ignore
+    }
+  }
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -248,48 +313,43 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
     <RelapseDetectionGate userId={userId} onStreakBroke={handleStreakBroke}>
       <View style={styles.root}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Top row: streak + hearts */}
-        <View style={styles.topRow}>
-          {/* Streak badge */}
-          <View style={[styles.card, styles.streakCard]}>
-            <Text style={styles.streakIcon}>{streakAtRisk ? '💀' : '🔥'}</Text>
-            <Text style={styles.streakCount}>{streak}</Text>
-            <Text style={styles.streakLabel}>{t('home.day_streak')}</Text>
-            {streakAtRisk && <Text style={styles.atRiskLabel}>{t('home.at_risk')}</Text>}
-          </View>
+        {/* Streak Display with Glass Effect */}
+        <StreakDisplay
+          streak={streak}
+          isAtRisk={streakAtRisk}
+          freezeCount={freezeCount}
+          variant="compact"
+        />
 
-          {/* Hearts */}
-          {!isPremium && (
-            <View style={[styles.card, styles.heartsCard]}>
-              <Text style={styles.heartsRow}>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Text key={i} style={{ opacity: i < hearts ? 1 : 0.2 }}>❤️</Text>
-                ))}
-              </Text>
-              <Text style={styles.heartsLabel}>{t('home.hearts_count', { count: hearts })}</Text>
-            </View>
-          )}
-          {isPremium && (
-            <View style={[styles.card, styles.heartsCard]}>
-              <Text style={{ fontSize: 28 }}>♾️</Text>
-              <Text style={styles.heartsLabel}>{t('home.unlimited_hearts')}</Text>
-            </View>
-          )}
-        </View>
+        {/* Hearts Display with Glass Effect */}
+        {!isPremium && (
+          <GlassCard intensity="medium" style={styles.heartsCard}>
+            <Text style={styles.heartsRow}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Text key={i} style={{ opacity: i < hearts ? 1 : 0.2 }}>❤️</Text>
+              ))}
+            </Text>
+            <Text style={styles.heartsLabel}>{t('home.hearts_count', { count: hearts })}</Text>
+          </GlassCard>
+        )}
+        {isPremium && (
+          <GlassCard intensity="medium" style={styles.heartsCard}>
+            <Text style={{ fontSize: 28 }}>♾️</Text>
+            <Text style={styles.heartsLabel}>{t('home.unlimited_hearts')}</Text>
+          </GlassCard>
+        )}
 
-        {/* XP bar */}
-        <View style={[styles.card, styles.xpCard]}>
-          <View style={styles.xpRow}>
-            <Text style={styles.xpLabel}>{t('home.total_xp')}</Text>
-            <Text style={styles.xpValue}>{totalXP.toLocaleString()}</Text>
-          </View>
-          <View style={styles.xpBarBg}>
-            <View style={[styles.xpBarFill, { width: `${Math.min((totalXP % 100), 100)}%` }]} />
-          </View>
-        </View>
+        {/* XP Bar with Level Display */}
+        <XPBar
+          currentXP={currentXP}
+          requiredXP={requiredXP}
+          level={currentLevel}
+          animated={true}
+          showLabel={true}
+        />
 
         {/* Freeze inventory */}
-        <View style={[styles.card, styles.freezeCard]}>
+        <GlassCard intensity="medium" style={styles.freezeCard}>
           <View style={styles.freezeRow}>
             <Text style={styles.freezeIcon}>🧊</Text>
             <View style={styles.freezeInfo}>
@@ -298,34 +358,64 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
             </View>
           </View>
           <Text style={styles.freezeHint}>{t('home.freeze_hint')}</Text>
-        </View>
+        </GlassCard>
+
+        {/* Daily Goals Section */}
+        {dailyGoals.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('home.daily_goals', 'Daily Goals')}</Text>
+            {dailyGoals.map((goal) => (
+              <DailyGoalCard
+                key={goal.id}
+                goal={goal}
+                progress={goal.currentValue / goal.targetValue}
+              />
+            ))}
+          </View>
+        )}
+
+        {/* Achievement Preview Section */}
+        {achievements.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('home.achievements', 'Achievements')}</Text>
+            <View style={styles.achievementsGrid}>
+              {achievements.map((achievement) => (
+                <AchievementBadge
+                  key={achievement.id}
+                  achievement={achievement}
+                  unlocked={unlockedAchievementIds.has(achievement.id)}
+                  size="small"
+                />
+              ))}
+            </View>
+          </View>
+        )}
 
         {/* Weekly Rex summary card — shown on Monday mornings */}
         {weeklySummary && (
-          <View style={[styles.card, styles.rexSummaryCard]}>
+          <GlassCard intensity="medium" style={styles.rexSummaryCard}>
             <Text style={styles.rexSummaryLabel}>{t('home.rex_weekly_report')}</Text>
             <Text style={styles.rexSummaryText}>{weeklySummary.summaryText}</Text>
             <Text style={styles.rexSummaryWeek}>Week of {weeklySummary.weekStart}</Text>
-          </View>
+          </GlassCard>
         )}
 
         {/* Weekly Rex Report card — shown on Monday mornings when report exists */}
         {weeklyReport && (
-          <TouchableOpacity
-            style={[styles.card, styles.weeklyReportCard]}
+          <GlassCard
+            intensity="medium"
+            style={styles.weeklyReportCard}
             onPress={() => setReportVisible(true)}
-            accessibilityRole="button"
-            accessibilityLabel="View your weekly report"
           >
             <Text style={styles.weeklyReportLabel}>WEEKLY REPORT READY</Text>
             <Text style={styles.weeklyReportTitle}>Rex has your week.</Text>
             <Text style={styles.weeklyReportHint}>Tap to see your full report →</Text>
-          </TouchableOpacity>
+          </GlassCard>
         )}
 
         {/* Weekly comparison card — shown on Monday mornings when paired */}
         {weeklyComparison && (
-          <View style={[styles.card, styles.weeklyComparisonCard]}>
+          <GlassCard intensity="medium" style={styles.weeklyComparisonCard}>
             <Text style={styles.weeklyComparisonLabel}>WEEKLY RECAP</Text>
             <View style={styles.weeklyComparisonRow}>
               <View style={styles.weeklyComparisonStat}>
@@ -345,12 +435,12 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
                 ? 'You won this week! 🏆'
                 : `${weeklyComparison.partnerStats.name} won this week — your turn next 💪`}
             </Text>
-          </View>
+          </GlassCard>
         )}
 
         {/* Partner status card */}
         {partnerStatus ? (
-          <View style={[styles.card, styles.partnerCard]}>
+          <GlassCard intensity="medium" style={styles.partnerCard}>
             <Text style={styles.partnerLabel}>ACCOUNTABILITY PARTNER</Text>
             <View style={styles.partnerRow}>
               <View style={[styles.partnerDot, partnerStatus.checkedIn ? styles.partnerDotGreen : styles.partnerDotGrey]} />
@@ -360,26 +450,21 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
             <Text style={styles.partnerStatus}>
               {partnerStatus.checkedIn ? 'Checked in today' : 'Not checked in yet'}
             </Text>
-          </View>
+          </GlassCard>
         ) : (
-          <TouchableOpacity
-            style={[styles.card, styles.partnerCard]}
-            accessibilityRole="button"
-            accessibilityLabel="Invite an accountability partner"
-          >
+          <GlassCard intensity="medium" style={styles.partnerCard}>
             <Text style={styles.partnerLabel}>ACCOUNTABILITY PARTNER</Text>
             <Text style={styles.partnerInviteText}>Invite an accountability partner</Text>
             <Text style={styles.partnerInviteHint}>Hold each other to the standard.</Text>
-          </TouchableOpacity>
+          </GlassCard>
         )}
 
         {/* Daily lesson card */}
         {nextLesson ? (
-          <TouchableOpacity
-            style={[styles.card, styles.lessonCard]}
+          <GlassCard
+            intensity="medium"
+            style={styles.lessonCard}
             onPress={() => setActiveLesson(nextLesson)}
-            accessibilityRole="button"
-            accessibilityLabel={`Start lesson: ${nextLesson.title}`}
           >
             <View style={styles.lessonCardHeader}>
               <Text style={styles.lessonCardBadge}>{t('home.todays_lesson')}</Text>
@@ -387,17 +472,17 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
             </View>
             <Text style={styles.lessonCardTitle}>{nextLesson.title}</Text>
             <Text style={styles.lessonCardSub}>{t('home.lesson_duration')}</Text>
-          </TouchableOpacity>
+          </GlassCard>
         ) : (
-          <View style={[styles.card, styles.lessonCard]}>
+          <GlassCard intensity="medium" style={styles.lessonCard}>
             <Text style={styles.lessonCardBadge}>{t('home.all_done')}</Text>
             <Text style={styles.lessonCardTitle}>{t('home.all_lessons_complete')}</Text>
-          </View>
+          </GlassCard>
         )}
 
         {/* League snapshot */}
         {leagueTop.length > 0 && (
-          <View style={[styles.card, styles.leagueCard]}>
+          <GlassCard intensity="medium" style={styles.leagueCard}>
             <Text style={styles.sectionTitle}>{t('home.your_league')}</Text>
             {leagueTop.map((m, i) => (
               <View key={m.userId} style={styles.leagueRow}>
@@ -412,7 +497,7 @@ export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStr
                 <Text style={[styles.leagueUsername, { color: colors.primary }]}>{t('common.you')}</Text>
               </View>
             )}
-          </View>
+          </GlassCard>
         )}
       </ScrollView>
 
@@ -489,22 +574,9 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
   container: { padding: spacing.md, paddingTop: 60, paddingBottom: 80, gap: spacing.md },
-  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md },
-  topRow: { flexDirection: 'row', gap: spacing.md },
-  streakCard: { flex: 1, alignItems: 'center', gap: 4 },
-  streakIcon: { fontSize: 32 },
-  streakCount: { ...typography.h1, color: colors.text },
-  streakLabel: { ...typography.small, color: colors.textMuted },
-  atRiskLabel: { ...typography.smallBold, color: colors.error },
-  heartsCard: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 4 },
+  heartsCard: { alignItems: 'center', justifyContent: 'center', gap: 4 },
   heartsRow: { fontSize: 18 },
   heartsLabel: { ...typography.small, color: colors.textMuted },
-  xpCard: {},
-  xpRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.sm },
-  xpLabel: { ...typography.bodyBold, color: colors.text },
-  xpValue: { ...typography.bodyBold, color: colors.xpGold },
-  xpBarBg: { height: 6, backgroundColor: colors.border, borderRadius: 3 },
-  xpBarFill: { height: 6, backgroundColor: colors.xpGold, borderRadius: 3 },
   freezeCard: {},
   freezeRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
   freezeIcon: { fontSize: 24 },
@@ -512,6 +584,9 @@ const styles = StyleSheet.create({
   freezeLabel: { ...typography.bodyBold, color: colors.text },
   freezeCount: { ...typography.body, color: colors.textMuted },
   freezeHint: { ...typography.small, color: colors.textMuted },
+  section: { gap: spacing.sm },
+  sectionTitle: { ...typography.bodyBold, color: colors.text, marginBottom: spacing.xs },
+  achievementsGrid: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' },
   lessonCard: { borderLeftWidth: 4, borderLeftColor: colors.pillars.discipline },
   lessonCardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.sm },
   lessonCardBadge: { ...typography.caption, color: colors.pillars.discipline },
@@ -519,7 +594,6 @@ const styles = StyleSheet.create({
   lessonCardTitle: { ...typography.h3, color: colors.text, marginBottom: 4 },
   lessonCardSub: { ...typography.small, color: colors.textMuted },
   leagueCard: {},
-  sectionTitle: { ...typography.bodyBold, color: colors.text, marginBottom: spacing.sm },
   leagueRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6, gap: spacing.sm },
   leagueRowSelf: { borderTopWidth: 1, borderTopColor: colors.border, marginTop: 4, paddingTop: 8 },
   leagueRank: { ...typography.smallBold, color: colors.textMuted, width: 28 },

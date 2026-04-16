@@ -14,6 +14,7 @@ import EveningDebriefGate from './src/components/EveningDebriefGate';
 import { useLanguageStore } from './src/store';
 import { colors } from './src/theme';
 import { syncWidgetData } from './src/services/widgetService';
+import { initAssetLoading, preloadCriticalAssets } from './src/services/assetLoadingService';
 
 // Screens
 import SignInScreen from './src/screens/auth/SignInScreen';
@@ -121,6 +122,12 @@ export default function App() {
         // Get current session to pass userId for Supabase language sync
         const { data: { session: currentSession } } = await supabase.auth.getSession();
         const userId = currentSession?.user?.id;
+
+        // Initialize asset loading service and preload critical assets
+        await initAssetLoading();
+        preloadCriticalAssets().catch((err) => {
+          console.warn('[App] Failed to preload critical assets:', err);
+        });
 
         // initI18n resolves: AsyncStorage → Supabase → device locale → 'en'
         const resolvedLanguage = await initI18n(userId);

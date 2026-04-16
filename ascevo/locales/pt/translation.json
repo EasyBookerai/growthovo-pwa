@@ -92,6 +92,64 @@
     "fallback_streak_warning": "A tua sequência está em risco. Não deixes uma noite preguiçosa arruinar uma boa semana.",
     "fallback_weekly_summary": "Mais uma semana nos livros. Estás a construir algo real — não pares agora."
   },
+  "gamification": {
+    "streak": {
+      "title": "Sequência",
+      "day_streak": "dias seguidos",
+      "at_risk": "Em risco!",
+      "milestone": "Marco de sequência!",
+      "milestone_desc": "Mantiveste a consistência por {{days}} dias!",
+      "freeze_available": "{{count}} congelamento disponível",
+      "freezes_available": "{{count}} congelamentos disponíveis",
+      "accessibility_label": "{{streak}} dias de sequência{{atRisk}}, {{freezes}}",
+      "accessibility_hint": "Toque para ver os detalhes da sequência"
+    },
+    "achievements": {
+      "title": "Conquistas",
+      "unlocked": "Desbloqueado",
+      "locked": "Bloqueado",
+      "unlocked_at": "Desbloqueado a {{date}}",
+      "requirements": "Requisitos",
+      "categories": {
+        "all": "Todas",
+        "streak": "Sequência",
+        "lessons": "Lições",
+        "social": "Social",
+        "special": "Especial"
+      }
+    },
+    "celebrations": {
+      "lesson_complete": "Lição completa!",
+      "level_up": "Subiu de nível!",
+      "streak_milestone": "Marco de sequência!",
+      "achievement_unlocked": "Conquista desbloqueada!",
+      "xp_earned": "+{{count}} XP",
+      "new_level": "Nível {{level}}",
+      "continue": "Continuar",
+      "skip": "Saltar"
+    },
+    "daily_goals": {
+      "title": "Objetivos diários",
+      "complete": "Concluído",
+      "in_progress": "Em progresso",
+      "xp_reward": "{{count}} XP",
+      "difficulties": {
+        "easy": "Fácil",
+        "medium": "Médio",
+        "hard": "Difícil"
+      }
+    },
+    "leaderboard": {
+      "title": "Classificação",
+      "your_league": "A sua Liga",
+      "rank": "Classificação {{rank}}",
+      "promotion": "Zona de promoção",
+      "relegation": "Zona de despromoção",
+      "view_all": "Ver tudo",
+      "you": "Você"
+    }
+  }
+},
   "streak": {
     "days": "{{count}} dias seguidos",
     "at_risk": "A tua sequência está em risco!",

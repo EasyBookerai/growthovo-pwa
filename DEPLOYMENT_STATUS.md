@@ -41,19 +41,19 @@
 ## Technical Details:
 
 ### App Structure:
-- Entry: `ascevo/index.js` → `ascevo/App.tsx`
+- Entry: `growthovo/index.js` → `growthovo/App.tsx`
 - Navigation: React Navigation (NOT Expo Router)
 - Bundler: Metro
 - Output: Static files for PWA
 
 ### Build Command:
 ```bash
-npm install --prefix ascevo --legacy-peer-deps && cd ascevo && npx expo export --platform web
+npm install --prefix growthovo --legacy-peer-deps && cd growthovo && npx expo export --platform web
 ```
 
 ### Output Directory:
 ```
-ascevo/dist
+growthovo/dist
 ```
 
 ## Domain Configuration:

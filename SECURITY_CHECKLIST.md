@@ -9,7 +9,7 @@
 
 ### .gitignore Files
 - [x] Root `.gitignore` created
-- [x] Enhanced `ascevo/.gitignore` (200+ rules)
+- [x] Enhanced `growthovo/.gitignore` (200+ rules)
 - [x] Excludes all `.env` files
 - [x] Excludes API keys and secrets
 - [x] Excludes certificates and keystores

@@ -30,8 +30,8 @@ This guide walks you through deploying Growthovo as a Progressive Web App (PWA) 
 Vercel should auto-detect the settings from `vercel.json`, but verify:
 
 - **Framework Preset**: Other
-- **Build Command**: `cd ascevo && npm install && npx expo export:web`
-- **Output Directory**: `ascevo/dist`
+- **Build Command**: `cd growthovo && npm install && npx expo export:web`
+- **Output Directory**: `growthovo/dist`
 - **Install Command**: `npm install` (in root)
 
 ## Step 3: Add Environment Variables

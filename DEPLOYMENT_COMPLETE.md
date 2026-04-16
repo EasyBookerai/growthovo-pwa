@@ -3,10 +3,10 @@
 ## ✅ What Was Deployed
 
 ### Production-Ready Files
-- ✅ `ascevo/public/splash.html` - Apple-grade glassmorphism splash screen
-- ✅ `ascevo/public/index.html` - Enhanced with PWA meta tags
-- ✅ `ascevo/public/manifest.json` - Full PWA manifest with shortcuts
-- ✅ `ascevo/public/service-worker.js` - Offline support
+- ✅ `growthovo/public/splash.html` - Apple-grade glassmorphism splash screen
+- ✅ `growthovo/public/index.html` - Enhanced with PWA meta tags
+- ✅ `growthovo/public/manifest.json` - Full PWA manifest with shortcuts
+- ✅ `growthovo/public/service-worker.js` - Offline support
 - ✅ `SPLASH_SCREEN_DEPLOYMENT.md` - Complete deployment guide
 
 ### Git Status

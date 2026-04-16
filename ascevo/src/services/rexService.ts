@@ -1,3 +1,8 @@
+/**
+ * Rex Service — core AI interaction gateway.
+ * Calls GROWTHOVO Edge Functions for AI responses.
+ */
+
 import { supabase } from './supabaseClient';
 import type { RexTrigger } from '../types';
 

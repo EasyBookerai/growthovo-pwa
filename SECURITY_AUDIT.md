@@ -54,7 +54,7 @@ All API keys are:
 - Protects all environment files
 - Excludes OS and IDE files
 
-**App Level:** `ascevo/.gitignore`
+**App Level:** `growthovo/.gitignore`
 - Comprehensive security-first configuration
 - Excludes build artifacts
 - Protects certificates and keystores

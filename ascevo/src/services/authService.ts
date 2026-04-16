@@ -1,4 +1,11 @@
+/**
+ * Auth Service — manages user authentication and profile creation.
+ * Local: AsyncStorage under '@growthovo:auth'
+ * Remote: Supabase Auth + users table
+ */
+
 import { supabase } from './supabaseClient';
+import { detectPlatform, trackPlatformAccess } from './platformDetectionService';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -45,6 +52,10 @@ export async function signUp(email: string, password: string, username: string) 
     supabase.from('hearts').insert({ user_id: userId }),
   ]);
 
+  // 🎯 Track platform on sign up
+  const platformInfo = detectPlatform();
+  await trackPlatformAccess(userId, platformInfo);
+
   return data;
 }
 
@@ -53,6 +64,13 @@ export async function signUp(email: string, password: string, username: string) 
 export async function signIn(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw new Error(friendlyError(error.message));
+  
+  // 🎯 Track platform on sign in
+  if (data.user?.id) {
+    const platformInfo = detectPlatform();
+    await trackPlatformAccess(data.user.id, platformInfo);
+  }
+  
   return data;
 }
 

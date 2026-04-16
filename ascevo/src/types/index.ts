@@ -538,3 +538,79 @@ export interface PrivacyPreferences {
   last_updated: string;
   created_at: string;
 }
+
+// ============================================================
+// Glassmorphism UI & Gamification — New Types
+// ============================================================
+
+export type AchievementCategory = 'streak' | 'lessons' | 'social' | 'special';
+export type GoalDifficulty = 'easy' | 'medium' | 'hard';
+export type CelebrationType = 'lesson_complete' | 'level_up' | 'streak_milestone' | 'achievement';
+
+export interface Achievement {
+  id: string;
+  userId: string;
+  achievementId: string;
+  unlockedAt: string;
+  createdAt: string;
+}
+
+export interface AchievementDefinition {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: AchievementCategory;
+  criteria: AchievementCriteria;
+}
+
+export interface AchievementCriteria {
+  type: 'streak' | 'xp_total' | 'lessons_count' | 'level' | 'custom';
+  threshold: number;
+  pillarId?: string;
+}
+
+export interface DailyGoal {
+  id: string;
+  userId: string;
+  goalType: string;
+  targetValue: number;
+  currentValue: number;
+  xpReward: number;
+  difficulty: GoalDifficulty;
+  date: string;
+  completedAt?: string;
+  createdAt: string;
+}
+
+export interface CelebrationEvent {
+  id: string;
+  userId: string;
+  celebrationType: CelebrationType;
+  data: Record<string, any>;
+  triggeredAt: string;
+}
+
+export interface CelebrationData {
+  title: string;
+  subtitle?: string;
+  xpEarned?: number;
+  achievements?: Achievement[];
+  streakMilestone?: number;
+  newLevel?: number;
+}
+
+export type AchievementEvent =
+  | { type: 'lesson_complete'; lessonId: string }
+  | { type: 'streak_updated'; streak: number }
+  | { type: 'xp_earned'; amount: number; total: number }
+  | { type: 'level_up'; level: number; pillarId: string };
+
+export interface UserPreference {
+  id: string;
+  userId: string;
+  preferenceKey: string;
+  preferenceValue: string;
+  createdAt: string;
+  updatedAt: string;
+}

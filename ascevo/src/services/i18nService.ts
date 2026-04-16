@@ -1,9 +1,11 @@
 /**
  * i18n Service — bootstraps i18next before the first render.
- * Resolution order: AsyncStorage → Supabase → expo-localization → 'en'
+ * Local: AsyncStorage under '@growthovo/language'
+ * Remote: Supabase users.language column
  */
 
 import i18n from 'i18next';
+import 'intl-pluralrules';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import { getStoredLanguage, getLanguageFromSupabase } from './languageService';
@@ -159,6 +161,13 @@ export async function initI18n(userId?: string): Promise<SupportedLanguage> {
   }
 
   return resolved;
+}
+
+/**
+ * Get the current app name
+ */
+export function getAppName(): string {
+  return 'GROWTHOVO';
 }
 
 export { i18n };

@@ -1,3 +1,9 @@
+/**
+ * Rex Chat Service — manages the AI coaching chat system.
+ * Local: AsyncStorage under '@growthovo/rex_chat_session_'
+ * Remote: Supabase rex_chat_messages table
+ */
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from './supabaseClient';
 import { getMemoryContext } from './rexMemoryService';
@@ -5,7 +11,7 @@ import { ChatMessage, ChatSession, MemoryContext } from '../types';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const SESSION_STORAGE_KEY_PREFIX = 'rex_chat_session_';
+const SESSION_STORAGE_KEY_PREFIX = '@growthovo/rex_chat_session_';
 const MAX_HISTORY_MESSAGES = 10;
 
 // Rex system prompt — Requirements 15.6

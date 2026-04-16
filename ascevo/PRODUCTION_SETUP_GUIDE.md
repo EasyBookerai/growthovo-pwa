@@ -63,10 +63,11 @@ This guide walks you through everything needed to make your PWA production-ready
 
 ```bash
 # Navigate to your project
-cd ascevo
+cd growthovo
 
 # Install Supabase CLI
 npm install -g supabase
+```supabase
 
 # Link to your project
 supabase link --project-ref your-project-id

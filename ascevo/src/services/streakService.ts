@@ -1,5 +1,13 @@
+/**
+ * Streak Service — manages user activity streaks and freezes.
+ * Local: AsyncStorage under '@growthovo:streak'
+ * Remote: Supabase streaks table
+ */
+
 import { supabase } from './supabaseClient';
 import { XP_AWARDS } from '../types';
+import { storeCelebrationEvent } from './celebrationService';
+import type { CelebrationData } from './animationService';
 
 const MAX_FREEZES = 5;
 
@@ -13,10 +21,37 @@ export interface MilestoneResult {
 // Idempotent: only increments if last_activity_date < today.
 // Uses RPC for atomic update.
 
-export async function incrementStreak(userId: string): Promise<number> {
+export async function incrementStreak(
+  userId: string,
+  onCelebration?: (data: CelebrationData) => void
+): Promise<number> {
   const { data, error } = await supabase.rpc('increment_streak', { p_user_id: userId });
   if (error) throw new Error('Failed to update streak.');
-  return data as number;
+  
+  const newStreak = data as number;
+  
+  // 🎉 Check if this is a milestone and trigger celebration
+  const milestone = checkMilestone(newStreak);
+  if (milestone.isMilestone) {
+    const celebrationData: CelebrationData = {
+      type: 'streak_milestone',
+      title: `${milestone.days} Day Streak!`,
+      subtitle: 'Amazing consistency!',
+      xpEarned: milestone.xpBonus,
+      streakMilestone: milestone.days,
+      intensity: milestone.days >= 100 ? 'high' : milestone.days >= 30 ? 'medium' : 'low',
+    };
+    
+    // Store celebration event in database
+    await storeCelebrationEvent(userId, celebrationData);
+    
+    // Trigger celebration callback if provided
+    if (onCelebration) {
+      onCelebration(celebrationData);
+    }
+  }
+  
+  return newStreak;
 }
 
 // ─── Handle Missed Day ────────────────────────────────────────────────────────
