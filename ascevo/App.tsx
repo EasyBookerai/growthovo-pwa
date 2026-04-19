@@ -15,6 +15,8 @@ import { useLanguageStore } from './src/store';
 import { colors } from './src/theme';
 import { syncWidgetData } from './src/services/widgetService';
 import { initAssetLoading, preloadCriticalAssets } from './src/services/assetLoadingService';
+import AppNavigator from './src/navigation/AppNavigator';
+import { AppProvider } from './src/context/AppContext';
 
 // Screens
 import SignInScreen from './src/screens/auth/SignInScreen';
@@ -241,11 +243,12 @@ export default function App() {
                 {() => (
                   <MorningBriefingGate userId={userId}>
                     <EveningDebriefGate userId={userId}>
-                      <MainTabs
-                        userId={userId}
-                        subscriptionStatus={subscriptionStatus}
-                        onPaywall={() => setShowPaywall(true)}
-                      />
+                      <AppProvider>
+                        <AppNavigator
+                          userId={userId}
+                          subscriptionStatus={subscriptionStatus}
+                        />
+                      </AppProvider>
                     </EveningDebriefGate>
                   </MorningBriefingGate>
                 )}

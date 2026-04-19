@@ -4,11 +4,11 @@ import { Text, StyleSheet } from 'react-native';
 import { colors } from '../theme';
 
 // Screens
-import HomeScreen from '../screens/home/HomeScreen';
+import SimpleHomeScreen from '../screens/home/SimpleHomeScreen';
 import PillarsScreen from '../screens/pillars/PillarsScreen';
 import RexScreen from '../screens/rex/RexScreen';
-import LeagueScreen from '../screens/league/LeagueScreen';
-import ProfileScreen from '../screens/profile/ProfileScreen';
+import SimpleLeagueScreen from '../screens/league/SimpleLeagueScreen';
+import SimpleProfileScreen from '../screens/profile/SimpleProfileScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ export default function AppNavigator({ userId, subscriptionStatus }: Props) {
       })}
     >
       <Tab.Screen name="Home">
-        {(props) => <HomeScreen userId={userId} subscriptionStatus={subscriptionStatus} {...props} />}
+        {(props) => <SimpleHomeScreen userId={userId} subscriptionStatus={subscriptionStatus} {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Pillars">
         {(props) => <PillarsScreen userId={userId} subscriptionStatus={subscriptionStatus} {...props} />}
@@ -50,10 +50,10 @@ export default function AppNavigator({ userId, subscriptionStatus }: Props) {
         {(props) => <RexScreen userId={userId} subscriptionStatus={subscriptionStatus} {...props} />}
       </Tab.Screen>
       <Tab.Screen name="League">
-        {(props) => <LeagueScreen userId={userId} {...props} />}
+        {(props) => <SimpleLeagueScreen userId={userId} {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Profile">
-        {(props) => <ProfileScreen userId={userId} {...props} />}
+        {(props) => <SimpleProfileScreen userId={userId} {...props} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
