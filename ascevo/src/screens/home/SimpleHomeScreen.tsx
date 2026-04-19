@@ -40,8 +40,20 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
 
   async function loadUserData() {
     try {
-      // Skip Supabase call for now due to CORS - use mock data
-      setStreak(7);
+      const { data: user } = await supabase
+        .from('users')
+        .select('current_streak, total_xp')
+        .eq('id', userId)
+        .single();
+      
+      if (user) {
+        setStreak(user.current_streak || 0);
+        setXp(user.total_xp || 0);
+        
+        // Calculate level from XP (every 100 XP = 1 level)
+        const calculatedLevel = Math.floor(user.total_xp / 100) + 1;
+        setLevel(calculatedLevel);
+      }
     } catch (error) {
       console.error('Failed to load user data:', error);
     }
