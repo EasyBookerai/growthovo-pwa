@@ -23,11 +23,10 @@ import SignInScreen from './src/screens/auth/SignInScreen';
 import SignUpScreen from './src/screens/auth/SignUpScreen';
 import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
 import QuizFlow from './src/screens/onboarding/QuizFlow';
-import HomeScreen from './src/screens/home/HomeScreen';
+import SimpleHomeScreen from './src/screens/home/SimpleHomeScreen';
 import PillarsScreen from './src/screens/pillars/PillarsScreen';
-import LeagueScreen from './src/screens/league/LeagueScreen';
-import SquadScreen from './src/screens/squad/SquadScreen';
-import ProfileScreen from './src/screens/profile/ProfileScreen';
+import SimpleLeagueScreen from './src/screens/league/SimpleLeagueScreen';
+import SimpleProfileScreen from './src/screens/profile/SimpleProfileScreen';
 import SettingsScreen from './src/screens/settings/SettingsScreen';
 import CheckInScreen from './src/screens/checkin/CheckInScreen';
 import PaywallScreen from './src/screens/paywall/PaywallScreen';
@@ -36,15 +35,16 @@ import ComebackChallengeScreen from './src/screens/relapse/ComebackChallengeScre
 import ComebackSuccessScreen from './src/screens/relapse/ComebackSuccessScreen';
 import StartFreshScreen from './src/screens/relapse/StartFreshScreen';
 import SpeakingNavigator from './src/screens/speaking/SpeakingNavigator';
+import RexScreen from './src/screens/rex/RexScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TAB_ICONS: Record<string, string> = {
   Home: '🏠',
-  Pillars: '🗺️',
+  Pillars: '🎯',
+  Rex: '💬',
   League: '🏆',
-  Squad: '⚔️',
   Profile: '👤',
 };
 
@@ -70,12 +70,10 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
     >
       <Tab.Screen name="Home">
         {(props) => (
-          <HomeScreen 
+          <SimpleHomeScreen 
             userId={userId} 
             subscriptionStatus={subscriptionStatus}
-            onNavigateToStreakBroke={(streakCount) => 
-              (props.navigation as any).navigate('StreakBroke', { streakCount })
-            }
+            navigation={props.navigation}
           />
         )}
       </Tab.Screen>
@@ -88,18 +86,23 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
           />
         )}
       </Tab.Screen>
-      <Tab.Screen name="League">
-        {() => <LeagueScreen userId={userId} />}
+      <Tab.Screen name="Rex">
+        {(props) => (
+          <RexScreen
+            userId={userId}
+            subscriptionStatus={subscriptionStatus}
+            navigation={props.navigation}
+          />
+        )}
       </Tab.Screen>
-      <Tab.Screen name="Squad">
-        {() => <SquadScreen userId={userId} />}
+      <Tab.Screen name="League">
+        {(props) => <SimpleLeagueScreen userId={userId} navigation={props.navigation} />}
       </Tab.Screen>
       <Tab.Screen name="Profile">
         {(props) => (
-          <ProfileScreen
+          <SimpleProfileScreen
             userId={userId}
-            onOpenSettings={() => (props.navigation as any).navigate('Settings')}
-            onOpenSpeaking={() => (props.navigation as any).navigate('Speaking')}
+            navigation={props.navigation}
           />
         )}
       </Tab.Screen>
