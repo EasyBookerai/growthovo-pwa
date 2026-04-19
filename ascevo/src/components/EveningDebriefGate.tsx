@@ -52,8 +52,8 @@ export default function EveningDebriefGate({ userId, children }: Props) {
     }
   }
 
-  // Still checking — render nothing (App already shows a splash while loading)
-  if (showDebrief === null) return null;
+  // Still checking — show children to avoid blocking the UI
+  if (showDebrief === null) return <>{children}</>;
 
   // Requirement 16.2: show EveningDebriefScreen before HomeScreen
   if (showDebrief) {

@@ -52,8 +52,8 @@ export default function MorningBriefingGate({ userId, children }: Props) {
     }
   }
 
-  // Still checking — render nothing (App already shows a splash while loading)
-  if (showBriefing === null) return null;
+  // Still checking — show children to avoid blocking the UI
+  if (showBriefing === null) return <>{children}</>;
 
   // Requirement 1.2: show MorningBriefingScreen before HomeScreen
   if (showBriefing) {
