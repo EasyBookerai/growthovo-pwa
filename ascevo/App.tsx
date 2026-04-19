@@ -241,16 +241,12 @@ export default function App() {
             <>
               <Stack.Screen name="Main">
                 {() => (
-                  <MorningBriefingGate userId={userId}>
-                    <EveningDebriefGate userId={userId}>
-                      <AppProvider>
-                        <AppNavigator
-                          userId={userId}
-                          subscriptionStatus={subscriptionStatus}
-                        />
-                      </AppProvider>
-                    </EveningDebriefGate>
-                  </MorningBriefingGate>
+                  <AppProvider>
+                    <AppNavigator
+                      userId={userId}
+                      subscriptionStatus={subscriptionStatus}
+                    />
+                  </AppProvider>
                 )}
               </Stack.Screen>
               <Stack.Screen name="Settings">

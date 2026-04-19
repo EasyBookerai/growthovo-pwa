@@ -20,12 +20,11 @@ interface Props {
 }
 
 const PILLARS = [
-  { id: '1', emoji: '🧠', name: 'Mental', progress: 0.65, color: '#7C3AED' },
-  { id: '2', emoji: '💬', name: 'Relations', progress: 0.45, color: '#DB2777' },
-  { id: '3', emoji: '💼', name: 'Career', progress: 0.80, color: '#EA580C' },
-  { id: '4', emoji: '💪', name: 'Fitness', progress: 0.30, color: '#16A34A' },
-  { id: '5', emoji: '💰', name: 'Finance', progress: 0.55, color: '#F59E0B' },
-  { id: '6', emoji: '🎨', name: 'Hobbies', progress: 0.20, color: '#2563EB' },
+  { key: 'mind', emoji: '🧠', name: 'Mental', progress: 0, color: '#7C3AED' },
+  { key: 'discipline', emoji: '🎯', name: 'Discipline', progress: 0, color: '#DB2777' },
+  { key: 'communication', emoji: '💬', name: 'Relations', progress: 0, color: '#EA580C' },
+  { key: 'money', emoji: '💰', name: 'Finance', progress: 0, color: '#F59E0B' },
+  { key: 'relationships', emoji: '💪', name: 'Fitness', progress: 0, color: '#16A34A' },
 ];
 
 export default function SimpleHomeScreen({ userId, subscriptionStatus, navigation }: Props) {
@@ -80,7 +79,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
   }
 
   function handlePillarPress(pillar: typeof PILLARS[0]) {
-    navigation?.navigate('Pillars', { selectedPillar: pillar.id });
+    navigation?.navigate('Pillars', { selectedPillar: pillar.key });
   }
 
   return (
@@ -147,7 +146,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         >
           {PILLARS.map((pillar) => (
             <TouchableOpacity
-              key={pillar.id}
+              key={pillar.key}
               style={styles.pillarCard}
               onPress={() => handlePillarPress(pillar)}
             >

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 interface AppState {
   xp: number;
@@ -62,6 +63,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadState() {
       try {
+        // Skip AsyncStorage on web for now to avoid errors
+        if (Platform.OS === 'web') {
+          return;
+        }
         const stored = await AsyncStorage.getItem('appState');
         if (stored) {
           dispatch({ type: 'LOAD_STATE', payload: JSON.parse(stored) });
@@ -77,6 +82,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function saveState() {
       try {
+        // Skip AsyncStorage on web for now to avoid errors
+        if (Platform.OS === 'web') {
+          return;
+        }
         await AsyncStorage.setItem('appState', JSON.stringify(state));
       } catch (error) {
         console.error('Failed to save app state:', error);
