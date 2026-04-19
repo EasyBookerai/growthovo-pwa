@@ -24,7 +24,7 @@ import SignUpScreen from './src/screens/auth/SignUpScreen';
 import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
 import QuizFlow from './src/screens/onboarding/QuizFlow';
 import HomeScreen from './src/screens/home/HomeScreen';
-import PillarsMapScreen from './src/screens/pillars/PillarsMapScreen';
+import PillarsScreen from './src/screens/pillars/PillarsScreen';
 import LeagueScreen from './src/screens/league/LeagueScreen';
 import SquadScreen from './src/screens/squad/SquadScreen';
 import ProfileScreen from './src/screens/profile/ProfileScreen';
@@ -80,11 +80,11 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
         )}
       </Tab.Screen>
       <Tab.Screen name="Pillars">
-        {() => (
-          <PillarsMapScreen
+        {(props) => (
+          <PillarsScreen
             userId={userId}
             subscriptionStatus={subscriptionStatus}
-            onPaywall={onPaywall}
+            navigation={props.navigation}
           />
         )}
       </Tab.Screen>
