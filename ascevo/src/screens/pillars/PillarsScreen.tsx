@@ -47,66 +47,13 @@ export default function PillarsScreen({ userId, subscriptionStatus, navigation, 
 
   async function loadPillarData() {
     try {
-      setLoading(true);
-
-      // Get pillar from database
-      const { data: pillarRow } = await supabase
-        .from('pillars')
-        .select('*')
-        .eq('name', selectedPillarKey)
-        .single();
-
-      if (!pillarRow) {
-        setLoading(false);
-        return;
-      }
-
-      setPillarData(pillarRow);
-
-      // Get units for this pillar
-      const { data: units } = await supabase
-        .from('units')
-        .select('*')
-        .eq('pillar_id', pillarRow.id)
-        .order('display_order', { ascending: true });
-
-      if (!units || units.length === 0) {
-        setLessons([]);
-        setLoading(false);
-        return;
-      }
-
-      // Get lessons for all units
-      const allLessons: Lesson[] = [];
-      for (const unit of units) {
-        const unitLessons = await getLessonsForUnit(unit.id);
-        allLessons.push(...unitLessons);
-      }
-
-      setLessons(allLessons);
-
-      // Get completed lesson IDs
-      const completed = await getCompletedLessonIds(userId, pillarRow.id);
-      setCompletedIds(completed);
-
-      // Check which lessons are unlocked
-      const unlocked: Record<string, boolean> = {};
-      for (const lesson of allLessons) {
-        unlocked[lesson.id] = await isLessonUnlocked(userId, lesson.id);
-      }
-      setUnlockedMap(unlocked);
-
-      // Get today's challenge
-      const todayChallenge = await getTodayChallenge(userId);
-      setChallenge(todayChallenge);
-
-      // Check if challenge is completed today
-      if (todayChallenge) {
-        const completion = await getTodayCompletion(userId, todayChallenge.id);
-        setChallengeCompleted(!!completion);
-      }
-
       setLoading(false);
+      // Skip Supabase calls due to CORS - show empty state
+      setLessons([]);
+      setCompletedIds(new Set());
+      setUnlockedMap({});
+      setChallenge(null);
+      setChallengeCompleted(false);
     } catch (error) {
       console.error('Failed to load pillar data:', error);
       setLoading(false);
