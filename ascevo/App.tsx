@@ -241,12 +241,10 @@ export default function App() {
             <>
               <Stack.Screen name="Main">
                 {() => (
-                  <AppProvider>
-                    <AppNavigator
-                      userId={userId}
-                      subscriptionStatus={subscriptionStatus}
-                    />
-                  </AppProvider>
+                  <AppNavigator
+                    userId={userId}
+                    subscriptionStatus={subscriptionStatus}
+                  />
                 )}
               </Stack.Screen>
               <Stack.Screen name="Settings">

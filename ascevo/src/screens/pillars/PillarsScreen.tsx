@@ -12,7 +12,6 @@ import { colors, typography, spacing, radius } from '../../theme';
 import { supabase } from '../../services/supabaseClient';
 import { getLessonsForUnit, getCompletedLessonIds, isLessonUnlocked } from '../../services/lessonService';
 import { getTodayChallenge, submitCheckIn, getTodayCompletion } from '../../services/challengeService';
-import { useAppContext } from '../../context/AppContext';
 import LessonPlayerScreen from '../lesson/LessonPlayerScreen';
 import type { Lesson, Challenge, Pillar, Unit } from '../../types';
 
@@ -32,7 +31,6 @@ const PILLAR_DISPLAY = [
 ];
 
 export default function PillarsScreen({ userId, subscriptionStatus, navigation, route }: Props) {
-  const { state, dispatch } = useAppContext();
   const [selectedPillarKey, setSelectedPillarKey] = useState(route?.params?.selectedPillar || 'mind');
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
@@ -119,8 +117,7 @@ export default function PillarsScreen({ userId, subscriptionStatus, navigation, 
     if (!challenge) return;
     
     try {
-      const { xpAwarded } = await submitCheckIn(userId, challenge.id, true);
-      dispatch({ type: 'ADD_XP', payload: xpAwarded });
+      await submitCheckIn(userId, challenge.id, true);
       setChallengeCompleted(true);
     } catch (error) {
       console.error('Failed to accept challenge:', error);
@@ -135,7 +132,6 @@ export default function PillarsScreen({ userId, subscriptionStatus, navigation, 
   }
 
   function handleLessonComplete(xpEarned: number) {
-    dispatch({ type: 'ADD_XP', payload: xpEarned });
     setSelectedLesson(null);
     loadPillarData(); // Reload to update completion status
   }

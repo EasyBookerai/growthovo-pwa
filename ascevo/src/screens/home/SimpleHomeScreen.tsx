@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { supabase } from '../../services/supabaseClient';
 import { colors, typography, spacing, radius } from '../../theme';
-import { useAppContext } from '../../context/AppContext';
 import CheckInModal from '../../components/CheckInModal';
 
 interface Props {
@@ -28,8 +27,9 @@ const PILLARS = [
 ];
 
 export default function SimpleHomeScreen({ userId, subscriptionStatus, navigation }: Props) {
-  const { state, dispatch } = useAppContext();
-  const [streak, setStreak] = useState(7);
+  const [xp, setXp] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [streak, setStreak] = useState(0);
   const [checkInVisible, setCheckInVisible] = useState(false);
   const [xpAnimation] = useState(new Animated.Value(0));
   const [showXPGain, setShowXPGain] = useState(false);
@@ -48,7 +48,6 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
 
       if (streakData) {
         setStreak(streakData.current_streak);
-        dispatch({ type: 'SET_STREAK', payload: streakData.current_streak });
       }
     } catch (error) {
       console.error('Failed to load user data:', error);
@@ -57,8 +56,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
 
   function handleCheckInComplete(data: { mood: string; focus: string; intention: string }) {
     // Award XP
-    dispatch({ type: 'ADD_XP', payload: 50 });
-    dispatch({ type: 'SET_MOOD', payload: data.mood });
+    setXp(prev => prev + 50);
 
     // Show XP gain animation
     setShowXPGain(true);
@@ -108,12 +106,12 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
           </View>
           <View style={[styles.statCard, { borderLeftColor: '#F59E0B' }]}>
             <Text style={styles.statLabel}>XP Points</Text>
-            <Text style={styles.statValue}>{state.xp}</Text>
+            <Text style={styles.statValue}>{xp}</Text>
             <Text style={styles.statIcon}>⚡</Text>
           </View>
           <View style={[styles.statCard, { borderLeftColor: '#7C3AED' }]}>
             <Text style={styles.statLabel}>Level</Text>
-            <Text style={styles.statValue}>{state.level}</Text>
+            <Text style={styles.statValue}>{level}</Text>
             <Text style={styles.statIcon}>🏆</Text>
           </View>
         </View>
