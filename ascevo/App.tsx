@@ -241,9 +241,10 @@ export default function App() {
             <>
               <Stack.Screen name="Main">
                 {() => (
-                  <AppNavigator
+                  <MainTabs
                     userId={userId}
                     subscriptionStatus={subscriptionStatus}
+                    onPaywall={() => setShowPaywall(true)}
                   />
                 )}
               </Stack.Screen>
