@@ -40,15 +40,8 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
 
   async function loadUserData() {
     try {
-      const { data: streakData } = await supabase
-        .from('streaks')
-        .select('current_streak')
-        .eq('user_id', userId)
-        .single();
-
-      if (streakData) {
-        setStreak(streakData.current_streak);
-      }
+      // Skip Supabase call for now due to CORS - use mock data
+      setStreak(7);
     } catch (error) {
       console.error('Failed to load user data:', error);
     }
