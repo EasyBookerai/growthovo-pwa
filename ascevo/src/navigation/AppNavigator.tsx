@@ -67,6 +67,8 @@ const styles = StyleSheet.create({
     height: 80,
     paddingBottom: 16,
     paddingTop: 8,
+    elevation: 0,
+    shadowOpacity: 0,
   },
   tabLabel: {
     fontSize: 11,

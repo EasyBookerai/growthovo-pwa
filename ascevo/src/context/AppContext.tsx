@@ -63,8 +63,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadState() {
       try {
-        // Skip AsyncStorage on web for now to avoid errors
+        // Skip AsyncStorage on web - use localStorage instead
         if (Platform.OS === 'web') {
+          const stored = localStorage.getItem('appState');
+          if (stored) {
+            dispatch({ type: 'LOAD_STATE', payload: JSON.parse(stored) });
+          }
           return;
         }
         const stored = await AsyncStorage.getItem('appState');
@@ -82,8 +86,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function saveState() {
       try {
-        // Skip AsyncStorage on web for now to avoid errors
+        // Skip AsyncStorage on web - use localStorage instead
         if (Platform.OS === 'web') {
+          localStorage.setItem('appState', JSON.stringify(state));
           return;
         }
         await AsyncStorage.setItem('appState', JSON.stringify(state));
