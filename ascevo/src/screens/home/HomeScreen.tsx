@@ -1,34 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, ActivityIndicator, Modal,
+  StyleSheet, ActivityIndicator, Animated,
 } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { supabase } from '../../services/supabaseClient';
-import { getNextLesson } from '../../services/lessonService';
-import { refillHearts } from '../../services/heartService';
-import { getTotalXP, getPillarLevel, getPillarXP, xpForNextLevel } from '../../services/progressService';
-import { getActivePair, getPartnerCheckinStatus, subscribeToPartnerCheckin, generateWeeklyComparison } from '../../services/partnerService';
-import { getOrGenerateWeeklyReport } from '../../services/reportService';
-import { getDailyGoals } from '../../services/gamificationService';
-import { getAllAchievements, getUserAchievements } from '../../services/gamificationService';
-import LessonPlayerScreen from '../lesson/LessonPlayerScreen';
-import WeeklyReportScreen from '../report/WeeklyReportScreen';
-import RelapseDetectionGate from '../../components/RelapseDetectionGate';
 import { colors, typography, spacing, radius } from '../../theme';
-import type { Lesson, LeagueMember, WeeklySummaryRecord, PartnerComparisonReport, WeeklyRexReport, DailyGoal, AchievementDefinition } from '../../types';
-import SOSBottomSheet from '../../screens/sos/SOSBottomSheet';
-import RexChatBottomSheet from '../../screens/chat/RexChatBottomSheet';
-import GlassCard from '../../components/glass/GlassCard';
-import StreakDisplay from '../../components/gamification/StreakDisplay';
-import XPBar from '../../components/gamification/XPBar';
-import DailyGoalCard from '../../components/gamification/DailyGoalCard';
-import AchievementBadge from '../../components/gamification/AchievementBadge';
+import { useAppContext } from '../../context/AppContext';
+import CheckInModal from '../../components/CheckInModal';
 
 interface Props {
   userId: string;
   subscriptionStatus: string;
-  onNavigateToStreakBroke: (streakCount: number) => void;
+  navigation?: any;
 }
 
 export default function HomeScreen({ userId, subscriptionStatus, onNavigateToStreakBroke }: Props) {
