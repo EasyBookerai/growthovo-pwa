@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "buildCommand": "npm install --prefix ascevo --legacy-peer-deps && cd ascevo && npm run build:web",
-  "outputDirectory": "ascevo/web-build",
-  "installCommand": "echo 'Install handled in buildCommand - cache cleared'",
+  "framework": "expo",
+  "buildCommand": "cd ascevo && npm install --legacy-peer-deps",
+  "devCommand": "cd ascevo && npm run web",
+  "outputDirectory": "ascevo/.expo/web",
+  "installCommand": "echo 'Install handled in buildCommand'",
   "headers": [
     {
       "source": "/static/(.*)",

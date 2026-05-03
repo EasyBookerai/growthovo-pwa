@@ -1,60 +1,67 @@
 #!/usr/bin/env node
 
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('Building Growthovo PWA for web...');
+console.log('Building Growthovo PWA for web with Expo...');
 
 const outputDir = path.join(__dirname, 'web-build');
-const publicDir = path.join(__dirname, 'public');
-
-// Recursive copy function
-function copyRecursive(src, dest) {
-  if (!fs.existsSync(src)) {
-    console.log(`Source directory ${src} does not exist, skipping...`);
-    return;
-  }
-  
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest, { recursive: true });
-  }
-  
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    
-    if (entry.isDirectory()) {
-      copyRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-      console.log(`Copied: ${entry.name}`);
-    }
-  }
-}
+const distDir = path.join(__dirname, 'dist');
 
 try {
-  // Create output directory
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+  // Clean previous builds
+  if (fs.existsSync(outputDir)) {
+    console.log('Cleaning previous web-build...');
+    fs.rmSync(outputDir, { recursive: true, force: true });
+  }
+  if (fs.existsSync(distDir)) {
+    console.log('Cleaning previous dist...');
+    fs.rmSync(distDir, { recursive: true, force: true });
   }
 
-  // Copy public files
-  console.log('Copying static files...');
-  copyRecursive(publicDir, outputDir);
+  // Export with Expo (creates dist folder)
+  console.log('Exporting React Native Web bundle with Expo...');
+  execSync('npx expo export --platform web --output-dir dist', {
+    stdio: 'inherit',
+    cwd: __dirname,
+    env: { ...process.env, NODE_ENV: 'production' }
+  });
 
-  // Create a simple success marker
+  // Move dist to web-build for Vercel
+  if (fs.existsSync(distDir)) {
+    console.log('Moving dist to web-build...');
+    fs.renameSync(distDir, outputDir);
+  }
+
+  // Verify build output
+  if (!fs.existsSync(outputDir)) {
+    throw new Error('Build output directory not created');
+  }
+
+  const files = fs.readdirSync(outputDir);
+  console.log(`\n✅ Build completed successfully!`);
+  console.log(`Output directory: web-build`);
+  console.log(`Files generated: ${files.length}`);
+  
+  // Create success marker
   fs.writeFileSync(
     path.join(outputDir, '.build-complete'), 
-    'Build completed at ' + new Date().toISOString()
+    JSON.stringify({
+      timestamp: new Date().toISOString(),
+      files: files.length,
+      buildType: 'expo-export-web'
+    }, null, 2)
   );
   
-  console.log('✅ Build completed successfully!');
-  console.log('Output directory: web-build');
-  console.log('Files:', fs.readdirSync(outputDir));
 } catch (error) {
-  console.error('❌ Build failed:', error.message);
+  console.error('\n❌ Build failed:', error.message);
+  console.error('\nTroubleshooting:');
+  console.error('1. Ensure Expo is installed: npm install expo');
+  console.error('2. Check that all dependencies are installed: npm install --legacy-peer-deps');
+  console.error('3. Verify app.json web configuration');
+  console.error('\nFull error:');
   console.error(error.stack);
   process.exit(1);
 }
+
