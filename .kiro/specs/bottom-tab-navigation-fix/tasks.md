@@ -1,0 +1,84 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration test
+  - **Property 1: Bug Condition** - Tab Navigation Triggers Screen Change
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the bug exists
+  - **Scoped PBT Approach**: Scope the property to concrete failing cases: tapping Pillars, Rex, League, or Profile tabs
+  - Test that tapping Pillars tab navigates to PillarsScreen (from Bug Condition in design)
+  - Test that tapping Rex tab navigates to RexScreen (from Bug Condition in design)
+  - Test that tapping League tab navigates to SimpleLeagueScreen (from Bug Condition in design)
+  - Test that tapping Profile tab navigates to SimpleProfileScreen (from Bug Condition in design)
+  - Test that tapped tab highlights in purple (#A78BFA) to indicate active state
+  - The test assertions should match the Expected Behavior Properties from design
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found to understand root cause (e.g., "Tapping Pillars tab does not navigate, stays on Home screen")
+  - Inspect props passed to screen components to verify route prop is missing
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Existing Functionality Unchanged
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for non-buggy inputs
+  - Observe: Home tab navigation works correctly on unfixed code
+  - Observe: Tab bar styling (colors, icons, labels, height, padding) renders correctly on unfixed code
+  - Observe: userId and subscriptionStatus props are passed correctly to all screen components on unfixed code
+  - Observe: Screen components render correctly on unfixed code
+  - Observe: Dark theme colors (#0A0A12 background, #1A1A2E cards, #7C3AED purple, #A78BFA light purple) are applied correctly on unfixed code
+  - Write property-based tests capturing observed behavior patterns from Preservation Requirements
+  - Property-based testing generates many test cases for stronger guarantees
+  - Test that Home tab continues to navigate to SimpleHomeScreen
+  - Test that tab bar displays all five tabs with correct icons and labels
+  - Test that dark theme colors are applied correctly
+  - Test that userId and subscriptionStatus props are passed to all screen components
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+
+- [ ] 3. Fix for bottom tab navigation
+
+  - [x] 3.1 Implement the fix in MainTabs component
+    - Update Tab.Screen render props pattern from `navigation={props.navigation}` to `{...props}` for all Tab.Screen components
+    - Line 73-79 (Home): Change to spread all props with `{...props}`
+    - Line 82-88 (Pillars): Change to spread all props with `{...props}`
+    - Line 91-97 (Rex): Change to spread all props with `{...props}`
+    - Line 100 (League): Change to spread all props with `{...props}`
+    - Line 103-108 (Profile): Change to spread all props with `{...props}`
+    - Remove unused AppNavigator import on line 18
+    - Verify all screen components accept standard React Navigation props interface (navigation, route)
+    - _Bug_Condition: isBugCondition(input) where input.tabName IN ['Pillars', 'Rex', 'League', 'Profile'] AND tabScreenUsesRenderPropsWithPartialProps(input.tabName)_
+    - _Expected_Behavior: For all tab press events where isBugCondition holds, the navigator SHALL switch to the corresponding screen and highlight the active tab_
+    - _Preservation: Home tab navigation, tab bar styling, screen rendering, and prop passing (userId, subscriptionStatus) must remain unchanged_
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5_
+
+  - [x] 3.2 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Tab Navigation Triggers Screen Change
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - Verify all tabs (Pillars, Rex, League, Profile) navigate correctly when tapped
+    - Verify active tab highlights in purple (#A78BFA)
+    - Verify screen components receive all required props including route prop
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+
+  - [x] 3.3 Verify preservation tests still pass
+    - **Property 2: Preservation** - Existing Functionality Unchanged
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm Home tab navigation still works correctly
+    - Confirm tab bar styling remains unchanged
+    - Confirm userId and subscriptionStatus props are still passed correctly
+    - Confirm screen rendering remains unchanged
+    - Confirm all tests still pass after fix (no regressions)
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+
+- [-] 4. Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.

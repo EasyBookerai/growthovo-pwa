@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,139 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 
+/**
+ * SimpleLeagueScreen Props Interface
+ * 
+ * @property {string} userId - Authenticated user ID
+ * @property {any} [navigation] - React Navigation object (optional, framework-specific type)
+ */
 interface Props {
   userId: string;
   navigation?: any;
 }
 
-const LEADERBOARD = [
+/**
+ * Leaderboard entry interface
+ * 
+ * Represents a single row in the leaderboard.
+ * 
+ * @property {number} rank - User's rank position (1-based)
+ * @property {string} username - Display username
+ * @property {number} xp - Total XP points
+ * @property {string} avatar - Avatar initial letter
+ * @property {string} [medal] - Medal emoji for top 3 (🥇🥈🥉)
+ * @property {boolean} [isCurrentUser] - True if this is the current user's row
+ */
+interface LeaderboardEntry {
+  rank: number;
+  username: string;
+  xp: number;
+  avatar: string;
+  medal?: string;
+  isCurrentUser?: boolean;
+}
+
+/**
+ * LeaderboardRow Props Interface
+ * 
+ * Props for the memoized LeaderboardRow component.
+ * 
+ * @property {LeaderboardEntry} entry - Leaderboard entry data to display
+ */
+interface LeaderboardRowProps {
+  entry: LeaderboardEntry;
+}
+
+/**
+ * Memoized leaderboard row component to prevent unnecessary re-renders
+ * Only re-renders when entry data changes
+ */
+const LeaderboardRow = memo(({ entry }: LeaderboardRowProps) => {
+  return (
+    <View
+      style={[
+        styles.leaderboardRow,
+        entry.isCurrentUser && styles.leaderboardRowCurrent,
+      ]}
+    >
+      {entry.isCurrentUser && <View style={styles.currentUserIndicator} />}
+      <Text style={styles.leaderboardRank}>
+        {entry.medal || `#${entry.rank}`}
+      </Text>
+      <View style={styles.leaderboardAvatar}>
+        <Text style={styles.leaderboardAvatarText}>{entry.avatar}</Text>
+      </View>
+      <Text
+        style={[
+          styles.leaderboardUsername,
+          entry.isCurrentUser && styles.leaderboardUsernameCurrent,
+        ]}
+      >
+        {entry.username}
+      </Text>
+      <Text style={styles.leaderboardXP}>{entry.xp} XP</Text>
+    </View>
+  );
+});
+
+interface Props {
+  userId: string;
+  navigation?: any;
+}
+
+/**
+ * Memoized squad card component to prevent unnecessary re-renders
+ * Only re-renders when member data changes
+ */
+const SquadCard = memo(({ member }: SquadCardProps) => {
+  return (
+    <View style={styles.squadCard}>
+      <View style={styles.squadAvatar}>
+        <Text style={styles.squadAvatarText}>{member.name[0]}</Text>
+      </View>
+      <View style={styles.squadInfo}>
+        <Text style={styles.squadName}>{member.name}</Text>
+        <Text style={styles.squadXP}>{member.xp} XP</Text>
+      </View>
+      <View
+        style={[
+          styles.squadStatus,
+          member.online ? styles.squadStatusOnline : styles.squadStatusOffline,
+        ]}
+      />
+    </View>
+  );
+});
+
+/**
+ * Squad member interface
+ * 
+ * Represents a squad member with online status.
+ * 
+ * @property {string} id - Unique member identifier
+ * @property {string} name - Member's display name
+ * @property {number} xp - Member's total XP
+ * @property {boolean} online - True if member is currently online
+ */
+interface SquadMember {
+  id: string;
+  name: string;
+  xp: number;
+  online: boolean;
+}
+
+/**
+ * SquadCard Props Interface
+ * 
+ * Props for the memoized SquadCard component.
+ * 
+ * @property {SquadMember} member - Squad member data to display
+ */
+interface SquadCardProps {
+  member: SquadMember;
+}
+
+const LEADERBOARD: LeaderboardEntry[] = [
   { rank: 1, username: 'Sarah_M', xp: 500, avatar: 'S', medal: '🥇' },
   { rank: 2, username: 'Mike_K', xp: 480, avatar: 'M', medal: '🥈' },
   { rank: 3, username: 'Alex_R', xp: 450, avatar: 'A', medal: '🥉' },
@@ -28,17 +155,56 @@ const LEADERBOARD = [
   { rank: 12, username: 'You', xp: 340, avatar: 'C', medal: '', isCurrentUser: true },
 ];
 
-const SQUAD = [
+const SQUAD: SquadMember[] = [
   { id: '1', name: 'Sarah_M', xp: 500, online: true },
   { id: '2', name: 'Mike_K', xp: 480, online: true },
   { id: '3', name: 'Alex_R', xp: 450, online: false },
 ];
 
+/**
+ * SimpleLeagueScreen Component
+ * 
+ * Displays weekly league leaderboard with user rank card and squad section.
+ * Shows fake leaderboard data for demonstration purposes.
+ * 
+ * Features:
+ * - User rank card with Bronze League badge
+ * - Progress bar showing XP needed to rank up
+ * - Leaderboard with 10 entries (ranks 1-10)
+ * - Medals for top 3 ranks (🥇🥈🥉)
+ * - Current user row highlighted in purple
+ * - Squad section with online/offline status
+ * - Invite friend button
+ * - Countdown timer for league reset
+ * 
+ * Performance optimizations:
+ * - Memoized LeaderboardRow components
+ * - Memoized SquadCard components
+ * - Prevents unnecessary re-renders
+ * 
+ * @param {Props} props - Component props
+ * @param {string} props.userId - Authenticated user ID
+ * @param {any} props.navigation - React Navigation object (optional)
+ * 
+ * @example
+ * ```tsx
+ * <SimpleLeagueScreen
+ *   userId={user.id}
+ *   navigation={navigation}
+ * />
+ * ```
+ */
 export default function SimpleLeagueScreen({ userId, navigation }: Props) {
   const [timeRemaining, setTimeRemaining] = useState('3d 14h');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // In a real implementation, you would fetch leaderboard data here
+  // For now, we're using hardcoded data
+  const hasLeaderboardData = LEADERBOARD.length > 0;
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} testID="league-screen">
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -77,56 +243,27 @@ export default function SimpleLeagueScreen({ userId, navigation }: Props) {
 
         {/* Leaderboard */}
         <Text style={styles.sectionTitle}>Leaderboard</Text>
-        <View style={styles.leaderboard}>
-          {LEADERBOARD.map((entry) => (
-            <View
-              key={entry.rank}
-              style={[
-                styles.leaderboardRow,
-                entry.isCurrentUser && styles.leaderboardRowCurrent,
-              ]}
-            >
-              {entry.isCurrentUser && <View style={styles.currentUserIndicator} />}
-              <Text style={styles.leaderboardRank}>
-                {entry.medal || `#${entry.rank}`}
-              </Text>
-              <View style={styles.leaderboardAvatar}>
-                <Text style={styles.leaderboardAvatarText}>{entry.avatar}</Text>
-              </View>
-              <Text
-                style={[
-                  styles.leaderboardUsername,
-                  entry.isCurrentUser && styles.leaderboardUsernameCurrent,
-                ]}
-              >
-                {entry.username}
-              </Text>
-              <Text style={styles.leaderboardXP}>{entry.xp} XP</Text>
-            </View>
-          ))}
-        </View>
+        {!hasLeaderboardData ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyEmoji}>🏆</Text>
+            <Text style={styles.emptyText}>No leaderboard data yet</Text>
+            <Text style={styles.emptySubtext}>Complete lessons to join the competition!</Text>
+          </View>
+        ) : (
+          <View style={styles.leaderboard}>
+            {LEADERBOARD.map((entry) => (
+              <LeaderboardRow key={entry.rank} entry={entry} />
+            ))}
+          </View>
+        )}
 
         {/* Squad Section */}
         <Text style={styles.sectionTitle}>Your Squad</Text>
         <View style={styles.squadSection}>
           {SQUAD.map((member) => (
-            <View key={member.id} style={styles.squadCard}>
-              <View style={styles.squadAvatar}>
-                <Text style={styles.squadAvatarText}>{member.name[0]}</Text>
-              </View>
-              <View style={styles.squadInfo}>
-                <Text style={styles.squadName}>{member.name}</Text>
-                <Text style={styles.squadXP}>{member.xp} XP</Text>
-              </View>
-              <View
-                style={[
-                  styles.squadStatus,
-                  member.online ? styles.squadStatusOnline : styles.squadStatusOffline,
-                ]}
-              />
-            </View>
+            <SquadCard key={member.id} member={member} />
           ))}
-          <TouchableOpacity style={styles.inviteButton}>
+          <TouchableOpacity style={styles.inviteButton} activeOpacity={0.7}>
             <Text style={styles.inviteButtonText}>Invite a Friend →</Text>
           </TouchableOpacity>
         </View>
@@ -348,5 +485,29 @@ const styles = StyleSheet.create({
   inviteButtonText: {
     ...typography.bodyBold,
     color: '#7C3AED',
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    backgroundColor: '#1A1A2E',
+    borderRadius: 16,
+    marginBottom: spacing.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  emptyEmoji: {
+    fontSize: 64,
+    marginBottom: spacing.md,
+  },
+  emptyText: {
+    ...typography.h3,
+    color: colors.text,
+    marginBottom: spacing.xs,
+  },
+  emptySubtext: {
+    ...typography.body,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
   },
 });

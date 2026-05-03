@@ -11,7 +11,15 @@ import {
 import { supabase } from '../../services/supabaseClient';
 import { colors, typography, spacing, radius } from '../../theme';
 import CheckInModal from '../../components/CheckInModal';
+import { useAppContext } from '../../context/AppContext';
 
+/**
+ * SimpleHomeScreen Props Interface
+ * 
+ * @property {string} userId - Authenticated user ID for data fetching
+ * @property {string} subscriptionStatus - User's subscription tier (e.g., 'free', 'premium')
+ * @property {any} [navigation] - React Navigation object (optional, framework-specific type)
+ */
 interface Props {
   userId: string;
   subscriptionStatus: string;
@@ -26,49 +34,74 @@ const PILLARS = [
   { key: 'relationships', emoji: '💪', name: 'Fitness', progress: 0, color: '#16A34A' },
 ];
 
+/**
+ * SimpleHomeScreen Component
+ * 
+ * Main home screen displaying user stats, daily mission, growth pillars, and quick actions.
+ * Integrates with AppContext for real-time XP, streak, and level updates.
+ * 
+ * Features:
+ * - Real-time stat cards (XP, Streak, Level) from AppContext
+ * - Daily check-in button with modal
+ * - Premium XP gain animation with spring physics
+ * - Horizontal scrolling pillar cards
+ * - Quick action buttons for key features
+ * - Error banner with dismiss functionality
+ * 
+ * @param {Props} props - Component props
+ * @param {string} props.userId - Authenticated user ID
+ * @param {string} props.subscriptionStatus - User's subscription tier
+ * @param {any} props.navigation - React Navigation object (optional)
+ * 
+ * @example
+ * ```tsx
+ * <SimpleHomeScreen
+ *   userId={user.id}
+ *   subscriptionStatus="free"
+ *   navigation={navigation}
+ * />
+ * ```
+ */
 export default function SimpleHomeScreen({ userId, subscriptionStatus, navigation }: Props) {
-  const [xp, setXp] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [streak, setStreak] = useState(0);
+  // Use AppContext for global state (xp, streak, level)
+  const { xp, streak, level, updateXP, error, clearError } = useAppContext();
+  
   const [checkInVisible, setCheckInVisible] = useState(false);
   const [xpAnimation] = useState(new Animated.Value(0));
   const [showXPGain, setShowXPGain] = useState(false);
+  const [xpGainAmount, setXpGainAmount] = useState(0);
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
-  async function loadUserData() {
-    try {
-      const { data: user } = await supabase
-        .from('users')
-        .select('current_streak, total_xp')
-        .eq('id', userId)
-        .single();
-      
-      if (user) {
-        setStreak(user.current_streak || 0);
-        setXp(user.total_xp || 0);
-        
-        // Calculate level from XP (every 100 XP = 1 level)
-        const calculatedLevel = Math.floor(user.total_xp / 100) + 1;
-        setLevel(calculatedLevel);
-      }
-    } catch (error) {
-      console.error('Failed to load user data:', error);
-    }
-  }
-
+  /**
+   * Handle check-in completion
+   * 
+   * Called when user completes all 3 steps of the check-in modal.
+   * Awards +50 XP through AppContext and triggers premium spring animation.
+   * 
+   * Animation sequence:
+   * 1. Spring animation rises XP text upward with bounce
+   * 2. Fade out as it reaches peak
+   * 3. Reset position for next animation
+   * 
+   * @param {Object} data - Check-in data from modal
+   * @param {string} data.mood - Selected mood emoji value
+   * @param {string} data.focus - User's focus text
+   * @param {string} data.intention - User's intention (optional)
+   */
   function handleCheckInComplete(data: { mood: string; focus: string; intention: string }) {
-    // Award XP
-    setXp(prev => prev + 50);
-
-    // Show XP gain animation
+    // Award XP through AppContext
+    const xpAmount = 50;
+    updateXP(xpAmount);
+    
+    // Show premium XP gain animation
+    setXpGainAmount(xpAmount);
     setShowXPGain(true);
+    
+    // Premium spring animation: rise and fade
     Animated.sequence([
-      Animated.timing(xpAnimation, {
-        toValue: -50,
-        duration: 1000,
+      Animated.spring(xpAnimation, {
+        toValue: -80,
+        friction: 8,
+        tension: 40,
         useNativeDriver: true,
       }),
       Animated.timing(xpAnimation, {
@@ -81,17 +114,39 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
     });
   }
 
+  /**
+   * Handle pillar card press
+   * 
+   * Navigates to the Pillars tab with the selected pillar pre-selected.
+   * This allows users to quickly jump to a specific pillar's lessons.
+   * 
+   * @param {Object} pillar - The pillar that was tapped
+   * @param {string} pillar.key - Pillar identifier (e.g., 'mind', 'discipline')
+   * @param {string} pillar.name - Display name
+   * @param {string} pillar.emoji - Pillar emoji
+   * @param {string} pillar.color - Theme color for pillar
+   */
   function handlePillarPress(pillar: typeof PILLARS[0]) {
     navigation?.navigate('Pillars', { selectedPillar: pillar.key });
   }
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} testID="home-screen">
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
+        {/* Error Banner */}
+        {error && (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorBannerText}>⚠️ {error}</Text>
+            <TouchableOpacity onPress={clearError} style={styles.errorDismiss}>
+              <Text style={styles.errorDismissText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
           <View>
@@ -136,6 +191,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         <TouchableOpacity
           style={styles.checkInButton}
           onPress={() => setCheckInVisible(true)}
+          activeOpacity={0.8}
         >
           <Text style={styles.checkInButtonText}>Start Daily Check-in →</Text>
         </TouchableOpacity>
@@ -152,6 +208,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
               key={pillar.key}
               style={styles.pillarCard}
               onPress={() => handlePillarPress(pillar)}
+              activeOpacity={0.7}
             >
               <Text style={styles.pillarEmoji}>{pillar.emoji}</Text>
               <Text style={styles.pillarName}>{pillar.name}</Text>
@@ -173,17 +230,18 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         {/* Quick Actions */}
         <Text style={styles.sectionTitle}>Quick Actions</Text>
         <View style={styles.quickActionsRow}>
-          <TouchableOpacity style={styles.quickActionCard}>
+          <TouchableOpacity style={styles.quickActionCard} activeOpacity={0.7}>
             <Text style={styles.quickActionEmoji}>☀️</Text>
             <Text style={styles.quickActionLabel}>Morning Briefing</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionCard}>
+          <TouchableOpacity style={styles.quickActionCard} activeOpacity={0.7}>
             <Text style={styles.quickActionEmoji}>🆘</Text>
             <Text style={styles.quickActionLabel}>SOS</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionCard}
             onPress={() => navigation?.navigate('Rex')}
+            activeOpacity={0.7}
           >
             <Text style={styles.quickActionEmoji}>🤖</Text>
             <Text style={styles.quickActionLabel}>Talk to Rex</Text>
@@ -191,7 +249,7 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         </View>
       </ScrollView>
 
-      {/* XP Gain Animation */}
+      {/* XP Gain Animation - Premium floating text */}
       {showXPGain && (
         <Animated.View
           style={[
@@ -199,19 +257,23 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
             {
               transform: [{ translateY: xpAnimation }],
               opacity: xpAnimation.interpolate({
-                inputRange: [-50, 0],
+                inputRange: [-80, 0],
                 outputRange: [0, 1],
               }),
             },
           ]}
         >
-          <Text style={styles.xpGainText}>+50 XP</Text>
+          <View style={styles.xpGainContainer}>
+            <Text style={styles.xpGainText}>+{xpGainAmount} XP</Text>
+            <Text style={styles.xpGainEmoji}>⚡</Text>
+          </View>
         </Animated.View>
       )}
 
       {/* Check-in Modal */}
       <CheckInModal
         visible={checkInVisible}
+        userId={userId}
         onComplete={handleCheckInComplete}
         onClose={() => setCheckInVisible(false)}
       />
@@ -373,7 +435,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 64,
     backgroundColor: '#1A1A2E',
-    borderRadius: 14,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -390,13 +452,57 @@ const styles = StyleSheet.create({
   },
   xpGainFloat: {
     position: 'absolute',
-    top: '50%',
+    top: '40%',
     left: '50%',
-    transform: [{ translateX: -50 }],
+    transform: [{ translateX: -75 }],
+    zIndex: 1000,
+  },
+  xpGainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(245, 158, 11, 0.95)',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    borderRadius: 100,
+    shadowColor: '#F59E0B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: '#FCD34D',
   },
   xpGainText: {
     ...typography.h2,
-    color: '#F59E0B',
-    fontWeight: '800',
+    color: '#FFFFFF',
+    fontWeight: '900',
+    fontSize: 28,
+    marginRight: spacing.xs,
+  },
+  xpGainEmoji: {
+    fontSize: 24,
+  },
+  errorBanner: {
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderRadius: 12,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  errorBannerText: {
+    ...typography.small,
+    color: '#FCA5A5',
+    flex: 1,
+  },
+  errorDismiss: {
+    padding: spacing.xs,
+  },
+  errorDismissText: {
+    color: '#FCA5A5',
+    fontSize: 18,
   },
 });

@@ -15,7 +15,6 @@ import { useLanguageStore } from './src/store';
 import { colors } from './src/theme';
 import { syncWidgetData } from './src/services/widgetService';
 import { initAssetLoading, preloadCriticalAssets } from './src/services/assetLoadingService';
-import AppNavigator from './src/navigation/AppNavigator';
 import { AppProvider } from './src/context/AppContext';
 
 // Screens
@@ -73,7 +72,7 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
           <SimpleHomeScreen 
             userId={userId} 
             subscriptionStatus={subscriptionStatus}
-            navigation={props.navigation}
+            {...props}
           />
         )}
       </Tab.Screen>
@@ -82,7 +81,7 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
           <PillarsScreen
             userId={userId}
             subscriptionStatus={subscriptionStatus}
-            navigation={props.navigation}
+            {...props}
           />
         )}
       </Tab.Screen>
@@ -91,18 +90,18 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
           <RexScreen
             userId={userId}
             subscriptionStatus={subscriptionStatus}
-            navigation={props.navigation}
+            {...props}
           />
         )}
       </Tab.Screen>
       <Tab.Screen name="League">
-        {(props) => <SimpleLeagueScreen userId={userId} navigation={props.navigation} />}
+        {(props) => <SimpleLeagueScreen userId={userId} {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Profile">
         {(props) => (
           <SimpleProfileScreen
             userId={userId}
-            navigation={props.navigation}
+            {...props}
           />
         )}
       </Tab.Screen>
@@ -244,11 +243,13 @@ export default function App() {
             <>
               <Stack.Screen name="Main">
                 {() => (
-                  <MainTabs
-                    userId={userId}
-                    subscriptionStatus={subscriptionStatus}
-                    onPaywall={() => setShowPaywall(true)}
-                  />
+                  <AppProvider userId={userId}>
+                    <MainTabs
+                      userId={userId}
+                      subscriptionStatus={subscriptionStatus}
+                      onPaywall={() => setShowPaywall(true)}
+                    />
+                  </AppProvider>
                 )}
               </Stack.Screen>
               <Stack.Screen name="Settings">

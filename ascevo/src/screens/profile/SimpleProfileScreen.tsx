@@ -10,7 +10,14 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 import { supabase } from '../../services/supabaseClient';
+import { useAppContext } from '../../context/AppContext';
 
+/**
+ * SimpleProfileScreen Props Interface
+ * 
+ * @property {string} userId - Authenticated user ID
+ * @property {any} [navigation] - React Navigation object (optional, framework-specific type)
+ */
 interface Props {
   userId: string;
   navigation?: any;
@@ -48,12 +55,57 @@ const SETTINGS_SECTIONS = [
   },
 ];
 
+/**
+ * SimpleProfileScreen Component
+ * 
+ * User profile screen displaying avatar, stats, achievement badges, and settings.
+ * Integrates with AppContext for real-time XP and streak display.
+ * 
+ * Features:
+ * - Circular avatar with user initial
+ * - Stats row (Total XP, Day Streak, Lessons Done)
+ * - Achievement badges with locked/unlocked states
+ * - Settings sections (Account, Preferences, Support)
+ * - Log out button with confirmation alert
+ * - Legal footer with version info
+ * - Error banner with dismiss functionality
+ * 
+ * Settings sections:
+ * - Account: Edit Profile, Notifications, Language
+ * - Preferences: Privacy & Data
+ * - Support: Help Center, Rate App
+ * 
+ * @param {Props} props - Component props
+ * @param {string} props.userId - Authenticated user ID
+ * @param {any} props.navigation - React Navigation object (optional)
+ * 
+ * @example
+ * ```tsx
+ * <SimpleProfileScreen
+ *   userId={user.id}
+ *   navigation={navigation}
+ * />
+ * ```
+ */
 export default function SimpleProfileScreen({ userId, navigation }: Props) {
+  // Use AppContext for XP and streak
+  const { xp, streak, isLoading, error, clearError } = useAppContext();
+  
   const [username] = useState('Champion');
-  const [totalXP] = useState(1250);
-  const [streak] = useState(7);
   const [lessonsCompleted] = useState(15);
 
+  /**
+   * Handle log out button press
+   * 
+   * Shows confirmation alert before signing out.
+   * Uses Supabase Auth to sign out the user.
+   * 
+   * Alert options:
+   * - Cancel: Dismisses alert, no action taken
+   * - Log Out: Signs out user and redirects to auth screen
+   * 
+   * @async
+   */
   async function handleLogOut() {
     Alert.alert(
       'Log Out',
@@ -71,17 +123,35 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
     );
   }
 
+  /**
+   * Handle settings item press
+   * 
+   * Placeholder function for settings navigation.
+   * In production, this would navigate to respective settings screens.
+   * 
+   * @param {string} action - The action identifier (e.g., 'edit_profile', 'notifications')
+   */
   function handleSettingPress(action: string) {
     console.log('Setting pressed:', action);
     // TODO: Navigate to respective screens
   }
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} testID="profile-screen">
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
+        {/* Error Banner */}
+        {error && (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorBannerText}>⚠️ {error}</Text>
+            <TouchableOpacity onPress={clearError} style={styles.errorDismiss}>
+              <Text style={styles.errorDismissText}>✕</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Profile Header */}
         <View style={styles.profileHeader}>
           <View style={styles.avatar}>
@@ -93,7 +163,7 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
           {/* Stats Row */}
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{totalXP}</Text>
+              <Text style={styles.statValue}>{xp}</Text>
               <Text style={styles.statLabel}>Total XP</Text>
             </View>
             <View style={styles.statDivider} />
@@ -157,6 +227,7 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
                     index < section.items.length - 1 && styles.settingRowBorder,
                   ]}
                   onPress={() => handleSettingPress(item.action)}
+                  activeOpacity={0.7}
                 >
                   <Text style={styles.settingIcon}>{item.icon}</Text>
                   <Text style={styles.settingLabel}>{item.label}</Text>
@@ -171,7 +242,7 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
         ))}
 
         {/* Log Out */}
-        <TouchableOpacity style={styles.logOutButton} onPress={handleLogOut}>
+        <TouchableOpacity style={styles.logOutButton} onPress={handleLogOut} activeOpacity={0.7}>
           <Text style={styles.logOutText}>Log Out</Text>
         </TouchableOpacity>
 
@@ -347,5 +418,28 @@ const styles = StyleSheet.create({
     ...typography.small,
     color: 'rgba(255,255,255,0.3)',
     textAlign: 'center',
+  },
+  errorBanner: {
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    borderRadius: 12,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  errorBannerText: {
+    ...typography.small,
+    color: '#FCA5A5',
+    flex: 1,
+  },
+  errorDismiss: {
+    padding: spacing.xs,
+  },
+  errorDismissText: {
+    color: '#FCA5A5',
+    fontSize: 18,
   },
 });
