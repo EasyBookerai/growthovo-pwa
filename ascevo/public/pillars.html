@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pillars - Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0A0A12;
+      color: #FFFFFF;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+    .header { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .pillar-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pillar-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .pillar-emoji { font-size: 32px; margin-bottom: 8px; }
+    .pillar-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .pillar-progress { font-size: 12px; color: #A78BFA; }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8,8,15,0.95);
+      backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 20px 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+    }
+    .nav-item.active { color: #A78BFA; }
+    .nav-icon { font-size: 24px; }
+    .nav-label { font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="header">Your Growth Pillars</h1>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-emoji">🧠</div>
+        <div class="pillar-name">Mental Health</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-emoji">💬</div>
+        <div class="pillar-name">Relationships</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-emoji">💼</div>
+        <div class="pillar-name">Career</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-emoji">💪</div>
+        <div class="pillar-name">Fitness</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-emoji">💰</div>
+        <div class="pillar-name">Finance</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-emoji">🎨</div>
+        <div class="pillar-name">Hobbies</div>
+        <div class="pillar-progress">Level 1</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="pillars.html" class="nav-item active">
+      <div class="nav-icon">🎯</div>
+      <div class="nav-label">Pillars</div>
+    </a>
+    <a href="rex.html" class="nav-item">
+      <div class="nav-icon">💬</div>
+      <div class="nav-label">Rex</div>
+    </a>
+    <a href="league.html" class="nav-item">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">League</div>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </div>
+</body>
+</html>

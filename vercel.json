@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "framework": "expo",
-  "buildCommand": "cd ascevo && npm install --legacy-peer-deps",
-  "devCommand": "cd ascevo && npm run web",
-  "outputDirectory": "ascevo/.expo/web",
+  "buildCommand": "cd ascevo && npm install --legacy-peer-deps && npm run build:web",
+  "outputDirectory": "ascevo/web-build",
   "installCommand": "echo 'Install handled in buildCommand'",
   "headers": [
     {

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0A0A12;
+      color: #FFFFFF;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .greeting { font-size: 24px; font-weight: 700; }
+    .greeting-name { color: #A78BFA; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-value { font-size: 28px; font-weight: 700; color: #A78BFA; }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+    .mission-card {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(167,139,250,0.1));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .mission-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .mission-desc { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
+    .mission-reward {
+      display: inline-flex;
+      background: rgba(52,211,153,0.15);
+      border: 1px solid rgba(52,211,153,0.3);
+      border-radius: 100px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #34D399;
+    }
+    .cta-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #7C3AED, #A78BFA);
+      border: none;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8,8,15,0.95);
+      backdrop-filter: blur(24px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 20px 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+    }
+    .nav-item.active { color: #A78BFA; }
+    .nav-icon { font-size: 24px; }
+    .nav-label { font-size: 11px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="greeting">Hey, <span class="greeting-name">Champion</span>! 👋</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">0</div>
+        <div class="stat-label">XP Points</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Level</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Today's Mission</h2>
+    <div class="mission-card">
+      <div class="mission-title">🎯 Complete Your First Check-in</div>
+      <div class="mission-desc">Take 2 minutes to reflect on your day and set your intentions</div>
+      <span class="mission-reward">+50 XP 💎</span>
+    </div>
+
+    <button class="cta-btn">Start Daily Check-in →</button>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item active">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="pillars.html" class="nav-item">
+      <div class="nav-icon">🎯</div>
+      <div class="nav-label">Pillars</div>
+    </a>
+    <a href="rex.html" class="nav-item">
+      <div class="nav-icon">💬</div>
+      <div class="nav-label">Rex</div>
+    </a>
+    <a href="league.html" class="nav-item">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">League</div>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </div>
+</body>
+</html>
