@@ -22,8 +22,9 @@ import SignInScreen from './src/screens/auth/SignInScreen';
 import SignUpScreen from './src/screens/auth/SignUpScreen';
 import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
 import QuizFlow from './src/screens/onboarding/QuizFlow';
-import SimpleHomeScreen from './src/screens/home/SimpleHomeScreen';
+import CompleteHomeScreen from './src/screens/home/CompleteHomeScreen';
 import PillarsScreen from './src/screens/pillars/PillarsScreen';
+import CompleteRexScreen from './src/screens/rex/CompleteRexScreen';
 import SimpleLeagueScreen from './src/screens/league/SimpleLeagueScreen';
 import SimpleProfileScreen from './src/screens/profile/SimpleProfileScreen';
 import SettingsScreen from './src/screens/settings/SettingsScreen';
@@ -69,7 +70,7 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
     >
       <Tab.Screen name="Home">
         {(props) => (
-          <SimpleHomeScreen 
+          <CompleteHomeScreen 
             userId={userId} 
             subscriptionStatus={subscriptionStatus}
             {...props}
@@ -87,7 +88,7 @@ function MainTabs({ userId, subscriptionStatus, onPaywall }: {
       </Tab.Screen>
       <Tab.Screen name="Rex">
         {(props) => (
-          <RexScreen
+          <CompleteRexScreen
             userId={userId}
             subscriptionStatus={subscriptionStatus}
             {...props}
