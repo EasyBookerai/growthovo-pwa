@@ -53,8 +53,8 @@ try {
     path.join(outputDir, '.build-complete'), 
     JSON.stringify({
       timestamp: new Date().toISOString(),
-      buildType: 'static-html-with-navigation',
-      note: 'Static HTML build with working navigation'
+      buildType: 'static-pwa-v1',
+      note: 'Static PWA build - working navigation and core features'
     }, null, 2)
   );
   
