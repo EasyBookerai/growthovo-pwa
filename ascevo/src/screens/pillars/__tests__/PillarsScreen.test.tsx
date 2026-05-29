@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import PillarsScreen from '../PillarsScreen';
+import { AppProvider } from '../../../context/AppContext';
 
 // Mock dependencies
 jest.mock('../../../services/supabaseClient', () => ({
@@ -8,9 +9,12 @@ jest.mock('../../../services/supabaseClient', () => ({
     from: jest.fn(() => ({
       select: jest.fn(() => ({
         eq: jest.fn(() => ({
-          single: jest.fn(() => Promise.resolve({ data: null })),
+          single: jest.fn(() => Promise.resolve({ data: { total_xp: 0, current_streak: 0 } })),
         })),
         order: jest.fn(() => Promise.resolve({ data: [] })),
+      })),
+      update: jest.fn(() => ({
+        eq: jest.fn(() => Promise.resolve({ error: null })),
       })),
     })),
   },
@@ -36,15 +40,24 @@ describe('PillarsScreen', () => {
     subscriptionStatus: 'active',
   };
 
+  // Helper function to render with AppProvider
+  const renderWithAppContext = (props = defaultProps) => {
+    return render(
+      <AppProvider userId={props.userId}>
+        <PillarsScreen {...props} />
+      </AppProvider>
+    );
+  };
+
   it('renders the screen with header', () => {
-    const { getByText } = render(<PillarsScreen {...defaultProps} />);
+    const { getByText } = renderWithAppContext();
     
     expect(getByText('Your Pillars')).toBeTruthy();
     expect(getByText('Choose your growth area')).toBeTruthy();
   });
 
   it('displays 6 pillar cards in grid', () => {
-    const { getByText } = render(<PillarsScreen {...defaultProps} />);
+    const { getByText } = renderWithAppContext();
     
     expect(getByText('Mental')).toBeTruthy();
     expect(getByText('Relations')).toBeTruthy();
@@ -55,19 +68,19 @@ describe('PillarsScreen', () => {
   });
 
   it('opens detail view when pillar card is pressed', async () => {
-    const { getByText, getAllByText } = render(<PillarsScreen {...defaultProps} />);
+    const { getByText } = renderWithAppContext();
     
     const mentalCard = getByText('Mental');
     fireEvent.press(mentalCard);
     
     await waitFor(() => {
-      expect(getByText('← Back')).toBeTruthy();
-      expect(getByText('Your growth journey')).toBeTruthy();
+      expect(getByText('← Pillars')).toBeTruthy();
+      expect(getByText('Level 1')).toBeTruthy();
     });
   });
 
   it('displays empty state when no lessons available', async () => {
-    const { getByText } = render(<PillarsScreen {...defaultProps} />);
+    const { getByText } = renderWithAppContext();
     
     const mentalCard = getByText('Mental');
     fireEvent.press(mentalCard);
@@ -79,28 +92,28 @@ describe('PillarsScreen', () => {
   });
 
   it('closes detail view when back button is pressed', async () => {
-    const { getByText, queryByText } = render(<PillarsScreen {...defaultProps} />);
+    const { getByText, queryByText } = renderWithAppContext();
     
     const mentalCard = getByText('Mental');
     fireEvent.press(mentalCard);
     
     await waitFor(() => {
-      expect(getByText('← Back')).toBeTruthy();
+      expect(getByText('← Pillars')).toBeTruthy();
     });
     
-    const backButton = getByText('← Back');
+    const backButton = getByText('← Pillars');
     fireEvent.press(backButton);
     
     await waitFor(() => {
-      expect(queryByText('← Back')).toBeNull();
+      expect(queryByText('← Pillars')).toBeNull();
     });
   });
 
-  it('displays progress bars for each pillar', () => {
-    const { getAllByText } = render(<PillarsScreen {...defaultProps} />);
+  it('displays XP progress for each pillar', () => {
+    const { getAllByText } = renderWithAppContext();
     
-    // Each pillar should have a progress percentage
-    const progressTexts = getAllByText(/%/);
-    expect(progressTexts.length).toBeGreaterThan(0);
+    // Each pillar should have XP progress text
+    const xpTexts = getAllByText(/\d+ \/ 500 XP/);
+    expect(xpTexts.length).toBeGreaterThan(0);
   });
 });

@@ -69,3 +69,6 @@ global.FileReader = jest.fn().mockImplementation(function() {
   });
   return this;
 });
+
+// Mock useReducedMotion hook for accessibility testing
+jest.mock('./src/hooks/useReducedMotion');
