@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet, View, Text, ActivityIndicator, AppState } from 'react-native';
+import { Analytics } from '@vercel/analytics/react';
 import { supabase } from './src/services/supabaseClient';
 import { registerPushToken, scheduleDefaultNotifications, scheduleMorningBriefingNotification, scheduleEveningDebriefNotification, scheduleWeeklyReportNotification } from './src/services/notificationService';
 import { initI18n } from './src/services/i18nService';
@@ -219,6 +220,7 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={styles.root}>
+      <Analytics />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!session ? (
