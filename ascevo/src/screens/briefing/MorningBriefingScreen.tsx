@@ -1,474 +1,488 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  TextInput,
   ActivityIndicator,
 } from 'react-native';
-import { supabase } from '../../services/supabaseClient';
-import {
-  selectMentalState,
-  dismissBriefing,
-  getBriefingFallbackTruth,
-  getBriefingFallbackFocus,
-} from '../../services/briefingService';
 import { colors, typography, spacing, radius } from '../../theme';
-import type { MentalState, MorningBriefingData } from '../../types';
-
-// ─── Mental state options ──────────────────────────────────────────────────────
-
-const MENTAL_STATE_OPTIONS: { state: MentalState; emoji: string; label: string }[] = [
-  { state: 'anxious', emoji: '😰', label: 'Anxious' },
-  { state: 'low', emoji: '😔', label: 'Low' },
-  { state: 'neutral', emoji: '😐', label: 'Neutral' },
-  { state: 'good', emoji: '🙂', label: 'Good' },
-  { state: 'locked_in', emoji: '🔥', label: 'Locked In' },
-];
-
-const STREAK_MILESTONES = [7, 14, 30, 60, 90];
+import { useAppContext } from '../../context/AppContext';
+import {
+  getDailyQuote,
+  getUserName,
+  getSelectedPillars,
+  getStreakCount,
+  getYesterdayActivity,
+  generateRexMorningMessage,
+  markMorningBriefingDone,
+  saveDailyIntention,
+  isBeforeNoon,
+  type YesterdayActivity,
+} from '../../services/growthovoExperienceService';
+import { getNextLesson } from '../../services/lessonService';
+import type { PillarKey, Lesson } from '../../types';
 
 // ─── Props ─────────────────────────────────────────────────────────────────────
 
 interface Props {
   userId: string;
-  onDismiss: () => void;
+  onComplete: () => void;
 }
 
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
-
-function SkeletonLine({ width = '100%', height = 16 }: { width?: string | number; height?: number }) {
-  return (
-    <View
-      style={[
-        styles.skeletonLine,
-        { width: width as any, height },
-      ]}
-    />
-  );
+interface SuggestedLesson {
+  pillar: PillarKey;
+  lesson: Lesson | null;
 }
 
-// ─── Main screen ──────────────────────────────────────────────────────────────
+// ─── Main Component ────────────────────────────────────────────────────────────
 
-export default function MorningBriefingScreen({ userId, onDismiss }: Props) {
-  const [briefingData, setBriefingData] = useState<MorningBriefingData | null>(null);
+export default function MorningBriefingScreen({ userId, onComplete }: Props) {
+  const { updateXP } = useAppContext();
+  
+  // State
+  const [currentPart, setCurrentPart] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(false);
+  
+  // Part 1 data
+  const [userName, setUserName] = useState('Champion');
+  const [quote, setQuote] = useState('');
+  const [streak, setStreak] = useState(0);
+  
+  // Part 2 data
+  const [yesterdayActivity, setYesterdayActivity] = useState<YesterdayActivity>({ xp: 0, lessons: 0, mood: null });
+  
+  // Part 3 data
+  const [suggestedLessons, setSuggestedLessons] = useState<SuggestedLesson[]>([]);
+  
+  // Part 4 data
+  const [intention, setIntention] = useState('');
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  
+  // Part 5 data
+  const [rexMessage, setRexMessage] = useState('');
+  
+  // Completing state
+  const [completing, setCompleting] = useState(false);
 
-  const [selectedState, setSelectedState] = useState<MentalState | null>(null);
-  const [rexReaction, setRexReaction] = useState<string | null>(null);
-  const [reactionLoading, setReactionLoading] = useState(false);
-
-  const [dismissing, setDismissing] = useState(false);
-
-  // ── Load briefing data on mount ──────────────────────────────────────────────
+  // ── Load data on mount ─────────────────────────────────────────────────────
   useEffect(() => {
-    loadBriefing();
+    loadBriefingData();
   }, []);
 
-  async function loadBriefing() {
-    setLoading(true);
-    setLoadError(false);
+  async function loadBriefingData() {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-morning-briefing', {
-        body: { userId },
-      });
-
-      if (error || !data) throw new Error('Failed to load briefing');
-      setBriefingData(data as MorningBriefingData);
-    } catch {
-      // Fallback content
+      setLoading(true);
+      
+      // Load Part 1 data
+      const name = await getUserName();
+      const dailyQuote = getDailyQuote();
+      const currentStreak = await getStreakCount();
+      
+      setUserName(name);
+      setQuote(dailyQuote);
+      setStreak(currentStreak);
+      
+      // Load Part 2 data
+      const yesterday = await getYesterdayActivity();
+      setYesterdayActivity(yesterday);
+      
+      // Load Part 3 data - get top 2 pillars and their next lessons
+      const pillars = await getSelectedPillars();
+      const top2Pillars = pillars.slice(0, 2);
+      
+      const lessons: SuggestedLesson[] = [];
+      for (const pillar of top2Pillars) {
+        const nextLesson = await getNextLesson(userId, pillar);
+        lessons.push({ pillar, lesson: nextLesson });
+      }
+      setSuggestedLessons(lessons);
+      
+      // Load Part 5 data - generate Rex message
       const dayOfWeek = new Date().getDay();
-      setBriefingData({
-        rexDailyTruth: getBriefingFallbackTruth(dayOfWeek),
-        todaysFocus: getBriefingFallbackFocus('discipline'),
-        streakCount: 0,
-        heartsRemaining: 5,
-        leaguePosition: 0,
-        leaguePositionDelta: 0,
-        streakMilestone: null,
-        partnerStatus: null,
+      const yesterdayMood = yesterday.mood;
+      const message = generateRexMorningMessage({
+        name,
+        streak: currentStreak,
+        yesterdayMood,
+        dayOfWeek,
       });
-      setLoadError(true);
+      setRexMessage(message);
+      
+      // Check Web Speech API support
+      if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+        setVoiceSupported(true);
+      }
+      
+    } catch (error) {
+      console.error('Failed to load briefing data:', error);
     } finally {
       setLoading(false);
     }
   }
 
-  // ── Mental state tap ─────────────────────────────────────────────────────────
-  async function handleMentalStateTap(state: MentalState) {
-    if (reactionLoading) return;
-    setSelectedState(state);
-    setRexReaction(null);
-    setReactionLoading(true);
-    try {
-      const reaction = await selectMentalState(userId, state);
-      setRexReaction(reaction);
-    } catch {
-      setRexReaction("Show up anyway. That's the whole game.");
-    } finally {
-      setReactionLoading(false);
+  // ── Navigation ─────────────────────────────────────────────────────────────
+  function goToNextPart() {
+    if (currentPart < 5) {
+      setCurrentPart(currentPart + 1);
     }
   }
 
-  // ── Dismiss ──────────────────────────────────────────────────────────────────
-  async function handleLetsGo() {
-    if (!selectedState || dismissing) return;
-    setDismissing(true);
-    try {
-      await dismissBriefing(userId);
-    } catch {
-      // Non-blocking — still navigate
+  function goToPreviousPart() {
+    if (currentPart > 1) {
+      setCurrentPart(currentPart - 1);
     }
-    onDismiss();
   }
 
-  // ── Milestone message ────────────────────────────────────────────────────────
-  function getMilestoneMessage(streak: number): string | null {
-    if (!STREAK_MILESTONES.includes(streak)) return null;
-    const messages: Record<number, string> = {
-      7: '7 days. One week of not quitting.',
-      14: '14 days. Two weeks of showing up.',
-      30: '30 days. A month of discipline.',
-      60: '60 days. You\'re building something real.',
-      90: '90 days. Most people quit at day 3.',
-    };
-    return messages[streak] ?? null;
+  // ── Complete briefing ──────────────────────────────────────────────────────
+  async function handleComplete() {
+    try {
+      setCompleting(true);
+      
+      // Save intention if provided
+      if (intention.trim()) {
+        await saveDailyIntention(intention.trim());
+      }
+      
+      // Mark briefing as done
+      await markMorningBriefingDone();
+      
+      // Award 20 XP
+      await updateXP(20);
+      
+      onComplete();
+    } catch (error) {
+      console.error('Failed to complete briefing:', error);
+      setCompleting(false);
+    }
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────────
+  // ── Render loading state ───────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>Preparing your morning briefing...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // ── Render parts ───────────────────────────────────────────────────────────
   return (
     <View style={styles.root}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <Text style={styles.header}>Good morning.</Text>
-        <Text style={styles.subheader}>60 seconds. Let's go.</Text>
+        {/* Progress indicator */}
+        <View style={styles.progressContainer}>
+          {[1, 2, 3, 4, 5].map((part) => (
+            <View
+              key={part}
+              style={[
+                styles.progressDot,
+                part === currentPart && styles.progressDotActive,
+                part < currentPart && styles.progressDotComplete,
+              ]}
+            />
+          ))}
+        </View>
 
-        {/* ── Section 1: Mental State ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>How are you showing up today?</Text>
-          <View style={styles.emojiRow}>
-            {MENTAL_STATE_OPTIONS.map((opt) => (
-              <TouchableOpacity
-                key={opt.state}
-                style={[
-                  styles.emojiButton,
-                  selectedState === opt.state && styles.emojiButtonSelected,
-                ]}
-                onPress={() => handleMentalStateTap(opt.state)}
-                accessibilityRole="button"
-                accessibilityLabel={opt.label}
-                accessibilityState={{ selected: selectedState === opt.state }}
-              >
-                <Text style={styles.emojiText}>{opt.emoji}</Text>
-                <Text style={[
-                  styles.emojiLabel,
-                  selectedState === opt.state && styles.emojiLabelSelected,
-                ]}>
-                  {opt.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+        {/* Part 1: Morning greeting with quote */}
+        {currentPart === 1 && (
+          <View style={styles.partContainer}>
+            <Text style={styles.greeting}>Good morning {userName} ☀️</Text>
+            <Text style={styles.date}>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</Text>
+            
+            <View style={styles.quoteCard}>
+              <Text style={styles.quote}>{quote}</Text>
+            </View>
+            
+            <View style={styles.streakCard}>
+              <Text style={styles.streakEmoji}>🔥</Text>
+              <Text style={styles.streakText}>Your streak: {streak} days</Text>
+            </View>
+            
+            <TouchableOpacity
+              style={styles.nextButton}
+              onPress={goToNextPart}
+              accessibilityRole="button"
+              accessibilityLabel="Continue to next part"
+            >
+              <Text style={styles.nextButtonText}>Continue →</Text>
+            </TouchableOpacity>
           </View>
+        )}
 
-          {/* Rex reaction */}
-          {reactionLoading && (
-            <View style={styles.reactionBox}>
-              <ActivityIndicator size="small" color={colors.primary} />
-            </View>
-          )}
-          {!reactionLoading && rexReaction && (
-            <View style={styles.reactionBox}>
-              <Text style={styles.rexLabel}>Rex</Text>
-              <Text style={styles.reactionText}>{rexReaction}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* ── Section 2: Rex's Daily Truth ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Rex's Daily Truth</Text>
-          {loading ? (
-            <View style={styles.skeletonBlock}>
-              <SkeletonLine />
-              <SkeletonLine width="80%" />
-            </View>
-          ) : (
-            <View style={styles.truthBox}>
-              {loadError && (
-                <Text style={styles.fallbackBadge}>Offline content</Text>
-              )}
-              <Text style={styles.truthText}>{briefingData?.rexDailyTruth}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* ── Section 3: Today's Single Focus ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Today's Single Focus</Text>
-          {loading ? (
-            <View style={styles.skeletonBlock}>
-              <SkeletonLine />
-              <SkeletonLine width="60%" />
-            </View>
-          ) : (
-            <View style={styles.focusBox}>
-              <Text style={styles.focusText}>{briefingData?.todaysFocus}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* ── Section 4: Streak / Hearts / League / Partner ── */}
-        <View style={styles.section}>
-          {loading ? (
-            <View style={styles.skeletonBlock}>
-              <SkeletonLine height={48} />
-            </View>
-          ) : briefingData ? (
-            <>
-              {/* Streak milestone or standard streak */}
-              {briefingData.streakMilestone != null ? (
-                <View style={styles.milestoneBox}>
-                  <Text style={styles.milestoneEmoji}>🏆</Text>
-                  <Text style={styles.milestoneText}>
-                    {getMilestoneMessage(briefingData.streakMilestone)}
-                  </Text>
+        {/* Part 2: Yesterday's recap */}
+        {currentPart === 2 && (
+          <View style={styles.partContainer}>
+            <Text style={styles.partTitle}>Yesterday's Recap</Text>
+            
+            {yesterdayActivity.xp === 0 && yesterdayActivity.lessons === 0 ? (
+              <View style={styles.freshStartCard}>
+                <Text style={styles.freshStartEmoji}>💪</Text>
+                <Text style={styles.freshStartText}>Fresh start today</Text>
+              </View>
+            ) : (
+              <View style={styles.recapCard}>
+                <View style={styles.recapRow}>
+                  <Text style={styles.recapLabel}>XP Earned</Text>
+                  <Text style={styles.recapValue}>{yesterdayActivity.xp}</Text>
                 </View>
-              ) : (
-                <View style={styles.statsRow}>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statEmoji}>🔥</Text>
-                    <Text style={styles.statValue}>{briefingData.streakCount}</Text>
-                    <Text style={styles.statLabel}>day streak</Text>
+                <View style={styles.recapRow}>
+                  <Text style={styles.recapLabel}>Lessons Completed</Text>
+                  <Text style={styles.recapValue}>{yesterdayActivity.lessons}</Text>
+                </View>
+                {yesterdayActivity.mood && (
+                  <View style={styles.recapRow}>
+                    <Text style={styles.recapLabel}>Mood Logged</Text>
+                    <Text style={styles.recapValue}>{yesterdayActivity.mood}</Text>
                   </View>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statEmoji}>❤️</Text>
-                    <Text style={styles.statValue}>{briefingData.heartsRemaining}</Text>
-                    <Text style={styles.statLabel}>hearts</Text>
+                )}
+              </View>
+            )}
+            
+            <View style={styles.navigationButtons}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={goToPreviousPart}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backButtonText}>← Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.nextButton}
+                onPress={goToNextPart}
+                accessibilityRole="button"
+                accessibilityLabel="Continue to next part"
+              >
+                <Text style={styles.nextButtonText}>Continue →</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* Part 3: Suggested lessons */}
+        {currentPart === 3 && (
+          <View style={styles.partContainer}>
+            <Text style={styles.partTitle}>Suggested Lessons</Text>
+            <Text style={styles.partSubtitle}>From your top pillars</Text>
+            
+            {suggestedLessons.length === 0 ? (
+              <View style={styles.noLessonsCard}>
+                <Text style={styles.noLessonsText}>No lessons available yet</Text>
+              </View>
+            ) : (
+              <View style={styles.lessonsContainer}>
+                {suggestedLessons.map((item, index) => (
+                  <View key={index} style={styles.lessonCard}>
+                    <Text style={styles.lessonPillar}>{item.pillar.toUpperCase()}</Text>
+                    {item.lesson ? (
+                      <>
+                        <Text style={styles.lessonTitle}>{item.lesson.title}</Text>
+                        <TouchableOpacity
+                          style={styles.addToPlanButton}
+                          accessibilityRole="button"
+                          accessibilityLabel={`Add ${item.lesson.title} to today's plan`}
+                        >
+                          <Text style={styles.addToPlanText}>Add to today's plan →</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : (
+                      <Text style={styles.lessonComplete}>All lessons completed! 🎉</Text>
+                    )}
                   </View>
-                  {briefingData.leaguePosition > 0 && (
-                    <View style={styles.statItem}>
-                      <Text style={styles.statEmoji}>🏅</Text>
-                      <Text style={styles.statValue}>#{briefingData.leaguePosition}</Text>
-                      <Text style={styles.statLabel}>league</Text>
-                    </View>
-                  )}
-                </View>
-              )}
+                ))}
+              </View>
+            )}
+            
+            <View style={styles.navigationButtons}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={goToPreviousPart}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backButtonText}>← Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.nextButton}
+                onPress={goToNextPart}
+                accessibilityRole="button"
+                accessibilityLabel="Continue to next part"
+              >
+                <Text style={styles.nextButtonText}>Continue →</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
-              {/* League drop comment */}
-              {briefingData.leaguePositionDelta < 0 && (
-                <Text style={styles.leagueDropText}>
-                  You dropped {Math.abs(briefingData.leaguePositionDelta)} spot{Math.abs(briefingData.leaguePositionDelta) > 1 ? 's' : ''} in the league. Fix that today.
-                </Text>
-              )}
+        {/* Part 4: Daily intention input */}
+        {currentPart === 4 && (
+          <View style={styles.partContainer}>
+            <Text style={styles.partTitle}>Set Your Intention</Text>
+            <Text style={styles.partSubtitle}>What will you focus on today?</Text>
+            
+            <TextInput
+              style={styles.intentionInput}
+              placeholder="Today I will..."
+              placeholderTextColor={colors.textMuted}
+              value={intention}
+              onChangeText={setIntention}
+              multiline
+              numberOfLines={3}
+              maxLength={200}
+              accessibilityLabel="Daily intention input"
+            />
+            
+            {voiceSupported && (
+              <View style={styles.voiceNoteHint}>
+                <Text style={styles.voiceNoteText}>🎤 Voice note available</Text>
+              </View>
+            )}
+            
+            <View style={styles.navigationButtons}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={goToPreviousPart}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backButtonText}>← Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.nextButton}
+                onPress={goToNextPart}
+                accessibilityRole="button"
+                accessibilityLabel="Continue to next part"
+              >
+                <Text style={styles.nextButtonText}>Continue →</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
-              {/* Partner status */}
-              {briefingData.partnerStatus ? (
-                <View style={styles.partnerBox}>
-                  <Text style={styles.partnerText}>
-                    {briefingData.partnerStatus.checkedIn
-                      ? `${briefingData.partnerStatus.partnerName} checked in. They're ready.`
-                      : `${briefingData.partnerStatus.partnerName} hasn't checked in yet. You going to let them slip?`}
-                  </Text>
-                </View>
-              ) : (
-                <View style={styles.partnerBox}>
-                  <Text style={styles.partnerPromptText}>
-                    No accountability partner yet. Invite someone who'll call you out.
-                  </Text>
-                </View>
-              )}
-            </>
-          ) : null}
-        </View>
-
-        {/* ── Section 5: Let's Go button ── */}
-        <TouchableOpacity
-          style={[
-            styles.letsGoButton,
-            !selectedState && styles.letsGoButtonDisabled,
-          ]}
-          onPress={handleLetsGo}
-          disabled={!selectedState || dismissing}
-          accessibilityRole="button"
-          accessibilityLabel="Let's go"
-          accessibilityState={{ disabled: !selectedState || dismissing }}
-        >
-          {dismissing ? (
-            <ActivityIndicator color={colors.text} size="small" />
-          ) : (
-            <Text style={[
-              styles.letsGoText,
-              !selectedState && styles.letsGoTextDisabled,
-            ]}>
-              {selectedState ? "Let's go →" : 'Select your state first'}
-            </Text>
-          )}
-        </TouchableOpacity>
+        {/* Part 5: Rex personalized message */}
+        {currentPart === 5 && (
+          <View style={styles.partContainer}>
+            <Text style={styles.partTitle}>Message from Rex</Text>
+            
+            <View style={styles.rexMessageCard}>
+              <Text style={styles.rexEmoji}>🤖</Text>
+              <Text style={styles.rexMessageText}>{rexMessage}</Text>
+            </View>
+            
+            <View style={styles.navigationButtons}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={goToPreviousPart}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+              >
+                <Text style={styles.backButtonText}>← Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.completeButton, completing && styles.completeButtonDisabled]}
+                onPress={handleComplete}
+                disabled={completing}
+                accessibilityRole="button"
+                accessibilityLabel="Start your day"
+              >
+                {completing ? (
+                  <ActivityIndicator color={colors.text} size="small" />
+                ) : (
+                  <Text style={styles.completeButtonText}>Start your day →</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// ─── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.background,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  loadingText: {
+    ...typography.body,
+    color: colors.textMuted,
+  },
   container: {
     padding: spacing.md,
     paddingTop: 60,
     paddingBottom: 48,
+  },
+  
+  // Progress indicator
+  progressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.xl,
+  },
+  progressDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.surface,
+  },
+  progressDotActive: {
+    backgroundColor: colors.primary,
+    width: 24,
+  },
+  progressDotComplete: {
+    backgroundColor: colors.success,
+  },
+  
+  // Part container
+  partContainer: {
     gap: spacing.lg,
   },
-
-  // Header
-  header: {
+  
+  // Part 1: Greeting
+  greeting: {
     ...typography.h1,
     color: colors.text,
-  },
-  subheader: {
-    ...typography.body,
-    color: colors.textMuted,
-    marginTop: -spacing.sm,
-  },
-
-  // Sections
-  section: {
-    gap: spacing.sm,
-  },
-  sectionLabel: {
-    ...typography.caption,
-    color: colors.textMuted,
-  },
-
-  // Skeleton
-  skeletonBlock: {
-    gap: spacing.xs,
-    paddingVertical: spacing.sm,
-  },
-  skeletonLine: {
-    backgroundColor: colors.surfaceElevated,
-    borderRadius: radius.sm,
-  },
-
-  // Mental state emojis
-  emojiRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: spacing.xs,
-  },
-  emojiButton: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderRadius: radius.md,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    gap: 4,
-  },
-  emojiButtonSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.surfaceElevated,
-  },
-  emojiText: {
-    fontSize: 24,
-  },
-  emojiLabel: {
-    ...typography.caption,
-    color: colors.textMuted,
     textAlign: 'center',
   },
-  emojiLabelSelected: {
-    color: colors.primary,
-  },
-
-  // Rex reaction
-  reactionBox: {
-    backgroundColor: colors.surfaceElevated,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-    minHeight: 56,
-    justifyContent: 'center',
-    gap: 4,
-  },
-  rexLabel: {
-    ...typography.caption,
-    color: colors.primary,
-  },
-  reactionText: {
+  date: {
     ...typography.body,
-    color: colors.text,
-  },
-
-  // Daily truth
-  truthBox: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  fallbackBadge: {
-    ...typography.caption,
     color: colors.textMuted,
+    textAlign: 'center',
+    marginTop: -spacing.md,
   },
-  truthText: {
-    ...typography.body,
-    color: colors.text,
-    lineHeight: 26,
-  },
-
-  // Focus
-  focusBox: {
+  quoteCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
-    padding: spacing.md,
+    padding: spacing.lg,
     borderLeftWidth: 4,
-    borderLeftColor: colors.xpGold,
+    borderLeftColor: colors.primary,
   },
-  focusText: {
-    ...typography.bodyBold,
+  quote: {
+    ...typography.body,
     color: colors.text,
     lineHeight: 26,
+    fontStyle: 'italic',
   },
-
-  // Stats row
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    gap: 4,
-  },
-  statEmoji: {
-    fontSize: 24,
-  },
-  statValue: {
-    ...typography.h3,
-    color: colors.text,
-  },
-  statLabel: {
-    ...typography.small,
-    color: colors.textMuted,
-  },
-
-  // Milestone
-  milestoneBox: {
+  streakCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.md,
@@ -476,38 +490,155 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.md,
   },
-  milestoneEmoji: {
+  streakEmoji: {
     fontSize: 32,
   },
-  milestoneText: {
-    ...typography.bodyBold,
-    color: colors.xpGold,
-    flex: 1,
-  },
-
-  // League drop
-  leagueDropText: {
-    ...typography.small,
-    color: colors.error,
-  },
-
-  // Partner
-  partnerBox: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.md,
-  },
-  partnerText: {
-    ...typography.body,
+  streakText: {
+    ...typography.h3,
     color: colors.text,
   },
-  partnerPromptText: {
+  
+  // Part 2: Recap
+  partTitle: {
+    ...typography.h2,
+    color: colors.text,
+  },
+  partSubtitle: {
+    ...typography.body,
+    color: colors.textMuted,
+    marginTop: -spacing.md,
+  },
+  freshStartCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.xl,
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  freshStartEmoji: {
+    fontSize: 48,
+  },
+  freshStartText: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  recapCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  recapRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  recapLabel: {
     ...typography.body,
     color: colors.textMuted,
   },
-
-  // Let's go button
-  letsGoButton: {
+  recapValue: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  
+  // Part 3: Lessons
+  lessonsContainer: {
+    gap: spacing.md,
+  },
+  lessonCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.sm,
+  },
+  lessonPillar: {
+    ...typography.caption,
+    color: colors.primary,
+  },
+  lessonTitle: {
+    ...typography.bodyBold,
+    color: colors.text,
+  },
+  lessonComplete: {
+    ...typography.body,
+    color: colors.success,
+  },
+  addToPlanButton: {
+    marginTop: spacing.sm,
+  },
+  addToPlanText: {
+    ...typography.bodyBold,
+    color: colors.primary,
+  },
+  noLessonsCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.xl,
+    alignItems: 'center',
+  },
+  noLessonsText: {
+    ...typography.body,
+    color: colors.textMuted,
+  },
+  
+  // Part 4: Intention
+  intentionInput: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    ...typography.body,
+    color: colors.text,
+    minHeight: 100,
+    textAlignVertical: 'top',
+  },
+  voiceNoteHint: {
+    alignItems: 'center',
+  },
+  voiceNoteText: {
+    ...typography.small,
+    color: colors.textMuted,
+  },
+  
+  // Part 5: Rex message
+  rexMessageCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    gap: spacing.md,
+    alignItems: 'center',
+  },
+  rexEmoji: {
+    fontSize: 48,
+  },
+  rexMessageText: {
+    ...typography.body,
+    color: colors.text,
+    lineHeight: 26,
+    textAlign: 'center',
+  },
+  
+  // Navigation buttons
+  navigationButtons: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  backButton: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 56,
+  },
+  backButtonText: {
+    ...typography.bodyBold,
+    color: colors.textMuted,
+  },
+  nextButton: {
+    flex: 1,
     backgroundColor: colors.primary,
     borderRadius: radius.lg,
     paddingVertical: spacing.md,
@@ -515,14 +646,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 56,
   },
-  letsGoButtonDisabled: {
-    backgroundColor: colors.surface,
-  },
-  letsGoText: {
+  nextButtonText: {
     ...typography.bodyBold,
     color: colors.text,
   },
-  letsGoTextDisabled: {
-    color: colors.textMuted,
+  completeButton: {
+    flex: 1,
+    backgroundColor: colors.success,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 56,
+  },
+  completeButtonDisabled: {
+    backgroundColor: colors.surface,
+  },
+  completeButtonText: {
+    ...typography.bodyBold,
+    color: colors.text,
   },
 });

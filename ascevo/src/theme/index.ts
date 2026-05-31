@@ -1,45 +1,42 @@
-// Growthovo Design System — Dark Mode First
+// Growthovo Design System — Dark Mode First, Light Mode Support
 
-export const colors = {
-  // Base
-  background: '#0A0A0A',
-  surface: '#141414',
-  surfaceElevated: '#1E1E1E',
-  border: '#2A2A2A',
+import { getColors as getThemeColors, type ColorScheme } from '../services/themeService';
+import { useTheme } from '../hooks/useTheme';
 
-  // Text
-  text: '#FFFFFF',
-  textSecondary: '#CCCCCC',
-  textMuted: '#666666',
+// Re-export the hook for easy access
+export { useTheme };
 
-  // Brand
-  primary: '#7C3AED', // Mind purple — used as app primary
+// Default dark mode colors (for static access)
+const defaultColors = getThemeColors('dark');
 
-  // Pillars
-  pillars: {
-    mind: '#7C3AED',
-    discipline: '#DC2626',
-    communication: '#2563EB',
-    money: '#16A34A',
-    career: '#EA580C',
-    relationships: '#DB2777',
-  },
+// Pillar colors are the same in both modes
+export const pillarColors = {
+  mind: '#7C3AED',
+  discipline: '#DC2626',
+  communication: '#2563EB',
+  money: '#16A34A',
+  career: '#EA580C',
+  relationships: '#DB2777',
+} as const;
 
-  // Semantic
-  success: '#16A34A',
-  error: '#DC2626',
-  warning: '#EA580C',
-  info: '#2563EB',
+// Create a combined color type including pillars
+export interface ThemeColors extends ColorScheme {
+  pillars: typeof pillarColors;
+}
 
-  // Gamification
-  xpGold: '#F59E0B',
-  heartRed: '#EF4444',
-  streakOrange: '#F97316',
-  leagueGold: '#EAB308',
-  leagueSilver: '#94A3B8',
-  leagueBronze: '#B45309',
-  promotionGreen: '#22C55E',
-  relegationRed: '#EF4444',
+// Dynamic colors using the hook
+export function useColors(): ThemeColors {
+  const { colors } = useTheme();
+  return {
+    ...colors,
+    pillars: pillarColors,
+  };
+}
+
+// Export default colors for backwards compatibility
+export const colors: ThemeColors = {
+  ...defaultColors,
+  pillars: pillarColors,
 } as const;
 
 export const typography = {
@@ -128,6 +125,6 @@ export const shadows = {
 
 // Helper: get pillar colour by name
 export function getPillarColor(pillarName: string): string {
-  const key = pillarName.toLowerCase() as keyof typeof colors.pillars;
-  return colors.pillars[key] ?? colors.primary;
+  const key = pillarName.toLowerCase() as keyof typeof pillarColors;
+  return pillarColors[key] ?? defaultColors.primary;
 }

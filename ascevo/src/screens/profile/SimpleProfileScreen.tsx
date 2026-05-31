@@ -43,7 +43,8 @@ const SETTINGS_SECTIONS = [
   {
     title: 'Preferences',
     items: [
-      { id: '4', icon: '🔒', label: 'Privacy & Data', action: 'privacy' },
+      { id: '4', icon: '📬', label: 'Time Capsule', action: 'capsule' },
+      { id: '4b', icon: '🔒', label: 'Privacy & Data', action: 'privacy' },
     ],
   },
   {
@@ -132,8 +133,13 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
    * @param {string} action - The action identifier (e.g., 'edit_profile', 'notifications')
    */
   function handleSettingPress(action: string) {
-    console.log('Setting pressed:', action);
-    // TODO: Navigate to respective screens
+    if (action === 'edit_profile' || action === 'notifications' || action === 'language') {
+      navigation?.getParent?.()?.navigate('Settings');
+      return;
+    }
+    if (action === 'capsule') {
+      navigation?.getParent?.()?.navigate('TimeCapsule');
+    }
   }
 
   return (

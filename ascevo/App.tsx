@@ -21,8 +21,14 @@ import { AppProvider } from './src/context/AppContext';
 // Screens
 import SignInScreen from './src/screens/auth/SignInScreen';
 import SignUpScreen from './src/screens/auth/SignUpScreen';
-import OnboardingScreen from './src/screens/onboarding/OnboardingScreen';
-import QuizFlow from './src/screens/onboarding/QuizFlow';
+import NewOnboardingScreen from './src/screens/onboarding/NewOnboardingScreen';
+import NotificationPermissionPrompt from './src/components/NotificationPermissionPrompt';
+import { ToastProvider } from './src/context/ToastContext';
+import MorningBriefingFlowScreen from './src/screens/worldclass/MorningBriefingFlowScreen';
+import EveningDebriefFlowScreen from './src/screens/worldclass/EveningDebriefFlowScreen';
+import TimeCapsuleScreen from './src/screens/worldclass/TimeCapsuleScreen';
+import WeeklyWrappedFlowScreen from './src/screens/worldclass/WeeklyWrappedFlowScreen';
+import FakeSquadScreen from './src/screens/worldclass/FakeSquadScreen';
 import CompleteHomeScreen from './src/screens/home/CompleteHomeScreen';
 import PillarsScreen from './src/screens/pillars/PillarsScreen';
 import CompleteRexScreen from './src/screens/rex/CompleteRexScreen';
@@ -118,6 +124,7 @@ export default function App() {
   const [i18nReady, setI18nReady] = useState(false);
   const [authScreen, setAuthScreen] = useState<'signin' | 'signup'>('signin');
   const [showPaywall, setShowPaywall] = useState(false);
+  const [showNotifPrompt, setShowNotifPrompt] = useState(false);
 
   const { setLanguage: setStoreLanguage } = useLanguageStore();
 
@@ -199,6 +206,7 @@ export default function App() {
   async function handleOnboardingComplete() {
     if (!session?.user) return;
     await loadProfile(session.user.id);
+    setShowNotifPrompt(true);
     await scheduleDefaultNotifications(session.user.id).catch(() => {});
     await scheduleMorningBriefingNotification(session.user.id).catch(() => {});
     await scheduleEveningDebriefNotification(session.user.id).catch(() => {});
@@ -236,7 +244,7 @@ export default function App() {
           ) : !userProfile?.onboarding_complete ? (
             <Stack.Screen name="Onboarding">
               {() => (
-                <QuizFlow
+                <NewOnboardingScreen
                   userId={userId}
                   onComplete={handleOnboardingComplete}
                 />
@@ -246,13 +254,68 @@ export default function App() {
             <>
               <Stack.Screen name="Main">
                 {() => (
-                  <AppProvider userId={userId}>
-                    <MainTabs
-                      userId={userId}
-                      subscriptionStatus={subscriptionStatus}
-                      onPaywall={() => setShowPaywall(true)}
-                    />
-                  </AppProvider>
+                  <ToastProvider>
+                    <AppProvider userId={userId}>
+                      <NotificationPermissionPrompt
+                        visible={showNotifPrompt}
+                        onDismiss={() => setShowNotifPrompt(false)}
+                      />
+                      <MainTabs
+                        userId={userId}
+                        subscriptionStatus={subscriptionStatus}
+                        onPaywall={() => setShowPaywall(true)}
+                      />
+                    </AppProvider>
+                  </ToastProvider>
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="MorningBriefing">
+                {(props) => (
+                  <ToastProvider>
+                    <AppProvider userId={userId!}>
+                      <MorningBriefingFlowScreen onClose={() => props.navigation.goBack()} />
+                    </AppProvider>
+                  </ToastProvider>
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="EveningDebrief">
+                {(props) => (
+                  <ToastProvider>
+                    <AppProvider userId={userId!}>
+                      <EveningDebriefFlowScreen onClose={() => props.navigation.goBack()} />
+                    </AppProvider>
+                  </ToastProvider>
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="TimeCapsule">
+                {(props) => (
+                  <ToastProvider>
+                    <AppProvider userId={userId!}>
+                      <TimeCapsuleScreen
+                        onClose={() => props.navigation.goBack()}
+                        onCheckout={() => props.navigation.navigate('Paywall')}
+                      />
+                    </AppProvider>
+                  </ToastProvider>
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="WeeklyWrapped">
+                {(props) => (
+                  <ToastProvider>
+                    <AppProvider userId={userId!}>
+                      <WeeklyWrappedFlowScreen
+                        onClose={() => props.navigation.goBack()}
+                        onCheckout={() => props.navigation.navigate('Paywall')}
+                      />
+                    </AppProvider>
+                  </ToastProvider>
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="Squad">
+                {(props) => (
+                  <ToastProvider>
+                    <FakeSquadScreen onClose={() => props.navigation.goBack()} />
+                  </ToastProvider>
                 )}
               </Stack.Screen>
               <Stack.Screen name="Settings">
@@ -326,20 +389,22 @@ export default function App() {
                   />
                 )}
               </Stack.Screen>
-              {showPaywall && (
-                <Stack.Screen name="Paywall">
-                  {() => (
-                    <PaywallScreen
-                      userId={userId}
-                      onClose={() => setShowPaywall(false)}
-                      onSuccess={() => {
-                        setShowPaywall(false);
-                        loadProfile(userId);
-                      }}
-                    />
-                  )}
-                </Stack.Screen>
-              )}
+              <Stack.Screen name="Paywall">
+                {(props) => (
+                  <PaywallScreen
+                    userId={userId}
+                    onClose={() => {
+                      setShowPaywall(false);
+                      props.navigation.goBack();
+                    }}
+                    onSuccess={() => {
+                      setShowPaywall(false);
+                      loadProfile(userId);
+                      props.navigation.goBack();
+                    }}
+                  />
+                )}
+              </Stack.Screen>
             </>
           )}
         </Stack.Navigator>

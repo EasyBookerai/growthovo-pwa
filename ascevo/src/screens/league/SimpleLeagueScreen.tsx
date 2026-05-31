@@ -263,8 +263,12 @@ export default function SimpleLeagueScreen({ userId, navigation }: Props) {
           {SQUAD.map((member) => (
             <SquadCard key={member.id} member={member} />
           ))}
-          <TouchableOpacity style={styles.inviteButton} activeOpacity={0.7}>
-            <Text style={styles.inviteButtonText}>Invite a Friend →</Text>
+          <TouchableOpacity
+            style={styles.inviteButton}
+            activeOpacity={0.7}
+            onPress={() => navigation?.getParent?.()?.navigate('Squad')}
+          >
+            <Text style={styles.inviteButtonText}>View Squad →</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
