@@ -18,7 +18,7 @@
     .header { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
     .pillars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .pillar-card {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
       padding: 20px;
@@ -59,37 +59,8 @@
 <body>
   <div class="container">
     <h1 class="header">Your Growth Pillars</h1>
-    <div class="pillars-grid">
-      <div class="pillar-card">
-        <div class="pillar-emoji">🧠</div>
-        <div class="pillar-name">Mental Health</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-emoji">💬</div>
-        <div class="pillar-name">Relationships</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-emoji">💼</div>
-        <div class="pillar-name">Career</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-emoji">💪</div>
-        <div class="pillar-name">Fitness</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-emoji">💰</div>
-        <div class="pillar-name">Finance</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
-      <div class="pillar-card">
-        <div class="pillar-emoji">🎨</div>
-        <div class="pillar-name">Hobbies</div>
-        <div class="pillar-progress">Level 1</div>
-      </div>
+    <div class="pillars-grid" id="pillars-grid">
+      <!-- Pillars rendered by JS -->
     </div>
   </div>
 
@@ -115,5 +86,40 @@
       <div class="nav-label">Profile</div>
     </a>
   </div>
+
+  <script src="lessons.js"></script>
+  <script src="lesson-service.js"></script>
+  <script>
+    const pillars = [
+      { id: "mental-health", name: "Mental Health", emoji: "🧠" },
+      { id: "relationships", name: "Relationships", emoji: "💬" },
+      { id: "career", name: "Career", emoji: "💼" },
+      { id: "fitness", name: "Fitness", emoji: "💪" },
+      { id: "finance", name: "Finance", emoji: "💰" },
+      { id: "hobbies", name: "Hobbies", emoji: "🎨" }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('pillars-grid');
+      const progress = getLessonProgress();
+      pillars.forEach(p => {
+        const lessons = allLessons[p.id] || [];
+        const completedCount = lessons.filter(l => progress[p.id]?.[l.id]?.completed).length;
+        const level = Math.floor(completedCount / 3) + 1;
+        
+        const card = document.createElement('div');
+        card.className = 'pillar-card';
+        card.onclick = () => {
+          window.location.href = `skill-tree.html?pillar=${p.id}`;
+        };
+        card.innerHTML = `
+          <div class="pillar-emoji">${p.emoji}</div>
+          <div class="pillar-name">${p.name}</div>
+          <div class="pillar-progress">${completedCount}/${lessons.length} · Level ${level}</div>
+        `;
+        grid.appendChild(card);
+      });
+    });
+  </script>
 </body>
 </html>

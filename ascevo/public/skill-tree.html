@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Tree | Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0A0A12;
+      color: #FFFFFF;
+      min-height: 100vh;
+      padding-bottom: 20px;
+    }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px; }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .back-btn {
+      background: rgba(255,255,255,0.05);
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .skill-tree {
+      position: relative;
+      padding: 20px 0;
+    }
+    .tree-line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, #3a3a5c, #2a2a4c);
+    }
+    .unit-divider {
+      background: linear-gradient(90deg, #7C3AED, #A78BFA);
+      padding: 10px 20px;
+      border-radius: 100px;
+      text-align: center;
+      margin: 24px 0;
+      font-weight: 700;
+    }
+    .lesson-node {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+      cursor: pointer;
+    }
+    .node-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .node-locked { background: #2a2a4c; color: #666; opacity: 0.5; }
+    .node-unlocked { background: white; color: #7C3AED; box-shadow: 0 0 20px rgba(124,58,237,0.4); animation: pulse 2s infinite; }
+    .node-completed { background: linear-gradient(135deg, #7C3AED, #A78BFA); color: white; }
+    .lesson-title { margin-top: 8px; font-size: 14px; max-width: 160px; text-align: center; }
+    .node-stars { font-size: 12px; margin-top: 4px; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 30px rgba(124,58,237,0.7); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-btn" onclick="goBack()">← Back</button>
+      <h2 id="pillar-title"></h2>
+      <div></div>
+    </div>
+    <div id="skill-tree"></div>
+  </div>
+
+  <script src="lessons.js"></script>
+  <script src="lesson-service.js"></script>
+  <script src="skill-tree.js"></script>
+</body>
+</html>
