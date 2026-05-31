@@ -85,6 +85,57 @@
     .nav-icon { font-size: 24px; }
     .nav-label { font-size: 11px; }
   </style>
+  <script>
+    // Load saved data on page load
+    window.onload = function() {
+      const xp = localStorage.getItem('growthovo_xp') || '0';
+      const streak = calculateStreak();
+      const level = Math.floor(parseInt(xp) / 100) + 1;
+      
+      document.querySelectorAll('.stat-value')[0].textContent = streak;
+      document.querySelectorAll('.stat-value')[1].textContent = xp;
+      document.querySelectorAll('.stat-value')[2].textContent = level;
+
+      // Check if already checked in today
+      const lastCheckin = localStorage.getItem('growthovo_last_checkin');
+      const today = new Date().toISOString().split('T')[0];
+      if (lastCheckin === today) {
+        const ctaBtn = document.querySelector('.cta-btn');
+        ctaBtn.textContent = '✓ Check-in Completed Today';
+        ctaBtn.style.background = '#16A34A';
+        ctaBtn.style.cursor = 'default';
+        ctaBtn.onclick = null;
+      }
+    };
+
+    function calculateStreak() {
+      const lastCheckin = localStorage.getItem('growthovo_last_checkin');
+      const today = new Date().toISOString().split('T')[0];
+      let streak = 0;
+      if (lastCheckin) {
+        let checkDate = new Date(lastCheckin);
+        const todayDate = new Date(today);
+        const diffTime = Math.abs(todayDate - checkDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays <= 1) {
+          streak = parseInt(localStorage.getItem('growthovo_streak') || '0');
+          if (lastCheckin !== today) {
+            streak += 1;
+            localStorage.setItem('growthovo_streak', streak.toString());
+          }
+        } else {
+          streak = 0;
+          localStorage.setItem('growthovo_streak', '0');
+        }
+      }
+      return streak;
+    }
+
+    function startCheckin() {
+      window.location.href = 'checkin.html';
+    }
+  </script>
 </head>
 <body>
   <div class="container">
@@ -114,7 +165,7 @@
       <span class="mission-reward">+50 XP 💎</span>
     </div>
 
-    <button class="cta-btn">Start Daily Check-in →</button>
+    <button class="cta-btn" onclick="startCheckin()">Start Daily Check-in →</button>
   </div>
 
   <div class="bottom-nav">

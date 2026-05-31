@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Check-in - Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0A0A12;
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 480px;
+      width: 100%;
+      background: #1A1A2E;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 32px;
+    }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .step-indicator { font-size: 14px; color: rgba(255,255,255,0.5); }
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .question { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 32px; }
+    .mood-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .mood-btn {
+      width: 80px;
+      height: 100px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mood-btn:hover, .mood-btn.selected {
+      border-color: #7C3AED;
+      background: rgba(124,58,237,0.2);
+    }
+    .mood-emoji { font-size: 36px; margin-bottom: 4px; }
+    .mood-label { font-size: 12px; color: rgba(255,255,255,0.8); }
+    .input {
+      width: 100%;
+      min-height: 120px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      resize: vertical;
+      margin-bottom: 32px;
+    }
+    .btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: 100px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: linear-gradient(135deg, #7C3AED, #A78BFA); color: white; }
+    .btn-primary:disabled { background: rgba(124,58,237,0.3); cursor: not-allowed; }
+    .btn-success { background: #16A34A; color: white; }
+    .btn-container { display: flex; gap: 12px; }
+    .btn-back { flex: 1; background: rgba(255,255,255,0.05); color: white; border: none; }
+    .completion { text-align: center; padding: 20px 0; }
+    .completion-emoji { font-size: 64px; margin-bottom: 16px; }
+    .completion-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .completion-text { font-size: 14px; color: rgba(255,255,255,0.65); }
+    .summary {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 24px 0;
+    }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .summary-label { color: rgba(255,255,255,0.5); font-size: 14px; }
+    .summary-value { color: white; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="step-indicator">Step <span id="stepNum">1</span> of 3</div>
+      <button class="close-btn" onclick="goHome()">✕</button>
+    </div>
+
+    <!-- Step 1: Mood -->
+    <div id="step1">
+      <h2 class="question">How are you feeling?</h2>
+      <div class="mood-grid">
+        <div class="mood-btn" data-mood="struggling" onclick="selectMood('struggling', '😔', 'Struggling')">
+          <div class="mood-emoji">😔</div>
+          <div class="mood-label">Struggling</div>
+        </div>
+        <div class="mood-btn" data-mood="okay" onclick="selectMood('okay', '😐', 'Okay')">
+          <div class="mood-emoji">😐</div>
+          <div class="mood-label">Okay</div>
+        </div>
+        <div class="mood-btn" data-mood="good" onclick="selectMood('good', '🙂', 'Good')">
+          <div class="mood-emoji">🙂</div>
+          <div class="mood-label">Good</div>
+        </div>
+        <div class="mood-btn" data-mood="great" onclick="selectMood('great', '😊', 'Great')">
+          <div class="mood-emoji">😊</div>
+          <div class="mood-label">Great</div>
+        </div>
+        <div class="mood-btn" data-mood="amazing" onclick="selectMood('amazing', '🤩', 'Amazing')">
+          <div class="mood-emoji">🤩</div>
+          <div class="mood-label">Amazing</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="next1Btn" disabled onclick="nextStep()">Next →</button>
+    </div>
+
+    <!-- Step 2: Focus -->
+    <div id="step2" style="display: none;">
+      <h2 class="question">What's your focus today?</h2>
+      <textarea id="focusInput" class="input" placeholder="e.g., Complete 2 lessons, stay consistent..." oninput="checkFocus()"></textarea>
+      <div class="btn-container">
+        <button class="btn btn-back" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="next2Btn" disabled onclick="nextStep()">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Completion -->
+    <div id="step3" style="display: none;">
+      <div class="completion">
+        <div class="completion-emoji">✨</div>
+        <h2 class="completion-title">Check-in Complete!</h2>
+        <p class="completion-text">You've earned +50 XP for checking in today.</p>
+        <div class="summary" id="summaryDiv">
+        </div>
+        <p class="completion-text" style="color: #7C3AED; margin-top: 16px;">Keep up the momentum! 🚀</p>
+      </div>
+      <button class="btn btn-success" onclick="finishCheckin()">Done ✓</button>
+    </div>
+  </div>
+
+  <script src="checkin.js"></script>
+</body>
+</html>
