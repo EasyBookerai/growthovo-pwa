@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { supabase } from '../services/supabaseClient';
+import { getUserName, getSelectedPillars, getYesterdayActivity, KEYS } from '../services/growthovoExperienceService';
+import { loadCompletedLessons } from '../services/pillarStorageService';
+import type { RexContext } from '../lib/rex';
 
 /**
  * AppContext State Interface
@@ -21,10 +24,20 @@ interface AppContextState {
   xp: number;
   streak: number;
   level: number;
+  name: string;
+  subscriptionStatus: string;
+  isPremium: boolean;
+  moodEmoji: string;
+  moodLabel: string;
+  completedLessons: string[];
+  selectedPillars: string[];
+  lastCheckIn: string;
+  rexContext: RexContext;
   isLoading: boolean;
   error: string | null;
   updateXP: (amount: number) => Promise<void>;
   updateStreak: (newStreak: number) => Promise<void>;
+  updateRexState: (updates: Partial<Pick<AppContextState, 'name' | 'subscriptionStatus' | 'isPremium' | 'moodEmoji' | 'moodLabel' | 'completedLessons' | 'selectedPillars' | 'lastCheckIn'>>) => void;
   refreshUserData: () => Promise<void>;
   clearError: () => void;
 }
@@ -72,6 +85,14 @@ export function AppProvider({ userId, children }: AppProviderProps) {
   const [xp, setXp] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
+  const [name, setName] = useState<string>('Champion');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>('free');
+  const [isPremium, setIsPremium] = useState<boolean>(false);
+  const [moodEmoji, setMoodEmoji] = useState<string>('🙂');
+  const [moodLabel, setMoodLabel] = useState<string>('steady');
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+  const [selectedPillars, setSelectedPillars] = useState<string[]>([]);
+  const [lastCheckIn, setLastCheckIn] = useState<string>('unknown');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [retryQueue, setRetryQueue] = useState<Array<() => Promise<void>>>([]);
@@ -113,12 +134,26 @@ export function AppProvider({ userId, children }: AppProviderProps) {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const { data, error: fetchError } = await supabase
-        .from('users')
-        .select('total_xp, current_streak')
-        .eq('id', userId)
-        .single();
+
+      const [
+        userResult,
+        storedName,
+        storedPillars,
+        yesterdayActivity,
+        completedLessonsData,
+      ] = await Promise.all([
+        supabase
+          .from('users')
+          .select('total_xp, current_streak, username, name, subscription_status, primary_pillar, secondary_pillar')
+          .eq('id', userId)
+          .single(),
+        getUserName(),
+        getSelectedPillars(),
+        getYesterdayActivity(),
+        loadCompletedLessons(),
+      ]);
+
+      const { data, error: fetchError } = userResult;
 
       if (fetchError) {
         const errorMessage = 'Unable to load your progress. Please check your connection.';
@@ -130,6 +165,24 @@ export function AppProvider({ userId, children }: AppProviderProps) {
       if (data) {
         setXp(data.total_xp || 0);
         setStreak(data.current_streak || 0);
+        const resolvedName = data.name || data.username || storedName || 'Champion';
+        const resolvedSubscription = data.subscription_status || 'free';
+        const resolvedPillars = storedPillars.length > 0
+          ? storedPillars
+          : [data.primary_pillar, data.secondary_pillar].filter(Boolean);
+
+        setName(resolvedName);
+        setSubscriptionStatus(resolvedSubscription);
+        setIsPremium(resolvedSubscription === 'active' || resolvedSubscription === 'trialing');
+        setSelectedPillars(resolvedPillars);
+        setCompletedLessons(completedLessonsData.lessonIds);
+        setMoodLabel(yesterdayActivity.mood || 'steady');
+        setMoodEmoji(getMoodEmoji(yesterdayActivity.mood));
+        setLastCheckIn(
+          (await getStoredLastCheckInDate()) ||
+          yesterdayActivity.mood ||
+          'unknown'
+        );
       }
     } catch (error) {
       const errorMessage = 'Something went wrong loading your data. Please try again.';
@@ -306,6 +359,35 @@ export function AppProvider({ userId, children }: AppProviderProps) {
     setError(null);
   };
 
+  const updateRexState = (
+    updates: Partial<Pick<AppContextState, 'name' | 'subscriptionStatus' | 'isPremium' | 'moodEmoji' | 'moodLabel' | 'completedLessons' | 'selectedPillars' | 'lastCheckIn'>>
+  ) => {
+    if (typeof updates.name === 'string') {
+      setName(updates.name);
+    }
+    if (typeof updates.subscriptionStatus === 'string') {
+      setSubscriptionStatus(updates.subscriptionStatus);
+    }
+    if (typeof updates.isPremium === 'boolean') {
+      setIsPremium(updates.isPremium);
+    }
+    if (typeof updates.moodEmoji === 'string') {
+      setMoodEmoji(updates.moodEmoji);
+    }
+    if (typeof updates.moodLabel === 'string') {
+      setMoodLabel(updates.moodLabel);
+    }
+    if (Array.isArray(updates.completedLessons)) {
+      setCompletedLessons(updates.completedLessons);
+    }
+    if (Array.isArray(updates.selectedPillars)) {
+      setSelectedPillars(updates.selectedPillars);
+    }
+    if (typeof updates.lastCheckIn === 'string') {
+      setLastCheckIn(updates.lastCheckIn);
+    }
+  };
+
   /**
    * Retry failed operations
    * 
@@ -351,14 +433,52 @@ export function AppProvider({ userId, children }: AppProviderProps) {
     }
   }, [retryQueue]);
 
+  const rexContext = useMemo<RexContext>(() => ({
+    userId,
+    name,
+    streak,
+    xp,
+    level,
+    moodEmoji,
+    moodLabel,
+    completedLessons,
+    selectedPillars,
+    timeOfDay: getTimeOfDay(),
+    lastCheckIn,
+    isPremium,
+    featureLabel: 'app',
+  }), [
+    userId,
+    name,
+    streak,
+    xp,
+    level,
+    moodEmoji,
+    moodLabel,
+    completedLessons,
+    selectedPillars,
+    lastCheckIn,
+    isPremium,
+  ]);
+
   const value: AppContextState = {
     xp,
     streak,
     level,
+    name,
+    subscriptionStatus,
+    isPremium,
+    moodEmoji,
+    moodLabel,
+    completedLessons,
+    selectedPillars,
+    lastCheckIn,
+    rexContext,
     isLoading,
     error,
     updateXP,
     updateStreak,
+    updateRexState,
     refreshUserData,
     clearError,
   };
@@ -401,4 +521,31 @@ export function useAppContext(): AppContextState {
     throw new Error('useAppContext must be used within AppProvider');
   }
   return context;
+}
+
+function getMoodEmoji(mood: string | null): string {
+  const normalized = (mood || '').toLowerCase();
+
+  if (normalized.includes('anx')) return '😰';
+  if (normalized.includes('low') || normalized.includes('sad')) return '😔';
+  if (normalized.includes('good')) return '🙂';
+  if (normalized.includes('lock')) return '🔥';
+  return '🙂';
+}
+
+async function getStoredLastCheckInDate(): Promise<string | null> {
+  try {
+    // `localStorage` on web is backed by AsyncStorage here via the shared app storage.
+    const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+    return await AsyncStorage.getItem(KEYS.lastCheckInDate);
+  } catch {
+    return null;
+  }
+}
+
+function getTimeOfDay(): 'morning' | 'afternoon' | 'evening' {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'morning';
+  if (hour < 18) return 'afternoon';
+  return 'evening';
 }

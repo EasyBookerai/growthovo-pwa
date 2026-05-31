@@ -4,5 +4,8 @@
   "private": true,
   "scripts": {
     "build": "cd growthovo && npm install && npx expo export:web"
+  },
+  "dependencies": {
+    "openai": "^6.39.1"
   }
 }
