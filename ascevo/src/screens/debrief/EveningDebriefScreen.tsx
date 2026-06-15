@@ -6,192 +6,127 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
   Animated,
 } from 'react-native';
-import {
-  validateMinWordCount,
-  getQ2Insight,
-  submitDebrief,
-  getTomorrowFocusPreview,
-} from '../../services/debriefService';
 import { colors, typography, spacing, radius } from '../../theme';
-import type { Q1Answer, DebriefFlowState } from '../../types';
+import { useAppContext } from '../../context/AppContext';
+import { 
+  saveTomorrowReminder, 
+  markEveningDebriefDone, 
+  getUserName 
+} from '../../services/growthovoExperienceService';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Step = 'q1' | 'q2' | 'q3' | 'verdict';
+type Step = 'rating' | 'win' | 'challenge' | 'priority' | 'complete';
 
 interface Props {
-  userId: string;
   onDismiss: () => void;
 }
 
-// ─── Q1 option config ─────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
 
-const Q1_OPTIONS: { answer: Q1Answer; label: string; followUp: string; enforceWordCount: boolean }[] = [
-  { answer: 'yes_crushed_it', label: 'Yes, crushed it', followUp: 'What made it work?', enforceWordCount: false },
-  { answer: 'partially', label: 'Partially', followUp: 'What got in the way?', enforceWordCount: false },
-  { answer: 'no_didnt_happen', label: "No, didn't happen", followUp: 'What actually happened?', enforceWordCount: true },
-];
-
-const MIN_WORDS = 10;
+const GOLD_COLOR = '#FFD700';
+const MAX_LINES = 3;
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 
-export default function EveningDebriefScreen({ userId, onDismiss }: Props) {
-  const [step, setStep] = useState<Step>('q1');
-  const [flow, setFlow] = useState<DebriefFlowState>({
-    q1Answer: null,
-    q1Detail: '',
-    q2Obstacle: '',
-    q3Note: '',
-    q2Insight: null,
-    rexVerdict: null,
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [tomorrowFocus, setTomorrowFocus] = useState<string | null>(null);
+export default function EveningDebriefScreen({ onDismiss }: Props) {
+  const { updateXP, name: contextName } = useAppContext();
+  
+  const [step, setStep] = useState<Step>('rating');
+  const [rating, setRating] = useState<number>(0);
+  const [winText, setWinText] = useState<string>('');
+  const [challengeText, setChallengeText] = useState<string>('');
+  const [priorityText, setPriorityText] = useState<string>('');
+  const [userName, setUserName] = useState<string>('Champion');
   const [xpAnim] = useState(new Animated.Value(0));
+
+  React.useEffect(() => {
+    getUserName().then(setUserName);
+  }, []);
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
-  const selectedQ1Option = Q1_OPTIONS.find(o => o.answer === flow.q1Answer);
+  const countLines = (text: string): number => {
+    return text.split('\n').length;
+  };
 
-  const q1DetailValid = selectedQ1Option
-    ? selectedQ1Option.enforceWordCount
-      ? validateMinWordCount(flow.q1Detail, MIN_WORDS)
-      : flow.q1Detail.trim().length > 0
-    : false;
-
-  const q2Valid = validateMinWordCount(flow.q2Obstacle, MIN_WORDS);
+  const canContinueFromRating = rating > 0;
+  const canContinueFromWin = winText.trim().length > 0 && countLines(winText) <= MAX_LINES;
+  const canContinueFromChallenge = challengeText.trim().length > 0;
+  const canComplete = priorityText.trim().length > 0;
 
   // ── Step transitions ─────────────────────────────────────────────────────────
 
-  async function handleQ1Next() {
-    if (!flow.q1Answer || !q1DetailValid) return;
-    setStep('q2');
-    setError(null);
-  }
-
-  async function handleQ2Submit() {
-    if (!q2Valid || loading) return;
-    setLoading(true);
-    setError(null);
+  async function handleCompleteDebrief() {
     try {
-      const insight = await getQ2Insight(userId, flow.q2Obstacle);
-      setFlow(prev => ({ ...prev, q2Insight: insight }));
-      setStep('q3');
-    } catch {
-      setError('Failed to get insight. Tap retry.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleQ3Submit(skip = false) {
-    if (loading) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const finalState: DebriefFlowState = {
-        ...flow,
-        q3Note: skip ? '' : flow.q3Note,
-      };
-      const debrief = await submitDebrief(userId, finalState);
-      const focus = await getTomorrowFocusPreview(userId);
-      setFlow(prev => ({ ...prev, rexVerdict: debrief.rexVerdict }));
-      setTomorrowFocus(focus);
-      setStep('verdict');
-      // Animate +20 XP
+      // Save tomorrow's reminder to localStorage
+      await saveTomorrowReminder(priorityText);
+      
+      // Mark debrief as done today
+      await markEveningDebriefDone();
+      
+      // Award 30 XP
+      await updateXP(30);
+      
+      // Show completion
+      setStep('complete');
+      
+      // Animate XP badge
       Animated.sequence([
         Animated.timing(xpAnim, { toValue: 1, duration: 400, useNativeDriver: true }),
         Animated.delay(2000),
         Animated.timing(xpAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
       ]).start();
-    } catch {
-      setError('Something went wrong. Tap retry.');
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Error completing debrief:', error);
     }
   }
 
   // ── Render helpers ───────────────────────────────────────────────────────────
 
-  function renderError() {
-    if (!error) return null;
+  function renderStarRating() {
     return (
-      <TouchableOpacity
-        style={styles.errorBox}
-        onPress={() => {
-          setError(null);
-          if (step === 'q2') handleQ2Submit();
-          else if (step === 'q3') handleQ3Submit();
-        }}
-      >
-        <Text style={styles.errorText}>{error} Tap to retry.</Text>
-      </TouchableOpacity>
+      <View style={styles.starsContainer}>
+        {[1, 2, 3, 4, 5].map((star) => {
+          const isFilled = rating >= star;
+          return (
+            <TouchableOpacity
+              key={star}
+              onPress={() => setRating(star)}
+              accessibilityRole="button"
+              accessibilityLabel={`Rate your day ${star} out of 5 stars`}
+              accessibilityState={{ selected: isFilled }}
+              style={styles.starButton}
+            >
+              <Text style={[styles.starIcon, isFilled && styles.starIconFilled]}>
+                ★
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     );
   }
 
-  // ── Q1 ───────────────────────────────────────────────────────────────────────
+  // ── Part 1: Day rating ───────────────────────────────────────────────────────
 
-  function renderQ1() {
+  function renderRating() {
     return (
       <View style={styles.stepContainer}>
-        <Text style={styles.stepLabel}>Q1 of 3</Text>
-        <Text style={styles.question}>Did you do the thing today?</Text>
-
-        <View style={styles.optionList}>
-          {Q1_OPTIONS.map(opt => (
-            <TouchableOpacity
-              key={opt.answer}
-              style={[
-                styles.optionCard,
-                flow.q1Answer === opt.answer && styles.optionCardSelected,
-              ]}
-              onPress={() => setFlow(prev => ({ ...prev, q1Answer: opt.answer, q1Detail: '' }))}
-              accessibilityRole="button"
-              accessibilityState={{ selected: flow.q1Answer === opt.answer }}
-            >
-              <Text style={[
-                styles.optionLabel,
-                flow.q1Answer === opt.answer && styles.optionLabelSelected,
-              ]}>
-                {opt.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {selectedQ1Option && (
-          <View style={styles.followUpContainer}>
-            <Text style={styles.followUpLabel}>{selectedQ1Option.followUp}</Text>
-            <TextInput
-              style={styles.textInput}
-              value={flow.q1Detail}
-              onChangeText={text => setFlow(prev => ({ ...prev, q1Detail: text }))}
-              placeholder="Type here..."
-              placeholderTextColor={colors.textMuted}
-              multiline
-              accessibilityLabel={selectedQ1Option.followUp}
-            />
-            {selectedQ1Option.enforceWordCount && (
-              <Text style={styles.wordCountHint}>
-                {flow.q1Detail.trim().split(/\s+/).filter(w => w.length > 0).length}/{MIN_WORDS} words minimum
-              </Text>
-            )}
-          </View>
-        )}
+        <Text style={styles.stepLabel}>Part 1 of 4</Text>
+        <Text style={styles.question}>How was your day overall?</Text>
+        
+        {renderStarRating()}
 
         <TouchableOpacity
-          style={[styles.primaryButton, (!flow.q1Answer || !q1DetailValid) && styles.primaryButtonDisabled]}
-          onPress={handleQ1Next}
-          disabled={!flow.q1Answer || !q1DetailValid}
+          style={[styles.primaryButton, !canContinueFromRating && styles.primaryButtonDisabled]}
+          onPress={() => setStep('win')}
+          disabled={!canContinueFromRating}
           accessibilityRole="button"
         >
-          <Text style={[styles.primaryButtonText, (!flow.q1Answer || !q1DetailValid) && styles.primaryButtonTextDisabled]}>
+          <Text style={[styles.primaryButtonText, !canContinueFromRating && styles.primaryButtonTextDisabled]}>
             Next →
           </Text>
         </TouchableOpacity>
@@ -199,129 +134,127 @@ export default function EveningDebriefScreen({ userId, onDismiss }: Props) {
     );
   }
 
-  // ── Q2 ───────────────────────────────────────────────────────────────────────
+  // ── Part 2: Win reflection ───────────────────────────────────────────────────
 
-  function renderQ2() {
+  function renderWin() {
     return (
       <View style={styles.stepContainer}>
-        <Text style={styles.stepLabel}>Q2 of 3</Text>
-        <Text style={styles.question}>What tried to stop you today?</Text>
-
+        <Text style={styles.stepLabel}>Part 2 of 4</Text>
+        <Text style={styles.question}>What's one win from today?</Text>
+        
         <TextInput
           style={styles.textInput}
-          value={flow.q2Obstacle}
-          onChangeText={text => setFlow(prev => ({ ...prev, q2Obstacle: text }))}
-          placeholder="Be specific. What actually got in the way?"
+          value={winText}
+          onChangeText={setWinText}
+          placeholder="Even something small counts..."
           placeholderTextColor={colors.textMuted}
           multiline
-          accessibilityLabel="What tried to stop you today"
+          numberOfLines={3}
+          maxLength={200}
+          accessibilityLabel="What's one win from today"
         />
         <Text style={styles.wordCountHint}>
-          {flow.q2Obstacle.trim().split(/\s+/).filter(w => w.length > 0).length}/{MIN_WORDS} words minimum
+          {countLines(winText)}/{MAX_LINES} lines {countLines(winText) > MAX_LINES && '(too many)'}
         </Text>
 
-        {renderError()}
-
         <TouchableOpacity
-          style={[styles.primaryButton, (!q2Valid || loading) && styles.primaryButtonDisabled]}
-          onPress={handleQ2Submit}
-          disabled={!q2Valid || loading}
+          style={[styles.primaryButton, !canContinueFromWin && styles.primaryButtonDisabled]}
+          onPress={() => setStep('challenge')}
+          disabled={!canContinueFromWin}
           accessibilityRole="button"
         >
-          {loading ? (
-            <ActivityIndicator color={colors.text} size="small" />
-          ) : (
-            <Text style={[styles.primaryButtonText, (!q2Valid || loading) && styles.primaryButtonTextDisabled]}>
-              Submit →
-            </Text>
-          )}
+          <Text style={[styles.primaryButtonText, !canContinueFromWin && styles.primaryButtonTextDisabled]}>
+            Next →
+          </Text>
         </TouchableOpacity>
       </View>
     );
   }
 
-  // ── Q3 ───────────────────────────────────────────────────────────────────────
+  // ── Part 3: Challenge reflection ─────────────────────────────────────────────
 
-  function renderQ3() {
+  function renderChallenge() {
     return (
       <View style={styles.stepContainer}>
-        <Text style={styles.stepLabel}>Q3 of 3</Text>
-        <Text style={styles.question}>What does tomorrow-you need to know?</Text>
-        <Text style={styles.optionalHint}>Optional — but worth it.</Text>
-
-        {/* Q2 insight inline */}
-        {flow.q2Insight && (
-          <View style={styles.insightBox}>
-            <Text style={styles.insightLabel}>Rex</Text>
-            <Text style={styles.insightText}>{flow.q2Insight}</Text>
-          </View>
-        )}
-
+        <Text style={styles.stepLabel}>Part 3 of 4</Text>
+        <Text style={styles.question}>What was challenging today?</Text>
+        
         <TextInput
           style={styles.textInput}
-          value={flow.q3Note}
-          onChangeText={text => setFlow(prev => ({ ...prev, q3Note: text }))}
-          placeholder="Leave a note for tomorrow..."
+          value={challengeText}
+          onChangeText={setChallengeText}
+          placeholder="No judgment, just reflection..."
           placeholderTextColor={colors.textMuted}
           multiline
-          accessibilityLabel="What does tomorrow-you need to know"
+          accessibilityLabel="What was challenging today"
         />
 
-        {renderError()}
-
-        <View style={styles.rowButtons}>
-          <TouchableOpacity
-            style={[styles.secondaryButton, loading && styles.primaryButtonDisabled]}
-            onPress={() => handleQ3Submit(true)}
-            disabled={loading}
-            accessibilityRole="button"
-          >
-            <Text style={styles.secondaryButtonText}>Skip</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.primaryButton, styles.flex1, loading && styles.primaryButtonDisabled]}
-            onPress={() => handleQ3Submit(false)}
-            disabled={loading}
-            accessibilityRole="button"
-          >
-            {loading ? (
-              <ActivityIndicator color={colors.text} size="small" />
-            ) : (
-              <Text style={styles.primaryButtonText}>Done →</Text>
-            )}
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.primaryButton, !canContinueFromChallenge && styles.primaryButtonDisabled]}
+          onPress={() => setStep('priority')}
+          disabled={!canContinueFromChallenge}
+          accessibilityRole="button"
+        >
+          <Text style={[styles.primaryButtonText, !canContinueFromChallenge && styles.primaryButtonTextDisabled]}>
+            Next →
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
-  // ── Verdict ──────────────────────────────────────────────────────────────────
+  // ── Part 4: Tomorrow's priority ──────────────────────────────────────────────
 
-  function renderVerdict() {
+  function renderPriority() {
+    return (
+      <View style={styles.stepContainer}>
+        <Text style={styles.stepLabel}>Part 4 of 4</Text>
+        <Text style={styles.question}>What's the ONE thing you want to do tomorrow?</Text>
+        
+        <TextInput
+          style={styles.textInput}
+          value={priorityText}
+          onChangeText={setPriorityText}
+          placeholder="Tomorrow I will..."
+          placeholderTextColor={colors.textMuted}
+          multiline
+          accessibilityLabel="What's the ONE thing you want to do tomorrow"
+        />
+
+        <TouchableOpacity
+          style={[styles.primaryButton, !canComplete && styles.primaryButtonDisabled]}
+          onPress={handleCompleteDebrief}
+          disabled={!canComplete}
+          accessibilityRole="button"
+        >
+          <Text style={[styles.primaryButtonText, !canComplete && styles.primaryButtonTextDisabled]}>
+            Complete →
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  // ── Complete screen ──────────────────────────────────────────────────────────
+
+  function renderComplete() {
     const xpOpacity = xpAnim.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
     const xpTranslate = xpAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] });
 
     return (
-      <ScrollView contentContainerStyle={styles.verdictContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.completeContainer} showsVerticalScrollIndicator={false}>
         {/* XP animation */}
         <Animated.View style={[styles.xpBadge, { opacity: xpOpacity, transform: [{ translateY: xpTranslate }] }]}>
-          <Text style={styles.xpText}>+20 XP 🔥</Text>
+          <Text style={styles.xpText}>+30 XP 🔥</Text>
         </Animated.View>
 
-        {/* Rex verdict */}
-        <View style={styles.verdictBox}>
-          <Text style={styles.verdictLabel}>Rex's Verdict</Text>
-          <Text style={styles.verdictText}>{flow.rexVerdict ?? 'Day logged. Keep going.'}</Text>
+        {/* Rex response */}
+        <View style={styles.rexBox}>
+          <Text style={styles.rexLabel}>Rex</Text>
+          <Text style={styles.rexText}>
+            Got it. I'll remind you about "{priorityText}" tomorrow morning 💪
+          </Text>
         </View>
-
-        {/* Tomorrow's focus */}
-        {tomorrowFocus && (
-          <View style={styles.tomorrowBox}>
-            <Text style={styles.tomorrowLabel}>Tomorrow's Focus</Text>
-            <Text style={styles.tomorrowText}>{tomorrowFocus}</Text>
-          </View>
-        )}
 
         <TouchableOpacity
           style={styles.primaryButton}
@@ -344,13 +277,14 @@ export default function EveningDebriefScreen({ userId, onDismiss }: Props) {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.header}>Evening Debrief</Text>
-        <Text style={styles.subheader}>2 minutes. Be honest.</Text>
+        <Text style={styles.header}>🌙 Evening Debrief</Text>
+        <Text style={styles.subheader}>4 quick reflections to close your day</Text>
 
-        {step === 'q1' && renderQ1()}
-        {step === 'q2' && renderQ2()}
-        {step === 'q3' && renderQ3()}
-        {step === 'verdict' && renderVerdict()}
+        {step === 'rating' && renderRating()}
+        {step === 'win' && renderWin()}
+        {step === 'challenge' && renderChallenge()}
+        {step === 'priority' && renderPriority()}
+        {step === 'complete' && renderComplete()}
       </ScrollView>
     </View>
   );
@@ -393,42 +327,23 @@ const styles = StyleSheet.create({
     ...typography.h2,
     color: colors.text,
   },
-  optionalHint: {
-    ...typography.small,
+
+  // Star rating
+  starsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.lg,
+  },
+  starButton: {
+    padding: spacing.xs,
+  },
+  starIcon: {
+    fontSize: 48,
     color: colors.textMuted,
-    marginTop: -spacing.sm,
   },
-
-  // Q1 options
-  optionList: {
-    gap: spacing.sm,
-  },
-  optionCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  optionCardSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.surfaceElevated,
-  },
-  optionLabel: {
-    ...typography.bodyBold,
-    color: colors.textSecondary,
-  },
-  optionLabelSelected: {
-    color: colors.primary,
-  },
-
-  // Follow-up
-  followUpContainer: {
-    gap: spacing.sm,
-  },
-  followUpLabel: {
-    ...typography.bodyBold,
-    color: colors.text,
+  starIconFilled: {
+    color: GOLD_COLOR,
   },
 
   // Text input
@@ -447,24 +362,6 @@ const styles = StyleSheet.create({
     ...typography.small,
     color: colors.textMuted,
     textAlign: 'right',
-  },
-
-  // Insight box
-  insightBox: {
-    backgroundColor: colors.surfaceElevated,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-    gap: 4,
-  },
-  insightLabel: {
-    ...typography.caption,
-    color: colors.primary,
-  },
-  insightText: {
-    ...typography.body,
-    color: colors.text,
   },
 
   // Buttons
@@ -486,42 +383,9 @@ const styles = StyleSheet.create({
   primaryButtonTextDisabled: {
     color: colors.textMuted,
   },
-  secondaryButton: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 52,
-  },
-  secondaryButtonText: {
-    ...typography.bodyBold,
-    color: colors.textMuted,
-  },
-  rowButtons: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  flex1: {
-    flex: 1,
-  },
 
-  // Error
-  errorBox: {
-    backgroundColor: colors.surfaceElevated,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.error,
-  },
-  errorText: {
-    ...typography.small,
-    color: colors.error,
-  },
-
-  // Verdict
-  verdictContainer: {
+  // Complete screen
+  completeContainer: {
     gap: spacing.lg,
     paddingBottom: 48,
   },
@@ -534,9 +398,9 @@ const styles = StyleSheet.create({
   },
   xpText: {
     ...typography.bodyBold,
-    color: colors.xpGold,
+    color: GOLD_COLOR,
   },
-  verdictBox: {
+  rexBox: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.md,
@@ -544,29 +408,12 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: colors.primary,
   },
-  verdictLabel: {
+  rexLabel: {
     ...typography.caption,
     color: colors.primary,
   },
-  verdictText: {
+  rexText: {
     ...typography.body,
-    color: colors.text,
-    lineHeight: 26,
-  },
-  tomorrowBox: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    gap: spacing.sm,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.xpGold,
-  },
-  tomorrowLabel: {
-    ...typography.caption,
-    color: colors.xpGold,
-  },
-  tomorrowText: {
-    ...typography.bodyBold,
     color: colors.text,
     lineHeight: 26,
   },

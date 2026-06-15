@@ -1,4 +1,3 @@
-# Design Document: PWA Support
 
 ## Overview
 
@@ -12,7 +11,7 @@ The design follows a progressive enhancement approach: core functionality works 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Growthovo Application                       │
+│                     Growthovo Application                    │
 │                   (React Native Codebase)                    │
 └─────────────────────────────────────────────────────────────┘
                               │

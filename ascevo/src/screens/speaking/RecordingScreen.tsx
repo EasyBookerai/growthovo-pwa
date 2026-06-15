@@ -8,8 +8,6 @@ import {
   Linking,
   SafeAreaView,
 } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { Audio } from 'expo-av';
 import Animated, {
   useSharedValue,
   withRepeat,
@@ -19,20 +17,35 @@ import Animated, {
 } from 'react-native-reanimated';
 import { colors, typography, spacing, radius } from '../../theme';
 import { submitSession } from '../../services/speakingService';
-import { SPEAKING_LEVEL_CONFIG, SpeakingLevel } from '../../types';
+import { SPEAKING_LEVEL_CONFIG, SpeakingLevel, SpeechAnalysisResult } from '../../types';
 
-// ─── Navigation types ─────────────────────────────────────────────────────────
+// expo-av Audio — install with: npx expo install expo-av
+let Audio: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  Audio = require('expo-av').Audio;
+} catch {
+  // expo-av not installed
+}
 
-type RecordingParams = {
-  RecordingScreen: {
-    level: SpeakingLevel;
-    topic: string;
-    userId: string;
-    language: string;
+// ─── Props ────────────────────────────────────────────────────────────────────
+
+interface RecordingScreenProps {
+  navigation: {
+    navigate: (screen: string, params?: any) => void;
+    goBack: () => void;
   };
-};
+  route: {
+    params: {
+      level: SpeakingLevel;
+      topic: string;
+      userId: string;
+      language: string;
+    };
+  };
+}
 
-// ─── Waveform bar component ───────────────────────────────────────────────────
+// ─── Waveform bar ─────────────────────────────────────────────────────────────
 
 function WaveformBar({ delay, isActive }: { delay: number; isActive: boolean }) {
   const height = useSharedValue(8);
@@ -40,8 +53,8 @@ function WaveformBar({ delay, isActive }: { delay: number; isActive: boolean }) 
   useEffect(() => {
     if (isActive) {
       height.value = withRepeat(
-        withTiming(32 + Math.random() * 20, {
-          duration: 400 + delay * 80,
+        withTiming(28 + delay * 6, {
+          duration: 380 + delay * 90,
           easing: Easing.inOut(Easing.ease),
         }),
         -1,
@@ -59,27 +72,22 @@ function WaveformBar({ delay, isActive }: { delay: number; isActive: boolean }) 
   return <Animated.View style={[styles.waveBar, animStyle]} />;
 }
 
-// ─── Main screen ──────────────────────────────────────────────────────────────
+// ─── Screen ───────────────────────────────────────────────────────────────────
 
 type ScreenState = 'idle' | 'recording' | 'processing' | 'error' | 'permission_denied';
 
-export default function RecordingScreen() {
-  const navigation = useNavigation<any>();
-  const route = useRoute<RouteProp<RecordingParams, 'RecordingScreen'>>();
+export default function RecordingScreen({ navigation, route }: RecordingScreenProps) {
   const { level, topic, userId, language } = route.params;
-
-  const config = SPEAKING_LEVEL_CONFIG[level];
+  const config = SPEAKING_LEVEL_CONFIG[level as SpeakingLevel];
   const maxSeconds = config.maxDurationSeconds;
 
   const [screenState, setScreenState] = useState<ScreenState>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const recordingRef = useRef<Audio.Recording | null>(null);
+  const recordingRef = useRef<any>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
-
-  // ─── Cleanup on unmount ───────────────────────────────────────────────────
 
   useEffect(() => {
     return () => {
@@ -90,15 +98,11 @@ export default function RecordingScreen() {
     };
   }, []);
 
-  // ─── Auto-stop when max duration reached ─────────────────────────────────
-
   useEffect(() => {
     if (elapsed >= maxSeconds && screenState === 'recording') {
       handleStop();
     }
-  }, [elapsed, maxSeconds, screenState]);
-
-  // ─── Timer helpers ────────────────────────────────────────────────────────
+  }, [elapsed]);
 
   function startTimer() {
     startTimeRef.current = Date.now();
@@ -115,12 +119,15 @@ export default function RecordingScreen() {
     }
   }
 
-  // ─── Record ───────────────────────────────────────────────────────────────
-
   const handleRecord = useCallback(async () => {
     setErrorMsg('');
 
-    // Request permission
+    if (!Audio) {
+      setScreenState('error');
+      setErrorMsg('Audio recording unavailable. Please install expo-av.');
+      return;
+    }
+
     const { status } = await Audio.requestPermissionsAsync();
     if (status !== 'granted') {
       setScreenState('permission_denied');
@@ -141,26 +148,20 @@ export default function RecordingScreen() {
       setElapsed(0);
       setScreenState('recording');
       startTimer();
-    } catch (err) {
+    } catch {
       setErrorMsg('Could not start recording. Please try again.');
       setScreenState('error');
     }
   }, []);
 
-  // ─── Stop ─────────────────────────────────────────────────────────────────
-
   const handleStop = useCallback(async () => {
     if (screenState !== 'recording') return;
 
     clearTimer();
-
     const durationSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
 
-    // Reject if too short
     if (durationSeconds < 5) {
-      try {
-        await recordingRef.current?.stopAndUnloadAsync();
-      } catch {}
+      try { await recordingRef.current?.stopAndUnloadAsync(); } catch {}
       recordingRef.current = null;
       setElapsed(0);
       setScreenState('error');
@@ -172,12 +173,12 @@ export default function RecordingScreen() {
 
     try {
       await recordingRef.current?.stopAndUnloadAsync();
-      const uri = recordingRef.current?.getURI();
+      const uri: string | null = recordingRef.current?.getURI() ?? null;
       recordingRef.current = null;
 
       if (!uri) throw new Error('No audio file found.');
 
-      const result = await submitSession({
+      const result: SpeechAnalysisResult = await submitSession({
         userId,
         level,
         topic,
@@ -186,30 +187,26 @@ export default function RecordingScreen() {
         language,
       });
 
-      navigation.navigate('FeedbackScreen', { result });
+      navigation.navigate('FeedbackScreen', { result, userId });
     } catch (err: any) {
       setScreenState('error');
       setErrorMsg(err?.message ?? 'Something went wrong. Please try again.');
     }
   }, [screenState, userId, level, topic, language, navigation]);
 
-  // ─── Derived display values ───────────────────────────────────────────────
-
   const remaining = Math.max(0, maxSeconds - elapsed);
 
-  function formatTime(secs: number) {
+  function formatTime(secs: number): string {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  // ─── Render: permission denied ────────────────────────────────────────────
-
   if (screenState === 'permission_denied') {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.center}>
-          <Text style={styles.permissionIcon}>🎙️</Text>
+          <Text style={styles.bigIcon}>🎙️</Text>
           <Text style={styles.permissionTitle}>Microphone access needed</Text>
           <Text style={styles.permissionBody}>
             GROWTHOVO needs microphone access to record your speech session.
@@ -218,6 +215,7 @@ export default function RecordingScreen() {
             style={styles.primaryBtn}
             onPress={() => Linking.openSettings()}
             accessibilityRole="button"
+            accessibilityLabel="Open device settings"
           >
             <Text style={styles.primaryBtnText}>Open Settings</Text>
           </TouchableOpacity>
@@ -233,8 +231,6 @@ export default function RecordingScreen() {
     );
   }
 
-  // ─── Render: processing (Rex is listening) ────────────────────────────────
-
   if (screenState === 'processing') {
     return (
       <SafeAreaView style={styles.container}>
@@ -245,41 +241,40 @@ export default function RecordingScreen() {
               <WaveformBar key={i} delay={i} isActive={true} />
             ))}
           </View>
-          <ActivityIndicator color={colors.primary} size="small" style={{ marginTop: spacing.lg }} />
+          <ActivityIndicator
+            color={colors.primary}
+            size="small"
+            style={{ marginTop: spacing.lg }}
+          />
         </View>
       </SafeAreaView>
     );
   }
 
-  // ─── Render: main recording UI ────────────────────────────────────────────
-
   const isRecording = screenState === 'recording';
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
+          disabled={isRecording}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          disabled={isRecording}
         >
-          <Text style={[styles.backText, isRecording && styles.disabledText]}>← Back</Text>
+          <Text style={[styles.backText, isRecording && styles.dimmed]}>← Back</Text>
         </TouchableOpacity>
         <View style={styles.levelBadge}>
           <Text style={styles.levelBadgeText}>{config.label}</Text>
         </View>
       </View>
 
-      {/* Topic card */}
       <View style={styles.topicCard}>
         <Text style={styles.topicLabel}>YOUR TOPIC</Text>
         <Text style={styles.topicText}>{topic}</Text>
         <Text style={styles.topicHint}>Max {formatTime(maxSeconds)}</Text>
       </View>
 
-      {/* Timer display */}
       <View style={styles.timerSection}>
         {isRecording ? (
           <>
@@ -291,21 +286,18 @@ export default function RecordingScreen() {
         )}
       </View>
 
-      {/* Waveform (visible while recording) */}
       <View style={styles.waveformRow}>
         {[0, 1, 2, 3, 4].map((i) => (
           <WaveformBar key={i} delay={i} isActive={isRecording} />
         ))}
       </View>
 
-      {/* Error message */}
       {screenState === 'error' && errorMsg ? (
         <View style={styles.errorCard}>
           <Text style={styles.errorText}>{errorMsg}</Text>
         </View>
       ) : null}
 
-      {/* Record / Stop button */}
       <View style={styles.controls}>
         {!isRecording ? (
           <TouchableOpacity
@@ -338,10 +330,7 @@ export default function RecordingScreen() {
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -357,23 +346,15 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingBottom: spacing.sm,
   },
-  backText: {
-    ...typography.body,
-    color: colors.textMuted,
-  },
-  disabledText: {
-    opacity: 0.3,
-  },
+  backText: { ...typography.body, color: colors.textMuted },
+  dimmed: { opacity: 0.3 },
   levelBadge: {
     backgroundColor: colors.pillars.communication,
     borderRadius: radius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
-  levelBadgeText: {
-    ...typography.smallBold,
-    color: '#fff',
-  },
+  levelBadgeText: { ...typography.smallBold, color: '#fff' },
   topicCard: {
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,
@@ -384,19 +365,9 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.pillars.communication,
     gap: spacing.sm,
   },
-  topicLabel: {
-    ...typography.caption,
-    color: colors.pillars.communication,
-  },
-  topicText: {
-    ...typography.h3,
-    color: colors.text,
-    lineHeight: 28,
-  },
-  topicHint: {
-    ...typography.small,
-    color: colors.textMuted,
-  },
+  topicLabel: { ...typography.caption, color: colors.pillars.communication },
+  topicText: { ...typography.h3, color: colors.text, lineHeight: 28 },
+  topicHint: { ...typography.small, color: colors.textMuted },
   timerSection: {
     alignItems: 'center',
     marginTop: spacing.xxl,
@@ -409,15 +380,8 @@ const styles = StyleSheet.create({
     color: colors.text,
     letterSpacing: -1,
   },
-  remainingTime: {
-    ...typography.body,
-    color: colors.textMuted,
-  },
-  idleHint: {
-    ...typography.body,
-    color: colors.textMuted,
-    fontSize: 18,
-  },
+  remainingTime: { ...typography.body, color: colors.textMuted },
+  idleHint: { ...typography.body, color: colors.textMuted, fontSize: 18 },
   waveformRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -440,10 +404,7 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.error,
     marginBottom: spacing.md,
   },
-  errorText: {
-    ...typography.body,
-    color: colors.error,
-  },
+  errorText: { ...typography.body, color: colors.error },
   controls: {
     alignItems: 'center',
     paddingBottom: spacing.xxl,
@@ -458,13 +419,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  recordBtnIcon: {
-    fontSize: 22,
-  },
-  recordBtnText: {
-    ...typography.bodyBold,
-    color: '#fff',
-  },
+  recordBtnIcon: { fontSize: 22 },
+  recordBtnText: { ...typography.bodyBold, color: '#fff' },
   stopBtn: {
     backgroundColor: colors.error,
     borderRadius: radius.full,
@@ -474,25 +430,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  stopIcon: {
-    width: 16,
-    height: 16,
-    backgroundColor: '#fff',
-    borderRadius: 3,
-  },
-  stopBtnText: {
-    ...typography.bodyBold,
-    color: '#fff',
-  },
-  // Permission denied styles
-  permissionIcon: {
-    fontSize: 56,
-  },
-  permissionTitle: {
-    ...typography.h3,
-    color: colors.text,
-    textAlign: 'center',
-  },
+  stopIcon: { width: 16, height: 16, backgroundColor: '#fff', borderRadius: 3 },
+  stopBtnText: { ...typography.bodyBold, color: '#fff' },
+  bigIcon: { fontSize: 56 },
+  permissionTitle: { ...typography.h3, color: colors.text, textAlign: 'center' },
   permissionBody: {
     ...typography.body,
     color: colors.textMuted,
@@ -508,21 +449,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 300,
   },
-  primaryBtnText: {
-    ...typography.bodyBold,
-    color: '#fff',
-  },
-  ghostBtn: {
-    paddingVertical: spacing.sm,
-  },
-  ghostBtnText: {
-    ...typography.body,
-    color: colors.textMuted,
-  },
-  // Processing styles
-  processingLabel: {
-    ...typography.h3,
-    color: colors.text,
-    marginBottom: spacing.lg,
-  },
+  primaryBtnText: { ...typography.bodyBold, color: '#fff' },
+  ghostBtn: { paddingVertical: spacing.sm },
+  ghostBtnText: { ...typography.body, color: colors.textMuted },
+  processingLabel: { ...typography.h3, color: colors.text, marginBottom: spacing.lg },
 });
