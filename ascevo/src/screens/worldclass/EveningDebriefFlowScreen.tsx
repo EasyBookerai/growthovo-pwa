@@ -10,11 +10,13 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import {
   isAfter6PM,
   markEveningDebriefDone,
   saveTomorrowReminder,
   addWeeklyXp,
+  recordDailyCheckIn,
 } from '../../services/growthovoExperienceService';
 
 interface Props {
@@ -22,7 +24,8 @@ interface Props {
 }
 
 export default function EveningDebriefFlowScreen({ onClose }: Props) {
-  const { updateXP } = useAppContext();
+  const { updateXP, updateStreak, streak, userId } = useAppContext();
+  const { showToast } = useToast();
   const [step, setStep] = useState(0);
   const [rating, setRating] = useState(0);
   const [win, setWin] = useState('');
@@ -41,6 +44,18 @@ export default function EveningDebriefFlowScreen({ onClose }: Props) {
   }
 
   async function complete() {
+    // Record daily check-in and update streak
+    const checkInResult = await recordDailyCheckIn(userId);
+    
+    // Requirement 4.7: Display "❄️ Streak Freeze used!" toast when freeze is consumed
+    if (checkInResult.freezeUsed) {
+      showToast('❄️ Streak Freeze used!', 'info');
+    }
+    
+    if (checkInResult.streak !== streak) {
+      updateStreak(checkInResult.streak);
+    }
+    
     await updateXP(30);
     await addWeeklyXp(30);
     await saveTomorrowReminder(tomorrow.trim());

@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skill Tree | Growthovo</title>
+  <title>Skill Tree - Growthovo</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -13,84 +12,241 @@
       background: #0A0A12;
       color: #FFFFFF;
       min-height: 100vh;
-      padding-bottom: 20px;
+      overflow-x: hidden;
     }
-    .container { max-width: 480px; margin: 0 auto; padding: 20px; }
     .header {
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,18,0.95);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 16px 20px;
+      z-index: 100;
+    }
+    .header-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
     .back-btn {
-      background: rgba(255,255,255,0.05);
+      background: none;
       border: none;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 12px;
+      color: #A78BFA;
+      font-size: 24px;
       cursor: pointer;
-      font-weight: 600;
+      padding: 4px;
+    }
+    .pillar-title {
+      font-size: 20px;
+      font-weight: 700;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lesson-counter {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #A78BFA, #C084FC);
+      transition: width 0.3s;
     }
     .skill-tree {
       position: relative;
-      padding: 20px 0;
+      padding: 40px 20px 80px;
+      max-width: 480px;
+      margin: 0 auto;
     }
-    .tree-line {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 2px;
-      height: 100%;
-      background: linear-gradient(to bottom, #3a3a5c, #2a2a4c);
-    }
-    .unit-divider {
-      background: linear-gradient(90deg, #7C3AED, #A78BFA);
-      padding: 10px 20px;
-      border-radius: 100px;
+    .unit-banner {
+      background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(192,132,252,0.2));
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 24px 0 32px;
       text-align: center;
-      margin: 24px 0;
-      font-weight: 700;
+      font-weight: 600;
+      font-size: 14px;
+      color: #A78BFA;
     }
     .lesson-node {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 20px 0;
-      cursor: pointer;
-    }
-    .node-circle {
       width: 64px;
       height: 64px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 24px;
       font-weight: 700;
-      font-size: 20px;
+      margin: 24px auto;
+      cursor: pointer;
+      transition: all 0.2s;
       position: relative;
+      z-index: 10;
+    }
+    .lesson-node.locked {
+      background: #1A1A2E;
+      border: 2px solid rgba(255,255,255,0.2);
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .lesson-node.current {
+      background: white;
+      color: #0A0A12;
+      border: 3px solid #A78BFA;
+      animation: pulse 2s infinite;
+    }
+    .lesson-node.completed {
+      border: 3px solid currentColor;
+      background: currentColor;
+      color: white;
+    }
+    .lesson-node:not(.locked):hover {
+      transform: scale(1.1);
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(167,139,250,0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(167,139,250,0); }
+    }
+    .lesson-path {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2) 50%, transparent 50%);
+      background-size: 2px 12px;
+      transform: translateX(-50%);
       z-index: 1;
     }
-    .node-locked { background: #2a2a4c; color: #666; opacity: 0.5; }
-    .node-unlocked { background: white; color: #7C3AED; box-shadow: 0 0 20px rgba(124,58,237,0.4); animation: pulse 2s infinite; }
-    .node-completed { background: linear-gradient(135deg, #7C3AED, #A78BFA); color: white; }
-    .lesson-title { margin-top: 8px; font-size: 14px; max-width: 160px; text-align: center; }
-    .node-stars { font-size: 12px; margin-top: 4px; }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 30px rgba(124,58,237,0.7); } }
+    .stars {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .lesson-title {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.7);
+    }
+    .lesson-wrapper {
+      position: relative;
+    }
+    .lesson-wrapper.alternate-left .lesson-node { margin-left: 20%; }
+    .lesson-wrapper.alternate-right .lesson-node { margin-right: 20%; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <button class="back-btn" onclick="goBack()">← Back</button>
-      <h2 id="pillar-title"></h2>
-      <div></div>
+  <div class="header">
+    <div class="header-top">
+      <button class="back-btn" onclick="window.location.href='pillars.html'">←</button>
+      <div class="pillar-title" id="pillar-title"></div>
+      <div class="lesson-counter" id="lesson-counter"></div>
     </div>
-    <div id="skill-tree"></div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <div class="skill-tree">
+    <div class="lesson-path"></div>
+    <div id="lessons-container"></div>
   </div>
 
   <script src="lessons.js"></script>
   <script src="lesson-service.js"></script>
-  <script src="skill-tree.js"></script>
+  <script>
+    const pillarsData = {
+      "mental-health": { name: "Mental Health", emoji: "🧠", color: "#A78BFA" },
+      "relationships": { name: "Relationships", emoji: "💬", color: "#F472B6" },
+      "career": { name: "Career", emoji: "💼", color: "#60A5FA" },
+      "fitness": { name: "Fitness", emoji: "💪", color: "#34D399" },
+      "finance": { name: "Finance", emoji: "💰", color: "#FBBF24" },
+      "hobbies": { name: "Hobbies", emoji: "🎨", color: "#F87171" }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const pillarId = urlParams.get('pillar');
+    const pillarInfo = pillarsData[pillarId];
+    const lessons = allLessons[pillarId] || [];
+    const progress = getLessonProgress();
+
+    document.getElementById('pillar-title').innerHTML = `${pillarInfo.emoji} ${pillarInfo.name}`;
+    
+    const completedCount = lessons.filter(l => progress[pillarId]?.[l.id]?.completed).length;
+    document.getElementById('lesson-counter').textContent = `${completedCount}/${lessons.length}`;
+    document.getElementById('progress-bar').style.width = `${(completedCount / lessons.length) * 100}%`;
+
+    const container = document.getElementById('lessons-container');
+    let currentUnit = null;
+
+    lessons.forEach((lesson, index) => {
+      if (lesson.unit !== currentUnit) {
+        currentUnit = lesson.unit;
+        const banner = document.createElement('div');
+        banner.className = 'unit-banner';
+        banner.style.borderColor = pillarInfo.color + '50';
+        banner.style.background = `linear-gradient(135deg, ${pillarInfo.color}30, ${pillarInfo.color}20)`;
+        banner.style.color = pillarInfo.color;
+        banner.textContent = `Unit ${lesson.unit}: ${lesson.unitName}`;
+        container.appendChild(banner);
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lesson-wrapper';
+      if (index % 2 === 0) wrapper.classList.add('alternate-right');
+      else wrapper.classList.add('alternate-left');
+
+      const lessonState = progress[pillarId]?.[lesson.id] || { completed: false, stars: 0 };
+      const isUnlocked = isLessonUnlocked(pillarId, index);
+      const isCurrent = !lessonState.completed && isUnlocked;
+
+      const node = document.createElement('div');
+      node.className = 'lesson-node';
+      
+      if (!isUnlocked) {
+        node.classList.add('locked');
+        node.innerHTML = '🔒';
+      } else if (lessonState.completed) {
+        node.classList.add('completed');
+        node.style.borderColor = pillarInfo.color;
+        node.style.background = pillarInfo.color;
+        node.innerHTML = `${index + 1}<div class="stars">${'⭐'.repeat(lessonState.stars || 0)}</div>`;
+      } else if (isCurrent) {
+        node.classList.add('current');
+        node.innerHTML = index + 1;
+      } else {
+        node.innerHTML = index + 1;
+        node.style.borderColor = pillarInfo.color;
+      }
+
+      if (isUnlocked) {
+        node.onclick = () => {
+          window.location.href = `lesson.html?pillar=${pillarId}&lesson=${lesson.id}`;
+        };
+      }
+
+      const title = document.createElement('div');
+      title.className = 'lesson-title';
+      title.textContent = lesson.title;
+
+      wrapper.appendChild(node);
+      wrapper.appendChild(title);
+      container.appendChild(wrapper);
+    });
+  </script>
 </body>
 </html>

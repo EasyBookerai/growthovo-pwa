@@ -1,12 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, ActivityIndicator, Animated,
+  StyleSheet, ActivityIndicator, Animated, Modal,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../services/supabaseClient';
 import { colors, typography, spacing, radius } from '../../theme';
 import { useAppContext } from '../../context/AppContext';
 import CheckInModal from '../../components/CheckInModal';
+import GlassCard from '../../components/glass/GlassCard';
+import StreakDisplay from '../../components/gamification/StreakDisplay';
+import XPBar from '../../components/gamification/XPBar';
+import DailyGoalCard from '../../components/gamification/DailyGoalCard';
+import AchievementBadge from '../../components/gamification/AchievementBadge';
+import RelapseDetectionGate from '../../components/RelapseDetectionGate';
+import SOSBottomSheet from '../sos/SOSBottomSheet';
+import RexChatBottomSheet from '../chat/RexChatBottomSheet';
+import LessonPlayerScreen from '../lesson/LessonPlayerScreen';
+import WeeklyReportScreen from '../report/WeeklyReportScreen';
+import {
+  getTotalXP,
+  getNextLesson,
+  refillHearts,
+  getPillarXP,
+  xpForNextLevel,
+} from '../../services/progressService';
+import {
+  getDailyGoals,
+  getAllAchievements,
+  getUserAchievements,
+} from '../../services/gamificationService';
+import {
+  getActivePair,
+  getPartnerCheckinStatus,
+  subscribeToPartnerCheckin,
+  generateWeeklyComparison,
+} from '../../services/partnerService';
+import type {
+  Lesson,
+  LeagueMember,
+  WeeklySummaryRecord,
+  PartnerComparisonReport,
+  WeeklyRexReport,
+  DailyGoal,
+  AchievementDefinition,
+} from '../../types';
 
 interface Props {
   userId: string;

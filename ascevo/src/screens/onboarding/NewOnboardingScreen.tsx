@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, typography, spacing, radius } from '../../theme';
+import NotificationPermissionPrompt from '../../components/NotificationPermissionPrompt';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -46,6 +47,7 @@ export default function NewOnboardingScreen({ userId, onComplete }: Props) {
   const [timeCommitment, setTimeCommitment] = useState<string>('');
   const [userName, setUserName] = useState('');
   const [avatarColor, setAvatarColor] = useState(AVATAR_COLORS[0]);
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
   
   const flatListRef = useRef<FlatList>(null);
 
@@ -110,10 +112,16 @@ export default function NewOnboardingScreen({ userId, onComplete }: Props) {
         });
       }
 
-      onComplete();
+      // Show notification permission prompt after onboarding completes
+      setShowNotificationPrompt(true);
     } catch (error) {
       console.error('Error saving onboarding data:', error);
     }
+  };
+
+  const handleNotificationPromptDismiss = () => {
+    setShowNotificationPrompt(false);
+    onComplete();
   };
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -202,6 +210,12 @@ export default function NewOnboardingScreen({ userId, onComplete }: Props) {
           />
         ))}
       </View>
+
+      {/* Notification Permission Prompt */}
+      <NotificationPermissionPrompt
+        visible={showNotificationPrompt}
+        onDismiss={handleNotificationPromptDismiss}
+      />
     </View>
   );
 }

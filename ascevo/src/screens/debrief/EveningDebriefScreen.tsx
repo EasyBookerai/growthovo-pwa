@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import { 
   saveTomorrowReminder, 
   markEveningDebriefDone, 
-  getUserName 
+  getUserName,
+  recordDailyCheckIn,
 } from '../../services/growthovoExperienceService';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -32,7 +34,8 @@ const MAX_LINES = 3;
 // ─── Main screen ──────────────────────────────────────────────────────────────
 
 export default function EveningDebriefScreen({ onDismiss }: Props) {
-  const { updateXP, name: contextName } = useAppContext();
+  const { updateXP, name: contextName, updateStreak, streak, userId } = useAppContext();
+  const { showToast } = useToast();
   
   const [step, setStep] = useState<Step>('rating');
   const [rating, setRating] = useState<number>(0);
@@ -66,6 +69,18 @@ export default function EveningDebriefScreen({ onDismiss }: Props) {
       
       // Mark debrief as done today
       await markEveningDebriefDone();
+      
+      // Record daily check-in and update streak
+      const checkInResult = await recordDailyCheckIn(userId);
+      
+      // Requirement 4.7: Display "❄️ Streak Freeze used!" toast when freeze is consumed
+      if (checkInResult.freezeUsed) {
+        showToast('❄️ Streak Freeze used!', 'info');
+      }
+      
+      if (checkInResult.streak !== streak) {
+        updateStreak(checkInResult.streak);
+      }
       
       // Award 30 XP
       await updateXP(30);

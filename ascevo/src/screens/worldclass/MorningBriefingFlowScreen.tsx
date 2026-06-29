@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import {
   getUserName,
   getSelectedPillars,
@@ -21,6 +22,7 @@ import {
   addWeeklyXp,
   isBeforeNoon,
   saveDailyIntention,
+  recordDailyCheckIn,
 } from '../../services/growthovoExperienceService';
 
 const PILLAR_LABELS: Record<string, { emoji: string; lesson: string }> = {
@@ -37,7 +39,8 @@ interface Props {
 }
 
 export default function MorningBriefingFlowScreen({ onClose }: Props) {
-  const { streak, updateXP } = useAppContext();
+  const { streak, updateXP, updateStreak, updateFreezeCount, userId } = useAppContext();
+  const { showToast } = useToast();
   const [step, setStep] = useState(0);
   const [name, setName] = useState('Champion');
   const [pillars, setPillars] = useState<string[]>([]);
@@ -79,6 +82,26 @@ export default function MorningBriefingFlowScreen({ onClose }: Props) {
   });
 
   async function finish() {
+    // Record daily check-in and update streak
+    const checkInResult = await recordDailyCheckIn(userId);
+    
+    // Requirement 4.7: Display "❄️ Streak Freeze used!" toast when freeze is consumed
+    if (checkInResult.freezeUsed) {
+      showToast('❄️ Streak Freeze used!', 'info');
+    }
+    
+    // Requirement 4.4: Display toast when freeze is awarded
+    if (checkInResult.freezeAwarded) {
+      showToast('❄️ Streak Freeze earned! You now have ' + checkInResult.freezeCount + ' freeze' + (checkInResult.freezeCount > 1 ? 's' : ''), 'success');
+    }
+    
+    if (checkInResult.streak !== streak) {
+      updateStreak(checkInResult.streak);
+    }
+    
+    // Update freeze count in AppContext
+    updateFreezeCount(checkInResult.freezeCount);
+    
     await updateXP(20);
     await addWeeklyXp(20);
     await markMorningBriefingDone();

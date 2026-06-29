@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson - Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0A0A12;
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: rgba(10,10,18,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .quit-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .hearts {
+      font-size: 20px;
+      display: flex;
+      gap: 4px;
+    }
+    .heart.lost { opacity: 0.2; }
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #A78BFA, #C084FC);
+      transition: width 0.3s;
+    }
+    .xp-display {
+      position: fixed;
+      top: 16px;
+      right: 80px;
+      background: rgba(167,139,250,0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #A78BFA;
+      z-index: 100;
+    }
+    .exercise-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px 120px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .exercise-type {
+      font-size: 12px;
+      font-weight: 700;
+      color: #A78BFA;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+    .question {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.4;
+    }
+    .options {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-btn {
+      background: #1A1A2E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      font-size: 16px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .option-btn:hover { border-color: rgba(255,255,255,0.3); background: #222238; }
+    .option-btn.selected { border-color: #A78BFA; background: rgba(167,139,250,0.1); }
+    .option-btn.correct { border-color: #34D399; background: rgba(52,211,153,0.1); }
+    .option-btn.wrong { border-color: #F87171; background: rgba(248,113,113,0.1); animation: shake 0.5s; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+    .input-field {
+      width: 100%;
+      background: #1A1A2E;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      font-size: 16px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #A78BFA;
+    }
+    textarea.input-field {
+      min-height: 150px;
+      resize: vertical;
+    }
+    .check-btn {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #A78BFA;
+      color: white;
+      border: none;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .check-btn:disabled {
+      background: rgba(167,139,250,0.3);
+      cursor: not-allowed;
+    }
+    .check-btn:not(:disabled):hover {
+      background: #9F7AEA;
+    }
+    .feedback-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 20px;
+      z-index: 200;
+      transform: translateY(100%);
+      transition: transform 0.3s;
+    }
+    .feedback-banner.show { transform: translateY(0); }
+    .feedback-banner.correct { background: #34D399; }
+    .feedback-banner.wrong { background: #F87171; }
+    .feedback-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .feedback-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feedback-explanation {
+      font-size: 14px;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    .continue-btn {
+      background: rgba(0,0,0,0.2);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .complete-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .complete-screen.show { display: flex; }
+    .xp-big {
+      font-size: 48px;
+      font-weight: 700;
+      color: #A78BFA;
+      margin-bottom: 24px;
+      animation: bounceIn 0.5s;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .stars-display {
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+    .stars-display span {
+      display: inline-block;
+      animation: dropIn 0.5s backwards;
+    }
+    .stars-display span:nth-child(1) { animation-delay: 0.2s; }
+    .stars-display span:nth-child(2) { animation-delay: 0.35s; }
+    .stars-display span:nth-child(3) { animation-delay: 0.5s; }
+    @keyframes dropIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .stats-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+    }
+    .xp-float {
+      position: fixed;
+      color: #A78BFA;
+      font-weight: 700;
+      font-size: 20px;
+      pointer-events: none;
+      animation: floatUp 1s forwards;
+      z-index: 300;
+    }
+    @keyframes floatUp {
+      to { transform: translateY(-50px); opacity: 0; }
+    }
+    .fail-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .fail-screen.show { display: flex; }
+    .fail-emoji { font-size: 64px; margin-bottom: 16px; }
+    .fail-title { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+    .fail-message { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+    .fail-btn {
+      background: #A78BFA;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="lesson-screen">
+    <div class="header">
+      <button class="quit-btn" onclick="quitLesson()">✕</button>
+      <div class="hearts" id="hearts">
+        <span class="heart">❤️</span>
+        <span class="heart">❤️</span>
+        <span class="heart">❤️</span>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="xp-display" id="xp-display">0 XP</div>
+
+    <div class="exercise-container" id="exercise-container">
+      <!-- Dynamically loaded exercises -->
+    </div>
+
+    <button class="check-btn" id="check-btn" disabled>CHECK</button>
+
+    <div class="feedback-banner" id="feedback-banner">
+      <div class="feedback-content">
+        <div class="feedback-title" id="feedback-title"></div>
+        <div class="feedback-explanation" id="feedback-explanation"></div>
+        <button class="continue-btn" onclick="nextExercise()">CONTINUE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="complete-screen" id="complete-screen">
+    <div class="xp-big" id="xp-earned"></div>
+    <div class="stars-display" id="stars-earned"></div>
+    <div class="stats-row" id="stats-row"></div>
+    <button class="fail-btn" onclick="backToSkillTree()">CONTINUE</button>
+  </div>
+
+  <div class="fail-screen" id="fail-screen">
+    <div class="fail-emoji">💪</div>
+    <div class="fail-title">Don't give up!</div>
+    <div class="fail-message">Every attempt makes you stronger</div>
+    <button class="fail-btn" onclick="location.reload()">TRY AGAIN</button>
+    <button class="fail-btn" style="background: rgba(255,255,255,0.1);" onclick="backToSkillTree()">QUIT</button>
+  </div>
+
+  <script src="lessons.js"></script>
+  <script src="lesson-service.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const pillarId = urlParams.get('pillar');
+    const lessonId = urlParams.get('lesson');
+    
+    const lessons = allLessons[pillarId] || [];
+    const lesson = lessons.find(l => l.id === lessonId);
+    
+    let currentExerciseIndex = 0;
+    let hearts = 3;
+    let earnedXP = 0;
+    let mistakes = 0;
+    let currentAnswer = null;
+    let startTime = Date.now();
+
+    function quitLesson() {
+      if (confirm('Quit lesson? Progress will be lost.')) {
+        backToSkillTree();
+      }
+    }
+
+    function backToSkillTree() {
+      window.location.href = `skill-tree.html?pillar=${pillarId}`;
+    }
+
+    function updateProgress() {
+      const progress = ((currentExerciseIndex + 1) / lesson.exercises.length) * 100;
+      document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function updateHearts() {
+      const heartElements = document.querySelectorAll('.heart');
+      heartElements.forEach((h, i) => {
+        if (i >= hearts) h.classList.add('lost');
+      });
+    }
+
+    function showXPFloat(amount, x, y) {
+      const float = document.createElement('div');
+      float.className = 'xp-float';
+      float.textContent = `+${amount} XP`;
+      float.style.left = x + 'px';
+      float.style.top = y + 'px';
+      document.body.appendChild(float);
+      setTimeout(() => float.remove(), 1000);
+    }
+
+    function checkAnswer() {
+      const exercise = lesson.exercises[currentExerciseIndex];
+      const btn = document.getElementById('check-btn');
+      const banner = document.getElementById('feedback-banner');
+      const title = document.getElementById('feedback-title');
+      const explanation = document.getElementById('feedback-explanation');
+      
+      btn.style.display = 'none';
+
+      let isCorrect = false;
+
+      if (exercise.type === 'multiple-choice' || exercise.type === 'scenario') {
+        isCorrect = currentAnswer === exercise.correct;
+        const options = document.querySelectorAll('.option-btn');
+        options.forEach((opt, i) => {
+          if (i === exercise.correct) opt.classList.add('correct');
+          else if (i === currentAnswer && !isCorrect) opt.classList.add('wrong');
+        });
+      } else if (exercise.type === 'true-false') {
+        isCorrect = currentAnswer === exercise.correct;
+        const options = document.querySelectorAll('.option-btn');
+        options.forEach((opt, i) => {
+          const val = i === 0;
+          if (val === exercise.correct) opt.classList.add('correct');
+          else if (val === currentAnswer && !isCorrect) opt.classList.add('wrong');
+        });
+      } else if (exercise.type === 'fill-blank') {
+        const input = document.querySelector('.input-field').value.trim().toLowerCase();
+        isCorrect = exercise.correct.some(ans => ans.toLowerCase() === input);
+      } else if (exercise.type === 'reflection') {
+        const input = document.querySelector('.input-field').value.trim();
+        isCorrect = input.length >= exercise.minChars;
+      } else if (exercise.type === 'reorder') {
+        isCorrect = JSON.stringify(currentAnswer) === JSON.stringify(exercise.correctOrder);
+      }
+
+      if (isCorrect) {
+        banner.className = 'feedback-banner correct show';
+        title.textContent = 'Correct! 🎉';
+        const xp = 10;
+        earnedXP += xp;
+        document.getElementById('xp-display').textContent = earnedXP + ' XP';
+        const rect = btn.getBoundingClientRect();
+        showXPFloat(xp, rect.left + rect.width / 2, rect.top);
+      } else {
+        banner.className = 'feedback-banner wrong show';
+        title.textContent = 'Not quite';
+        mistakes++;
+        hearts--;
+        updateHearts();
+        if (hearts === 0) {
+          setTimeout(showFailScreen, 1500);
+          return;
+        }
+      }
+
+      explanation.textContent = exercise.explanation;
+    }
+
+    function nextExercise() {
+      document.getElementById('feedback-banner').classList.remove('show');
+      currentExerciseIndex++;
+      
+      if (currentExerciseIndex >= lesson.exercises.length) {
+        completeLesson();
+      } else {
+        loadExercise();
+      }
+    }
+
+    function completeLesson() {
+      const stars = mistakes === 0 ? 3 : mistakes === 1 ? 2 : 1;
+      const totalXP = earnedXP + 150; // Base XP
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+      const accuracy = Math.round(((lesson.exercises.length - mistakes) / lesson.exercises.length) * 100);
+
+      updateLessonState(pillarId, lessonId, { completed: true, stars, xpEarned: totalXP });
+      addXP(totalXP);
+      markActiveToday();
+
+      document.getElementById('lesson-screen').style.display = 'none';
+      document.getElementById('complete-screen').classList.add('show');
+      document.getElementById('xp-earned').textContent = '+' + totalXP + ' XP';
+      document.getElementById('stars-earned').innerHTML = '<span>⭐</span>'.repeat(stars);
+      document.getElementById('stats-row').innerHTML = `
+        <div>${Math.floor(elapsed / 60)}:${(elapsed % 60).toString().padStart(2, '0')}</div>
+        <div>${accuracy}% Accuracy</div>
+        <div>${totalXP} XP</div>
+      `;
+    }
+
+    function showFailScreen() {
+      document.getElementById('lesson-screen').style.display = 'none';
+      document.getElementById('fail-screen').classList.add('show');
+    }
+
+    function loadExercise() {
+      const exercise = lesson.exercises[currentExerciseIndex];
+      const container = document.getElementById('exercise-container');
+      const btn = document.getElementById('check-btn');
+      
+      currentAnswer = null;
+      btn.disabled = true;
+      btn.style.display = 'block';
+      btn.onclick = checkAnswer;
+      
+      container.innerHTML = '';
+      updateProgress();
+
+      const typeLabel = document.createElement('div');
+      typeLabel.className = 'exercise-type';
+      typeLabel.textContent = exercise.type.replace('-', ' ');
+      container.appendChild(typeLabel);
+
+      const question = document.createElement('div');
+      question.className = 'question';
+      question.textContent = exercise.question || exercise.statement || exercise.sentence;
+      container.appendChild(question);
+
+      if (exercise.type === 'multiple-choice' || exercise.type === 'scenario') {
+        const options = document.createElement('div');
+        options.className = 'options';
+        exercise.options.forEach((opt, i) => {
+          const optBtn = document.createElement('button');
+          optBtn.className = 'option-btn';
+          optBtn.textContent = opt;
+          optBtn.onclick = () => {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            optBtn.classList.add('selected');
+            currentAnswer = i;
+            btn.disabled = false;
+          };
+          options.appendChild(optBtn);
+        });
+        container.appendChild(options);
+      } else if (exercise.type === 'true-false') {
+        const options = document.createElement('div');
+        options.className = 'options';
+        ['True', 'False'].forEach((label, i) => {
+          const optBtn = document.createElement('button');
+          optBtn.className = 'option-btn';
+          optBtn.textContent = label;
+          optBtn.onclick = () => {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            optBtn.classList.add('selected');
+            currentAnswer = i === 0;
+            btn.disabled = false;
+          };
+          options.appendChild(optBtn);
+        });
+        container.appendChild(options);
+      } else if (exercise.type === 'fill-blank') {
+        const input = document.createElement('input');
+        input.className = 'input-field';
+        input.placeholder = 'Type your answer...';
+        input.oninput = () => {
+          btn.disabled = input.value.trim() === '';
+        };
+        container.appendChild(input);
+      } else if (exercise.type === 'reflection') {
+        question.textContent = exercise.prompt || exercise.question;
+        const textarea = document.createElement('textarea');
+        textarea.className = 'input-field';
+        textarea.placeholder = 'Share your thoughts...';
+        textarea.oninput = () => {
+          btn.disabled = textarea.value.trim().length < exercise.minChars;
+        };
+        container.appendChild(textarea);
+      } else if (exercise.type === 'reorder') {
+        const options = document.createElement('div');
+        options.className = 'options';
+        let userOrder = [];
+        const optButtons = [];
+        exercise.items.forEach((item, i) => {
+          const optBtn = document.createElement('button');
+          optBtn.className = 'option-btn';
+          optBtn.dataset.index = i;
+          optBtn.dataset.originalText = item;
+          optBtn.textContent = item;
+          optBtn.onclick = () => {
+            if (userOrder.includes(i)) {
+              userOrder = userOrder.filter(x => x !== i);
+              optBtn.classList.remove('selected');
+              optBtn.textContent = item;
+            } else {
+              userOrder.push(i);
+              optBtn.classList.add('selected');
+              optBtn.textContent = `${userOrder.length}. ${item}`;
+            }
+            currentAnswer = userOrder;
+            btn.disabled = userOrder.length !== exercise.items.length;
+          };
+          optButtons.push(optBtn);
+          options.appendChild(optBtn);
+        });
+        container.appendChild(options);
+      }
+    }
+
+    loadExercise();
+  </script>
+</body>
+</html>

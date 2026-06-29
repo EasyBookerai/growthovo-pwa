@@ -148,8 +148,7 @@
       "view_all": "Vedi tutto",
       "you": "Tu"
     }
-  }
-},
+  },
   "streak": {
     "days": "{{count}} giorni di fila",
     "at_risk": "Il tuo streak è a rischio!",

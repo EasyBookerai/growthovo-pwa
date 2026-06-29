@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { colors, typography, spacing, radius } from '../../theme';
 import { useAppContext } from '../../context/AppContext';
+import { useToast } from '../../context/ToastContext';
 import {
   getDailyQuote,
   getUserName,
@@ -20,6 +21,7 @@ import {
   markMorningBriefingDone,
   saveDailyIntention,
   isBeforeNoon,
+  recordDailyCheckIn,
   type YesterdayActivity,
 } from '../../services/growthovoExperienceService';
 import { getNextLesson } from '../../services/lessonService';
@@ -40,7 +42,8 @@ interface SuggestedLesson {
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function MorningBriefingScreen({ userId, onComplete }: Props) {
-  const { updateXP } = useAppContext();
+  const { updateXP, updateStreak, streak: appStreak } = useAppContext();
+  const { showToast } = useToast();
   
   // State
   const [currentPart, setCurrentPart] = useState(1);
@@ -148,6 +151,9 @@ export default function MorningBriefingScreen({ userId, onComplete }: Props) {
       
       // Mark briefing as done
       await markMorningBriefingDone();
+      
+      // Record daily check-in and update streak
+      const checkInResult = await recordDailyCheckIn();
       
       // Award 20 XP
       await updateXP(20);

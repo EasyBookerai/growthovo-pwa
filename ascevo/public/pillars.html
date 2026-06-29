@@ -18,18 +18,22 @@
     .header { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
     .pillars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .pillar-card {
-      background: rgba(255,255,255,0.05);
+      background: #1A1A2E;
       border: 1px solid rgba(255,255,255,0.1);
+      border-left: 4px solid;
       border-radius: 16px;
       padding: 20px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
     }
-    .pillar-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .pillar-card:hover { background: #222238; transform: translateY(-2px); }
     .pillar-emoji { font-size: 32px; margin-bottom: 8px; }
     .pillar-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .pillar-progress { font-size: 12px; color: #A78BFA; }
+    .pillar-level { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+    .xp-bar-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+    .xp-bar-fill { height: 100%; background: currentColor; transition: width 0.3s; }
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -91,31 +95,39 @@
   <script src="lesson-service.js"></script>
   <script>
     const pillars = [
-      { id: "mental-health", name: "Mental Health", emoji: "🧠" },
-      { id: "relationships", name: "Relationships", emoji: "💬" },
-      { id: "career", name: "Career", emoji: "💼" },
-      { id: "fitness", name: "Fitness", emoji: "💪" },
-      { id: "finance", name: "Finance", emoji: "💰" },
-      { id: "hobbies", name: "Hobbies", emoji: "🎨" }
+      { id: "mental-health", name: "Mental Health", emoji: "🧠", color: "#A78BFA" },
+      { id: "relationships", name: "Relationships", emoji: "💬", color: "#F472B6" },
+      { id: "career", name: "Career", emoji: "💼", color: "#60A5FA" },
+      { id: "fitness", name: "Fitness", emoji: "💪", color: "#34D399" },
+      { id: "finance", name: "Finance", emoji: "💰", color: "#FBBF24" },
+      { id: "hobbies", name: "Hobbies", emoji: "🎨", color: "#F87171" }
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
       const grid = document.getElementById('pillars-grid');
       const progress = getLessonProgress();
+      
       pillars.forEach(p => {
         const lessons = allLessons[p.id] || [];
         const completedCount = lessons.filter(l => progress[p.id]?.[l.id]?.completed).length;
         const level = Math.floor(completedCount / 3) + 1;
+        const xpInLevel = completedCount % 3;
+        const xpProgress = (xpInLevel / 3) * 100;
         
         const card = document.createElement('div');
         card.className = 'pillar-card';
+        card.style.borderLeftColor = p.color;
+        card.style.color = p.color;
         card.onclick = () => {
           window.location.href = `skill-tree.html?pillar=${p.id}`;
         };
         card.innerHTML = `
           <div class="pillar-emoji">${p.emoji}</div>
           <div class="pillar-name">${p.name}</div>
-          <div class="pillar-progress">${completedCount}/${lessons.length} · Level ${level}</div>
+          <div class="pillar-level">Level ${level}</div>
+          <div class="xp-bar-container">
+            <div class="xp-bar-fill" style="width: ${xpProgress}%; background: ${p.color};"></div>
+          </div>
         `;
         grid.appendChild(card);
       });

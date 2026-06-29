@@ -7,11 +7,14 @@ import {
   StyleSheet,
   Animated,
   SafeAreaView,
+  Modal,
 } from 'react-native';
 import { supabase } from '../../services/supabaseClient';
 import { colors, typography, spacing, radius } from '../../theme';
 import CheckInModal from '../../components/CheckInModal';
 import { useAppContext } from '../../context/AppContext';
+import EveningDebriefScreen from '../debrief/EveningDebriefScreen';
+import { isAfter6PM } from '../../services/growthovoExperienceService';
 
 /**
  * SimpleHomeScreen Props Interface
@@ -63,13 +66,27 @@ const PILLARS = [
  * ```
  */
 export default function SimpleHomeScreen({ userId, subscriptionStatus, navigation }: Props) {
-  // Use AppContext for global state (xp, streak, level)
-  const { xp, streak, level, updateXP, error, clearError } = useAppContext();
+  // Use AppContext for global state (xp, streak, level, freezeCount)
+  const { xp, streak, freezeCount, level, updateXP, error, clearError } = useAppContext();
   
   const [checkInVisible, setCheckInVisible] = useState(false);
+  const [eveningDebriefVisible, setEveningDebriefVisible] = useState(false);
+  const [showEveningDebrief, setShowEveningDebrief] = useState(false);
   const [xpAnimation] = useState(new Animated.Value(0));
   const [showXPGain, setShowXPGain] = useState(false);
   const [xpGainAmount, setXpGainAmount] = useState(0);
+
+  // Check if evening debrief should be shown (after 6 PM)
+  useEffect(() => {
+    setShowEveningDebrief(isAfter6PM());
+    
+    // Check every minute to update the button visibility
+    const interval = setInterval(() => {
+      setShowEveningDebrief(isAfter6PM());
+    }, 60000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   /**
    * Handle check-in completion
@@ -161,7 +178,12 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         <View style={styles.statsRow}>
           <View style={[styles.statCard, { borderLeftColor: '#F97316' }]}>
             <Text style={styles.statLabel}>Day Streak</Text>
-            <Text style={styles.statValue}>{streak}</Text>
+            <View style={styles.streakValueContainer}>
+              <Text style={styles.statValue}>{streak}</Text>
+              {freezeCount > 0 && (
+                <Text style={styles.freezeIndicator}>❄️</Text>
+              )}
+            </View>
             <Text style={styles.statIcon}>🔥</Text>
           </View>
           <View style={[styles.statCard, { borderLeftColor: '#F59E0B' }]}>
@@ -234,6 +256,16 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
             <Text style={styles.quickActionEmoji}>☀️</Text>
             <Text style={styles.quickActionLabel}>Morning Briefing</Text>
           </TouchableOpacity>
+          {showEveningDebrief && (
+            <TouchableOpacity 
+              style={styles.quickActionCard} 
+              activeOpacity={0.7}
+              onPress={() => setEveningDebriefVisible(true)}
+            >
+              <Text style={styles.quickActionEmoji}>🌙</Text>
+              <Text style={styles.quickActionLabel}>Evening Debrief</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity style={styles.quickActionCard} activeOpacity={0.7}>
             <Text style={styles.quickActionEmoji}>🆘</Text>
             <Text style={styles.quickActionLabel}>SOS</Text>
@@ -277,6 +309,15 @@ export default function SimpleHomeScreen({ userId, subscriptionStatus, navigatio
         onComplete={handleCheckInComplete}
         onClose={() => setCheckInVisible(false)}
       />
+
+      {/* Evening Debrief Modal */}
+      <Modal
+        visible={eveningDebriefVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+      >
+        <EveningDebriefScreen onDismiss={() => setEveningDebriefVisible(false)} />
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -335,6 +376,15 @@ const styles = StyleSheet.create({
     ...typography.h2,
     color: '#A78BFA',
     fontWeight: '700',
+  },
+  streakValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  freezeIndicator: {
+    fontSize: 16,
+    marginLeft: 4,
   },
   statIcon: {
     fontSize: 20,

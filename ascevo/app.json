@@ -38,7 +38,19 @@
       "startUrl": "/",
       "scope": "/",
       "lang": "en",
-      "dir": "ltr"
+      "dir": "ltr",
+      "build": {
+        "babel": {
+          "dangerouslyAddModulePathsToTranspile": ["@react-navigation"]
+        }
+      },
+      "config": {
+        "webpack": {
+          "alias": {
+            "react-native": "react-native-web"
+          }
+        }
+      }
     },
     "plugins": [
       [

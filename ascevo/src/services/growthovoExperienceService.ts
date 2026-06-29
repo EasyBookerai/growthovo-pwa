@@ -190,48 +190,88 @@ export async function setStreakCount(count: number): Promise<void> {
   await setItem(KEYS.streakCount, String(count));
 }
 
-export async function recordDailyCheckIn(): Promise<{ streak: number; freezeUsed: boolean; milestone: number | null }> {
+/**
+ * Records a daily check-in and updates the user's streak in Supabase.
+ * This function integrates with the database-backed streak system.
+ * 
+ * Requirements 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8:
+ * - Increments streak on daily check-in completion
+ * - Increments when current date equals lastCheckInDate + 1 day
+ * - Resets streak to 0 when current date > lastCheckInDate + 1 day
+ * - Award 1 Streak_Freeze on 7-day streak completion
+ * - Store maximum of 2 Streak_Freezes at once
+ * - Auto-consumes 1 freeze when day is missed and at least 1 freeze available
+ * - Displays "❄️ Streak Freeze used!" toast when freeze is consumed
+ * - Display ❄️ icon near streak count on Home screen when freezes available
+ * 
+ * The database RPC `increment_streak` handles:
+ * - Same-day check-ins (returns current streak, no increment)
+ * - Consecutive day check-ins (increments by 1)
+ * - Missed days (resets to 1 if no freeze handling)
+ * 
+ * @param userId - The authenticated user's ID
+ * @returns Promise with streak count, freeze usage status, freeze count, and milestone
+ */
+export async function recordDailyCheckIn(userId: string): Promise<{ streak: number; freezeUsed: boolean; freezeCount: number; freezeAwarded: boolean; milestone: number | null }> {
+  const { incrementStreak, checkMilestone, handleMissedDay, getStreak } = await import('./streakService');
+  const { supabase } = await import('./supabaseClient');
+  
   const today = todayKey();
-  const last = await getItem(KEYS.lastCheckInDate);
-  let streak = await getStreakCount();
+  const lastCheckIn = await getItem(KEYS.lastCheckInDate);
+  
+  // Calculate if we missed a day
   let freezeUsed = false;
-  let milestone: number | null = null;
-
-  if (last === today) {
-    return { streak, freezeUsed, milestone };
-  }
-
-  if (!last) {
-    streak = 1;
-  } else {
-    const lastDate = new Date(last);
+  
+  if (lastCheckIn) {
+    const lastDate = new Date(lastCheckIn);
     const todayDate = new Date(today);
-    const diffDays = Math.round((todayDate.getTime() - lastDate.getTime()) / 86400000);
-
-    if (diffDays === 1) {
-      streak += 1;
-    } else if (diffDays > 1) {
-      const freezes = await getStreakFreezes();
-      if (freezes > 0) {
-        await setStreakFreezes(freezes - 1);
+    const daysDiff = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // If we missed more than 1 day (daysDiff > 1), check for freeze
+    // Requirement 4.6: Auto-consume 1 freeze when day is missed and at least 1 freeze available
+    if (daysDiff > 1) {
+      const streakData = await getStreak(userId);
+      if (streakData.freeze_count > 0) {
+        // Consume freeze and preserve streak
+        // Update last_activity_date to yesterday so RPC increments normally
+        const yesterday = new Date(todayDate);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        
+        await supabase
+          .from('streaks')
+          .update({
+            freeze_count: streakData.freeze_count - 1,
+            last_activity_date: yesterdayStr,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId);
+        
         freezeUsed = true;
-      } else {
-        streak = 1;
       }
     }
   }
-
+  
+  // Call the database-backed incrementStreak function
+  // This handles the streak logic: increment on consecutive day, reset on missed days
+  // If we consumed a freeze above, last_activity_date is now yesterday, so this will increment normally
+  const result = await incrementStreak(userId);
+  
+  // Update local storage to keep UI in sync
   await setItem(KEYS.lastCheckInDate, today);
-  await setStreakCount(streak);
+  await setStreakCount(result.streak);
+  
+  // Check if this streak value is a milestone
+  const milestoneResult = checkMilestone(result.streak);
+  const milestone = milestoneResult.isMilestone ? milestoneResult.days : null;
 
-  if (streak > 0 && streak % 7 === 0) {
-    const freezes = await getStreakFreezes();
-    if (freezes < 2) await setStreakFreezes(freezes + 1);
-  }
-
-  if ([3, 7, 14, 30].includes(streak)) milestone = streak;
-
-  return { streak, freezeUsed, milestone };
+  return { 
+    streak: result.streak, 
+    freezeUsed, 
+    freezeCount: result.newFreezeCount,
+    freezeAwarded: result.freezeAwarded,
+    milestone 
+  };
 }
 
 export async function getYesterdayActivity(): Promise<YesterdayActivity> {

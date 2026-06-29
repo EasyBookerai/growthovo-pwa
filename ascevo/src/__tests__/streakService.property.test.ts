@@ -82,7 +82,7 @@ describe('Property Tests: Streak Logic', () => {
       fc.assert(
         fc.property(
           fc.integer({ min: 1, max: 365 }), // current streak
-          fc.integer({ min: 1, max: 5 }), // has freezes
+          fc.integer({ min: 1, max: 2 }), // has freezes (max 2)
           (currentStreak, freezeCount) => {
             // Apply missed day with freeze
             const result = applyMissedDay(currentStreak, freezeCount);
@@ -138,7 +138,7 @@ describe('Property Tests: Streak Logic', () => {
       fc.assert(
         fc.property(
           fc.integer({ min: 0, max: 365 }), // current streak
-          fc.integer({ min: 0, max: 5 }), // freeze count
+          fc.integer({ min: 0, max: 2 }), // freeze count (max 2)
           fc.boolean(), // missed day
           (currentStreak, freezeCount, missedDay) => {
             if (!missedDay) {
@@ -171,7 +171,7 @@ describe('Property Tests: Streak Logic', () => {
       fc.assert(
         fc.property(
           fc.integer({ min: 0, max: 365 }), // current streak
-          fc.integer({ min: 0, max: 5 }), // freeze count
+          fc.integer({ min: 0, max: 2 }), // freeze count (max 2)
           (currentStreak, freezeCount) => {
             // Test missed day
             const result = applyMissedDay(currentStreak, freezeCount);

@@ -287,61 +287,132 @@ export async function scheduleYearlyWrappedNotification(): Promise<void> {
 // ─── Schedule Morning Briefing Notification ───────────────────────────────────
 
 /**
- * Schedules a daily push notification for the morning briefing at the user's
- * configured time (default 07:30 local time).
- * Requirement 1.1: "Rex has your briefing. 60 seconds."
+ * Schedules a daily push notification for the morning briefing at 8:00 AM local time.
+ * Message: "☀️ Morning briefing is ready, [name]!"
+ * Requirements: 5.6
  */
 export async function scheduleMorningBriefingNotification(
   userId: string,
-  hour = 7,
-  minute = 30
+  hour = 8,
+  minute = 0
 ): Promise<void> {
-  await scheduleDaily(
-    hour,
-    minute,
-    'Rex',
-    'Rex has your briefing. 60 seconds.'
-  );
+  try {
+    // Fetch user's name for personalized notification
+    const { data: user } = await supabase
+      .from('users')
+      .select('username')
+      .eq('id', userId)
+      .single();
 
-  await supabase.from('notifications').upsert(
-    {
-      user_id: userId,
-      type: 'morning_briefing',
-      scheduled_time: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
-      enabled: true,
-    },
-    { onConflict: 'user_id,type' }
-  );
+    const userName = user?.username || 'there';
+
+    await scheduleDaily(
+      hour,
+      minute,
+      'Growthovo',
+      `☀️ Morning briefing is ready, ${userName}!`
+    );
+
+    await supabase.from('notifications').upsert(
+      {
+        user_id: userId,
+        type: 'morning_briefing',
+        scheduled_time: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
+        enabled: true,
+      },
+      { onConflict: 'user_id,type' }
+    );
+  } catch (err) {
+    console.warn('Failed to schedule morning briefing notification:', err);
+  }
 }
 
 // ─── Schedule Evening Debrief Notification ────────────────────────────────────
 
 /**
- * Schedules a daily push notification for the evening debrief at the user's
- * configured time (default 21:00 local time).
- * Requirement 16.1: "Rex is waiting. 2 minutes."
+ * Schedules a daily push notification for the evening debrief at 8:00 PM local time.
+ * Message: "🌙 Time for your evening debrief"
+ * Requirements: 5.7
  */
 export async function scheduleEveningDebriefNotification(
   userId: string,
-  hour = 21,
+  hour = 20,
   minute = 0
 ): Promise<void> {
-  await scheduleDaily(
-    hour,
-    minute,
-    'Rex',
-    'Rex is waiting. 2 minutes.'
-  );
+  try {
+    await scheduleDaily(
+      hour,
+      minute,
+      'Growthovo',
+      '🌙 Time for your evening debrief'
+    );
 
-  await supabase.from('notifications').upsert(
-    {
-      user_id: userId,
-      type: 'evening_debrief',
-      scheduled_time: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
-      enabled: true,
-    },
-    { onConflict: 'user_id,type' }
-  );
+    await supabase.from('notifications').upsert(
+      {
+        user_id: userId,
+        type: 'evening_debrief',
+        scheduled_time: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
+        enabled: true,
+      },
+      { onConflict: 'user_id,type' }
+    );
+  } catch (err) {
+    console.warn('Failed to schedule evening debrief notification:', err);
+  }
+}
+
+// ─── Schedule Streak Warning Notification ─────────────────────────────────────
+
+/**
+ * Schedules a daily check at 11:00 PM to send a streak warning notification
+ * if the user hasn't checked in today.
+ * Message: "🔥 [name], your X-day streak ends in 1 hour!"
+ * Requirements: 5.8
+ * 
+ * Note: This schedules a daily trigger. The actual check for whether the user
+ * has checked in must be done at the application level when the notification fires.
+ */
+export async function scheduleStreakWarningNotification(
+  userId: string,
+  hour = 23,
+  minute = 0
+): Promise<void> {
+  try {
+    // Fetch user's name and current streak for personalized notification
+    const { data: user } = await supabase
+      .from('users')
+      .select('username')
+      .eq('id', userId)
+      .single();
+
+    const { data: streakData } = await supabase
+      .from('streaks')
+      .select('current_streak')
+      .eq('user_id', userId)
+      .single();
+
+    const userName = user?.username || 'there';
+    const streakCount = streakData?.current_streak || 0;
+
+    await scheduleDaily(
+      hour,
+      minute,
+      'Growthovo',
+      `🔥 ${userName}, your ${streakCount}-day streak ends in 1 hour!`
+    );
+
+    await supabase.from('notifications').upsert(
+      {
+        user_id: userId,
+        type: 'streak_warning',
+        scheduled_time: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
+        enabled: true,
+      },
+      { onConflict: 'user_id,type' }
+    );
+  } catch (err) {
+    console.warn('Failed to schedule streak warning notification:', err);
+  }
 }
 
 // ─── Partner Notification Helpers ─────────────────────────────────────────────
@@ -511,6 +582,43 @@ export async function scheduleWeeklyReportNotification(userId: string): Promise<
     );
   } catch (err) {
     console.warn('Failed to schedule weekly report notification:', err);
+  }
+}
+
+// ─── Schedule League Reset Notification ──────────────────────────────────────
+
+/**
+ * Schedules a weekly push notification every Sunday at 20:00 local time.
+ * Message: "🏆 League resets tomorrow — make your final push!"
+ * Requirements: 5.9
+ */
+export async function scheduleLeagueResetNotification(userId: string): Promise<void> {
+  try {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Growthovo',
+        body: '🏆 League resets tomorrow — make your final push!',
+        sound: true,
+      },
+      trigger: {
+        weekday: 1, // Sunday (Expo uses 1=Sunday, 2=Monday, ..., 7=Saturday)
+        hour: 20,
+        minute: 0,
+        repeats: true,
+      } as any,
+    });
+
+    await supabase.from('notifications').upsert(
+      {
+        user_id: userId,
+        type: 'league_reset',
+        scheduled_time: '20:00',
+        enabled: true,
+      },
+      { onConflict: 'user_id,type' }
+    );
+  } catch (err) {
+    console.warn('Failed to schedule league reset notification:', err);
   }
 }
 

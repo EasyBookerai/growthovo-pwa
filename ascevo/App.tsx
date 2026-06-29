@@ -206,7 +206,14 @@ export default function App() {
   async function handleOnboardingComplete() {
     if (!session?.user) return;
     await loadProfile(session.user.id);
+    // Show notification prompt immediately after onboarding completion
     setShowNotifPrompt(true);
+  }
+
+  async function handleNotificationPromptDismiss() {
+    setShowNotifPrompt(false);
+    // Schedule notifications regardless of permission grant/deny
+    if (!session?.user) return;
     await scheduleDefaultNotifications(session.user.id).catch(() => {});
     await scheduleMorningBriefingNotification(session.user.id).catch(() => {});
     await scheduleEveningDebriefNotification(session.user.id).catch(() => {});
@@ -241,25 +248,35 @@ export default function App() {
                 {() => <SignUpScreen onNavigateToSignIn={() => setAuthScreen('signin')} />}
               </Stack.Screen>
             )
-          ) : !userProfile?.onboarding_complete ? (
-            <Stack.Screen name="Onboarding">
-              {() => (
-                <NewOnboardingScreen
-                  userId={userId}
-                  onComplete={handleOnboardingComplete}
-                />
-              )}
-            </Stack.Screen>
+          ) : !userProfile?.onboarding_complete || showNotifPrompt ? (
+            // Show onboarding or notification prompt as transition
+            showNotifPrompt && userProfile?.onboarding_complete ? (
+              <Stack.Screen name="NotificationPrompt">
+                {() => (
+                  <View style={styles.root}>
+                    <NotificationPermissionPrompt
+                      visible={true}
+                      onDismiss={handleNotificationPromptDismiss}
+                    />
+                  </View>
+                )}
+              </Stack.Screen>
+            ) : (
+              <Stack.Screen name="Onboarding">
+                {() => (
+                  <NewOnboardingScreen
+                    userId={userId}
+                    onComplete={handleOnboardingComplete}
+                  />
+                )}
+              </Stack.Screen>
+            )
           ) : (
             <>
               <Stack.Screen name="Main">
                 {() => (
                   <ToastProvider>
                     <AppProvider userId={userId}>
-                      <NotificationPermissionPrompt
-                        visible={showNotifPrompt}
-                        onDismiss={() => setShowNotifPrompt(false)}
-                      />
                       <MainTabs
                         userId={userId}
                         subscriptionStatus={subscriptionStatus}

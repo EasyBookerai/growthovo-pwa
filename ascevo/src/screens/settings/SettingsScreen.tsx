@@ -10,6 +10,10 @@ import { getPortalLink } from '../../services/subscriptionService';
 import {
   scheduleDefaultNotifications,
   cancelAllNotifications,
+  scheduleMorningBriefingNotification,
+  scheduleEveningDebriefNotification,
+  scheduleStreakWarningNotification,
+  scheduleLeagueResetNotification,
 } from '../../services/notificationService';
 import { exportUserData, shareExportedData, deleteExportedFile } from '../../services/dataExportService';
 import { 
@@ -46,6 +50,10 @@ export default function SettingsScreen({ userId, onSignOut, onNavigateToLegalDoc
   const [notifMorning, setNotifMorning] = useState(true);
   const [notifAfternoon, setNotifAfternoon] = useState(true);
   const [notifEvening, setNotifEvening] = useState(true);
+  const [notifMorningBriefing, setNotifMorningBriefing] = useState(true);
+  const [notifEveningDebrief, setNotifEveningDebrief] = useState(true);
+  const [notifStreakWarning, setNotifStreakWarning] = useState(true);
+  const [notifLeagueReset, setNotifLeagueReset] = useState(true);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
@@ -83,6 +91,10 @@ export default function SettingsScreen({ userId, onSignOut, onNavigateToLegalDoc
     setNotifMorning(notifs.find((n: any) => n.type === 'morning')?.enabled ?? true);
     setNotifAfternoon(notifs.find((n: any) => n.type === 'afternoon')?.enabled ?? true);
     setNotifEvening(notifs.find((n: any) => n.type === 'evening')?.enabled ?? true);
+    setNotifMorningBriefing(notifs.find((n: any) => n.type === 'morning_briefing')?.enabled ?? true);
+    setNotifEveningDebrief(notifs.find((n: any) => n.type === 'evening_debrief')?.enabled ?? true);
+    setNotifStreakWarning(notifs.find((n: any) => n.type === 'streak_warning')?.enabled ?? true);
+    setNotifLeagueReset(notifs.find((n: any) => n.type === 'league_reset')?.enabled ?? true);
 
     if (privacyPrefs) {
       setAnalyticsEnabled(privacyPrefs.analytics_enabled);
@@ -95,15 +107,35 @@ export default function SettingsScreen({ userId, onSignOut, onNavigateToLegalDoc
     setLoading(false);
   }
 
-  async function handleNotifToggle(type: 'morning' | 'afternoon' | 'evening', value: boolean) {
+  async function handleNotifToggle(
+    type: 'morning' | 'afternoon' | 'evening' | 'morning_briefing' | 'evening_debrief' | 'streak_warning' | 'league_reset',
+    value: boolean
+  ) {
     if (type === 'morning') setNotifMorning(value);
     if (type === 'afternoon') setNotifAfternoon(value);
     if (type === 'evening') setNotifEvening(value);
+    if (type === 'morning_briefing') setNotifMorningBriefing(value);
+    if (type === 'evening_debrief') setNotifEveningDebrief(value);
+    if (type === 'streak_warning') setNotifStreakWarning(value);
+    if (type === 'league_reset') setNotifLeagueReset(value);
 
     await supabase.from('notifications')
       .update({ enabled: value })
       .eq('user_id', userId)
       .eq('type', type);
+
+    // Schedule or cancel the specific notification type
+    if (value) {
+      if (type === 'morning_briefing') {
+        await scheduleMorningBriefingNotification(userId);
+      } else if (type === 'evening_debrief') {
+        await scheduleEveningDebriefNotification(userId);
+      } else if (type === 'streak_warning') {
+        await scheduleStreakWarningNotification(userId);
+      } else if (type === 'league_reset') {
+        await scheduleLeagueResetNotification(userId);
+      }
+    }
 
     const morning = type === 'morning' ? value : notifMorning;
     const afternoon = type === 'afternoon' ? value : notifAfternoon;
@@ -301,6 +333,42 @@ export default function SettingsScreen({ userId, onSignOut, onNavigateToLegalDoc
         {/* Notifications */}
         <View style={[styles.section, { backgroundColor: themeColors.surface }]}>
           <Text style={[styles.sectionTitle, { color: themeColors.text }]}>{t('settings.notifications')}</Text>
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: themeColors.text }]}>Morning Briefing (8:00 AM)</Text>
+            <Switch
+              value={notifMorningBriefing}
+              onValueChange={(v) => handleNotifToggle('morning_briefing', v)}
+              trackColor={{ true: themeColors.primary }}
+              accessibilityLabel="Morning Briefing"
+            />
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: themeColors.text }]}>Evening Debrief (8:00 PM)</Text>
+            <Switch
+              value={notifEveningDebrief}
+              onValueChange={(v) => handleNotifToggle('evening_debrief', v)}
+              trackColor={{ true: themeColors.primary }}
+              accessibilityLabel="Evening Debrief"
+            />
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: themeColors.text }]}>Streak Warning (11:00 PM)</Text>
+            <Switch
+              value={notifStreakWarning}
+              onValueChange={(v) => handleNotifToggle('streak_warning', v)}
+              trackColor={{ true: themeColors.primary }}
+              accessibilityLabel="Streak Warning"
+            />
+          </View>
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: themeColors.text }]}>League Reset (Sunday 8:00 PM)</Text>
+            <Switch
+              value={notifLeagueReset}
+              onValueChange={(v) => handleNotifToggle('league_reset', v)}
+              trackColor={{ true: themeColors.primary }}
+              accessibilityLabel="League Reset"
+            />
+          </View>
           <View style={styles.row}>
             <Text style={[styles.rowLabel, { color: themeColors.text }]}>{t('settings.morning')}</Text>
             <Switch

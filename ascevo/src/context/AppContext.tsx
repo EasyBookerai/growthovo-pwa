@@ -21,8 +21,10 @@ import type { RexContext } from '../lib/rex';
  * @property {function} clearError - Clears the current error state
  */
 interface AppContextState {
+  userId: string;
   xp: number;
   streak: number;
+  freezeCount: number; // Number of streak freezes available (max 2)
   level: number;
   name: string;
   subscriptionStatus: string;
@@ -37,6 +39,7 @@ interface AppContextState {
   error: string | null;
   updateXP: (amount: number) => Promise<void>;
   updateStreak: (newStreak: number) => Promise<void>;
+  updateFreezeCount: (newFreezeCount: number) => Promise<void>;
   updateRexState: (updates: Partial<Pick<AppContextState, 'name' | 'subscriptionStatus' | 'isPremium' | 'moodEmoji' | 'moodLabel' | 'completedLessons' | 'selectedPillars' | 'lastCheckIn'>>) => void;
   refreshUserData: () => Promise<void>;
   clearError: () => void;
@@ -84,6 +87,7 @@ const AppContext = createContext<AppContextState | undefined>(undefined);
 export function AppProvider({ userId, children }: AppProviderProps) {
   const [xp, setXp] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
+  const [freezeCount, setFreezeCount] = useState<number>(0);
   const [level, setLevel] = useState<number>(1);
   const [name, setName] = useState<string>('Champion');
   const [subscriptionStatus, setSubscriptionStatus] = useState<string>('free');
@@ -137,6 +141,7 @@ export function AppProvider({ userId, children }: AppProviderProps) {
 
       const [
         userResult,
+        streakResult,
         storedName,
         storedPillars,
         yesterdayActivity,
@@ -147,6 +152,11 @@ export function AppProvider({ userId, children }: AppProviderProps) {
           .select('total_xp, current_streak, username, name, subscription_status, primary_pillar, secondary_pillar')
           .eq('id', userId)
           .single(),
+        supabase
+          .from('streaks')
+          .select('freeze_count')
+          .eq('user_id', userId)
+          .single(),
         getUserName(),
         getSelectedPillars(),
         getYesterdayActivity(),
@@ -154,6 +164,7 @@ export function AppProvider({ userId, children }: AppProviderProps) {
       ]);
 
       const { data, error: fetchError } = userResult;
+      const { data: streakData, error: streakError } = streakResult;
 
       if (fetchError) {
         const errorMessage = 'Unable to load your progress. Please check your connection.';
@@ -165,6 +176,7 @@ export function AppProvider({ userId, children }: AppProviderProps) {
       if (data) {
         setXp(data.total_xp || 0);
         setStreak(data.current_streak || 0);
+        setFreezeCount((streakData as any)?.freeze_count || 0);
         const resolvedName = data.name || data.username || storedName || 'Champion';
         const resolvedSubscription = data.subscription_status || 'free';
         const resolvedPillars = storedPillars.length > 0
@@ -342,6 +354,79 @@ export function AppProvider({ userId, children }: AppProviderProps) {
   };
 
   /**
+   * Update freeze count to a new value
+   * 
+   * Updates local state immediately (optimistic update) and syncs with Supabase.
+   * Implements retry logic for failed updates.
+   * 
+   * @async
+   * @param {number} newFreezeCount - New freeze count value (must be non-negative, max 2)
+   * @returns {Promise<void>} Resolves when freeze count is updated and synced
+   * 
+   * @throws Will throw on unexpected errors after reverting optimistic update
+   * 
+   * @example
+   * ```tsx
+   * const { updateFreezeCount } = useAppContext();
+   * await updateFreezeCount(1); // Set freeze count to 1
+   * await updateFreezeCount(0); // No freezes available
+   * ```
+   * 
+   * Behavior:
+   * - Updates local state immediately for responsive UI
+   * - Syncs with Supabase in background
+   * - Queues retry if sync fails (network error)
+   * - Reverts local state only on unexpected errors
+   */
+  const updateFreezeCount = async (newFreezeCount: number): Promise<void> => {
+    const previousFreezeCount = freezeCount;
+    
+    try {
+      setError(null);
+      
+      // Update local state immediately for responsive UI
+      setFreezeCount(newFreezeCount);
+
+      // Sync with Supabase
+      const { error: updateError } = await supabase
+        .from('streaks')
+        .update({ freeze_count: newFreezeCount })
+        .eq('user_id', userId);
+
+      if (updateError) {
+        const errorMessage = 'Failed to save your freeze count. Your progress is saved locally and will sync when connection is restored.';
+        console.error('[AppContext] Failed to update freeze count in Supabase:', updateError);
+        setError(errorMessage);
+        
+        // Queue for retry
+        const retryFn = async () => {
+          const { error: retryError } = await supabase
+            .from('streaks')
+            .update({ freeze_count: newFreezeCount })
+            .eq('user_id', userId);
+          
+          if (!retryError) {
+            console.log('[AppContext] Freeze count update retry successful');
+            setError(null);
+          }
+        };
+        setRetryQueue(prev => [...prev, retryFn]);
+        
+        // Don't revert - keep optimistic update
+        return;
+      }
+    } catch (error) {
+      const errorMessage = 'Unable to update freeze count. Please check your connection.';
+      console.error('[AppContext] Error updating freeze count:', error);
+      setError(errorMessage);
+      
+      // Revert local state on unexpected error
+      setFreezeCount(previousFreezeCount);
+      throw error;
+    }
+  };
+
+  /**
    * Clear error state
    * 
    * Resets the error state to null, dismissing any error messages.
@@ -462,8 +547,10 @@ export function AppProvider({ userId, children }: AppProviderProps) {
   ]);
 
   const value: AppContextState = {
+    userId,
     xp,
     streak,
+    freezeCount,
     level,
     name,
     subscriptionStatus,
@@ -478,6 +565,7 @@ export function AppProvider({ userId, children }: AppProviderProps) {
     error,
     updateXP,
     updateStreak,
+    updateFreezeCount,
     updateRexState,
     refreshUserData,
     clearError,
