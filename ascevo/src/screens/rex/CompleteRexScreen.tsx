@@ -18,6 +18,12 @@ import { colors, typography, spacing } from '../../theme';
 import { buildChatStarters, DEFAULT_REX_FALLBACK, streamRex } from '../../lib/rex';
 import { useAppContext } from '../../context/AppContext';
 import PaywallModal from '../../components/PaywallModal';
+import { 
+  getRexMessagesRemaining, 
+  incrementRexMessages,
+  isPremiumUser 
+} from '../../services/growthovoExperienceService';
+import { triggerHaptic } from '../../services/webThemeService';
 
 interface Props {
   userId: string;
@@ -114,6 +120,8 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [messagesRemaining, setMessagesRemaining] = useState(10);
+  const [isPremium, setIsPremium] = useState(false);
   const flatListRef = useRef<FlatList<Message>>(null);
 
   const suggestionChips = useMemo(
@@ -124,6 +132,22 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
     }),
     [completedLessons, moodLabel, rexContext.streak]
   );
+
+  useEffect(() => {
+    loadPersistedState();
+    checkPremiumStatus();
+  }, [rexContext.name]);
+
+  async function checkPremiumStatus() {
+    const premium = await isPremiumUser();
+    setIsPremium(premium);
+    if (!premium) {
+      const remaining = await getRexMessagesRemaining();
+      setMessagesRemaining(remaining);
+    } else {
+      setMessagesRemaining(999);
+    }
+  }
 
   useEffect(() => {
     loadPersistedState();
@@ -169,6 +193,15 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
       return;
     }
 
+    // Check paywall limit
+    if (!isPremium && messagesRemaining <= 0) {
+      triggerHaptic('error');
+      setShowUpgradeModal(true);
+      return;
+    }
+
+    triggerHaptic('light');
+
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       role: 'user',
@@ -188,6 +221,12 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
     setMessages(nextMessages);
     setInputText('');
     setIsTyping(true);
+
+    // Increment counter for free users
+    if (!isPremium) {
+      const remaining = await incrementRexMessages();
+      setMessagesRemaining(remaining);
+    }
 
     const streamedReply = await streamRex({
       feature: 'chat',
@@ -273,6 +312,13 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
         },
       ]
     );
+  }
+
+  function getCounterColor(): string {
+    if (isPremium) return colors.success;
+    if (messagesRemaining >= 8) return '#16A34A'; // green
+    if (messagesRemaining >= 5) return '#F59E0B'; // amber
+    return '#EF4444'; // red
   }
 
   function renderMessage({ item }: { item: Message }) {
@@ -378,26 +424,45 @@ export default function CompleteRexScreen({ userId, navigation }: Props) {
           ))}
         </ScrollView>
 
-        <View style={styles.inputRow}>
-          <TextInput
-            style={styles.input}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder="Message Rex..."
-            placeholderTextColor="rgba(255,255,255,0.3)"
-            multiline
-            maxLength={500}
-          />
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              !inputText.trim() && styles.sendButtonDisabled,
-            ]}
-            onPress={() => handleSend()}
-            disabled={!inputText.trim()}
-          >
-            <Text style={styles.sendButtonText}>↑</Text>
-          </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          {!isPremium && (
+            <View style={styles.counterRow}>
+              <Text style={[styles.counterText, { color: getCounterColor() }]}>
+                {messagesRemaining === 0
+                  ? '⚠️ Daily limit reached'
+                  : `${messagesRemaining}/10 free messages today`}
+              </Text>
+              {messagesRemaining === 0 && (
+                <TouchableOpacity 
+                  style={styles.upgradeLink} 
+                  onPress={() => setShowUpgradeModal(true)}
+                >
+                  <Text style={styles.upgradeLinkText}>Upgrade for unlimited →</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          <View style={styles.inputRow}>
+            <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Message Rex..."
+              placeholderTextColor="rgba(255,255,255,0.3)"
+              multiline
+              maxLength={500}
+            />
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                !inputText.trim() && styles.sendButtonDisabled,
+              ]}
+              onPress={() => handleSend()}
+              disabled={!inputText.trim()}
+            >
+              <Text style={styles.sendButtonText}>↑</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
 
@@ -514,12 +579,31 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.08)',
   },
   quickReplyText: { ...typography.body, color: colors.text },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+  inputContainer: {
     padding: spacing.md,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255,255,255,0.08)',
+  },
+  counterRow: {
+    marginBottom: spacing.sm,
+  },
+  counterText: {
+    ...typography.small,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: spacing.xs,
+  },
+  upgradeLink: {
+    alignSelf: 'center',
+  },
+  upgradeLinkText: {
+    ...typography.small,
+    color: colors.primary,
+    textDecorationLine: 'underline',
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: spacing.sm,
   },
   input: {

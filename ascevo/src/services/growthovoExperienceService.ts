@@ -341,6 +341,19 @@ export async function incrementRexMessages(): Promise<number> {
   return Math.max(0, 10 - used);
 }
 
+export async function getSpeakingSessionsRemaining(): Promise<number> {
+  if (await isPremiumUser()) return 999;
+  const used = parseInt((await getItem(KEYS.speakingSessionsUsed)) ?? '0', 10);
+  return Math.max(0, 2 - used);
+}
+
+export async function incrementSpeakingSessionCount(): Promise<number> {
+  if (await isPremiumUser()) return 999;
+  const used = parseInt((await getItem(KEYS.speakingSessionsUsed)) ?? '0', 10) + 1;
+  await setItem(KEYS.speakingSessionsUsed, String(used));
+  return Math.max(0, 2 - used);
+}
+
 export function timeCommitmentToMinutes(commitment: string): number {
   if (commitment.startsWith('5')) return 5;
   if (commitment.startsWith('10')) return 10;

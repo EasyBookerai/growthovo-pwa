@@ -18,6 +18,15 @@ import Animated, {
 import { colors, typography, spacing, radius } from '../../theme';
 import { submitSession } from '../../services/speakingService';
 import { SPEAKING_LEVEL_CONFIG, SpeakingLevel, SpeechAnalysisResult } from '../../types';
+import { 
+  isPremiumUser 
+} from '../../services/growthovoExperienceService';
+import { 
+  getSpeakingSessionsRemaining, 
+  incrementSpeakingSessionCount 
+} from '../../services/paywallService';
+import PaywallModal from '../../components/PaywallModal';
+import { triggerHaptic } from '../../services/webThemeService';
 
 // expo-av Audio — install with: npx expo install expo-av
 let Audio: any = null;
@@ -84,6 +93,9 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
   const [screenState, setScreenState] = useState<ScreenState>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
+  const [sessionsRemaining, setSessionsRemaining] = useState(2);
+  const [isPremium, setIsPremium] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   const recordingRef = useRef<any>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -97,6 +109,21 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
       }
     };
   }, []);
+
+  useEffect(() => {
+    checkSessionLimit();
+  }, []);
+
+  async function checkSessionLimit() {
+    const premium = await isPremiumUser();
+    setIsPremium(premium);
+    if (!premium) {
+      const remaining = await getSpeakingSessionsRemaining();
+      setSessionsRemaining(remaining);
+    } else {
+      setSessionsRemaining(999);
+    }
+  }
 
   useEffect(() => {
     if (elapsed >= maxSeconds && screenState === 'recording') {
@@ -122,6 +149,13 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
   const handleRecord = useCallback(async () => {
     setErrorMsg('');
 
+    // Check paywall limit
+    if (!isPremium && sessionsRemaining <= 0) {
+      triggerHaptic('error');
+      setShowPaywall(true);
+      return;
+    }
+
     if (!Audio) {
       setScreenState('error');
       setErrorMsg('Audio recording unavailable. Please install expo-av.');
@@ -144,6 +178,13 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
 
+      // Increment counter for free users
+      if (!isPremium) {
+        const remaining = await incrementSpeakingSessionCount();
+        setSessionsRemaining(remaining);
+      }
+
+      triggerHaptic('medium');
       recordingRef.current = recording;
       setElapsed(0);
       setScreenState('recording');
@@ -152,7 +193,7 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
       setErrorMsg('Could not start recording. Please try again.');
       setScreenState('error');
     }
-  }, []);
+  }, [isPremium, sessionsRemaining]);
 
   const handleStop = useCallback(async () => {
     if (screenState !== 'recording') return;
@@ -200,6 +241,13 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function getCounterColor(): string {
+    if (isPremium) return colors.success;
+    if (sessionsRemaining >= 2) return '#16A34A'; // green
+    if (sessionsRemaining === 1) return '#F59E0B'; // amber
+    return '#EF4444'; // red
   }
 
   if (screenState === 'permission_denied') {
@@ -269,6 +317,16 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
         </View>
       </View>
 
+      {!isPremium && !isRecording && (
+        <View style={styles.counterBanner}>
+          <Text style={[styles.counterText, { color: getCounterColor() }]}>
+            {sessionsRemaining === 0
+              ? '⚠️ Daily limit reached'
+              : `${sessionsRemaining}/2 free sessions today`}
+          </Text>
+        </View>
+      )}
+
       <View style={styles.topicCard}>
         <Text style={styles.topicLabel}>YOUR TOPIC</Text>
         <Text style={styles.topicText}>{topic}</Text>
@@ -323,6 +381,15 @@ export default function RecordingScreen({ navigation, route }: RecordingScreenPr
           </TouchableOpacity>
         )}
       </View>
+
+      <PaywallModal
+        visible={showPaywall}
+        onClose={() => setShowPaywall(false)}
+        onStartTrial={() => {
+          setShowPaywall(false);
+          navigation.navigate?.('Paywall');
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -355,6 +422,18 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   levelBadgeText: { ...typography.smallBold, color: '#fff' },
+  counterBanner: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingVertical: spacing.sm,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.sm,
+    alignItems: 'center',
+  },
+  counterText: {
+    ...typography.small,
+    fontWeight: '600',
+  },
   topicCard: {
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,

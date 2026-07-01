@@ -42,6 +42,65 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   
   <style>
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * GROWTHOVO CSS VARIABLES — DARK MODE (DEFAULT)
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    :root {
+      /* Backgrounds */
+      --bg-primary: #0A0A12;
+      --bg-card: #1A1A2E;
+      --bg-card-hover: #1F1F3A;
+      
+      /* Text */
+      --text-primary: #FFFFFF;
+      --text-secondary: #CCCCCC;
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --text-hint: rgba(255, 255, 255, 0.25);
+      
+      /* Borders */
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      
+      /* Brand Colors */
+      --purple: #7C3AED;
+      --purple-light: #A78BFA;
+      --teal: #34D399;
+      
+      /* UI Elements */
+      --bottom-nav: #0F0F1A;
+      
+      /* Smooth theme transitions */
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     * LIGHT MODE OVERRIDES
+     * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    html.light {
+      /* Backgrounds */
+      --bg-primary: #F5F5FA;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F0F0F8;
+      
+      /* Text */
+      --text-primary: #1A1A2E;
+      --text-secondary: #525252;
+      --text-muted: rgba(26, 26, 46, 0.55);
+      --text-hint: rgba(26, 26, 46, 0.3);
+      
+      /* Borders */
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.15);
+      
+      /* Brand Colors (adjusted for light mode readability) */
+      --purple: #7C3AED;
+      --purple-light: #6D28D9;
+      --teal: #059669;
+      
+      /* UI Elements */
+      --bottom-nav: #FFFFFF;
+    }
+    
     /* Reset and base styles */
     * {
       box-sizing: border-box;
@@ -54,14 +113,15 @@
       height: 100%;
       width: 100%;
       overflow: hidden;
+      transition: background-color 0.3s ease;
     }
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      background-color: #0A0A0A;
-      color: #FFFFFF;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
     }
     
     #root {
@@ -79,27 +139,128 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      background-color: #0A0A0A;
+      background-color: var(--bg-primary);
     }
     
     #app-loading .spinner {
       width: 50px;
       height: 50px;
-      border: 3px solid rgba(124, 58, 237, 0.3);
-      border-top-color: #7C3AED;
+      border: 3px solid var(--border-strong);
+      border-top-color: var(--purple);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
     
     #app-loading .loading-text {
       margin-top: 20px;
-      color: #888;
+      color: var(--text-muted);
       font-size: 14px;
     }
     
     @keyframes spin {
       to {
         transform: rotate(360deg);
+      }
+    }
+    
+    /* Micro-interaction: Button press feel */
+    button:active,
+    [role="button"]:active {
+      transform: scale(0.96);
+      transition: transform 0.1s ease;
+    }
+    
+    /* Screen transitions */
+    .screen-enter {
+      animation: screenEnter 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    @keyframes screenEnter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Shimmer loading skeleton */
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--bg-card) 25%,
+        var(--bg-card-hover) 50%,
+        var(--bg-card) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+    
+    /* Glow animation for unlocked elements */
+    .glow-pulse {
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes glowPulse {
+      0%, 100% {
+        box-shadow: 0 0 8px var(--purple), 0 0 16px var(--purple);
+      }
+      50% {
+        box-shadow: 0 0 16px var(--purple), 0 0 24px var(--purple);
+      }
+    }
+    
+    /* Confetti particle */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      z-index: 10000;
+      animation: confettiFall 3s ease-out forwards;
+    }
+    
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    /* XP gain floating animation */
+    .xp-gain {
+      position: absolute;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--teal);
+      pointer-events: none;
+      z-index: 9998;
+      animation: xpFloat 1s ease-out forwards;
+    }
+    
+    @keyframes xpFloat {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-60px);
+        opacity: 0;
       }
     }
     

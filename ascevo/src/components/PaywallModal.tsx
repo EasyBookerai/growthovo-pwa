@@ -18,23 +18,34 @@ interface Props {
 export default function PaywallModal({ visible, onClose, onStartTrial }: Props) {
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('yearly');
 
+  async function handleStartTrial() {
+    // Set premium status in localStorage (for MVP)
+    const { setPremiumUser } = await import('../services/growthovoExperienceService');
+    await setPremiumUser(true);
+    
+    onStartTrial();
+  }
+
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose}>
         <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
           <Text style={styles.title}>🚀 Unlock Growthovo Pro</Text>
-          {[
-            '✓ Unlimited Rex conversations — 24/7',
-            '✓ All 24 lessons across every pillar',
-            '✓ Public Speaking Trainer unlimited',
-          ].map((line) => (
-            <Text key={line} style={styles.bullet}>{line}</Text>
-          ))}
+          
+          <View style={styles.features}>
+            <Text style={styles.feature}>✓ Unlimited Rex — available 24/7</Text>
+            <Text style={styles.feature}>✓ All 90 lessons across every pillar</Text>
+            <Text style={styles.feature}>✓ Unlimited speaking sessions</Text>
+            <Text style={styles.feature}>✓ Up to 12 time capsules</Text>
+            <Text style={styles.feature}>✓ Weekly Wrapped with share card</Text>
+          </View>
 
           <View style={styles.toggleRow}>
             <TouchableOpacity
               style={[styles.planBtn, plan === 'monthly' && styles.planBtnActive]}
               onPress={() => setPlan('monthly')}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: plan === 'monthly' }}
             >
               <Text style={styles.planLabel}>Monthly</Text>
               <Text style={styles.planPrice}>€9.99/mo</Text>
@@ -42,6 +53,8 @@ export default function PaywallModal({ visible, onClose, onStartTrial }: Props) 
             <TouchableOpacity
               style={[styles.planBtn, plan === 'yearly' && styles.planBtnActive]}
               onPress={() => setPlan('yearly')}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: plan === 'yearly' }}
             >
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>Most Popular</Text>
@@ -52,7 +65,7 @@ export default function PaywallModal({ visible, onClose, onStartTrial }: Props) 
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.cta} onPress={onStartTrial} accessibilityRole="button">
+          <TouchableOpacity style={styles.cta} onPress={handleStartTrial} accessibilityRole="button">
             <Text style={styles.ctaText}>Start 7-Day Free Trial →</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={onClose} style={styles.later}>
@@ -80,7 +93,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   title: { ...typography.h2, color: colors.text, marginBottom: spacing.md },
-  bullet: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.sm },
+  features: { gap: spacing.xs, marginBottom: spacing.md },
+  feature: { ...typography.body, color: colors.text },
   toggleRow: { flexDirection: 'row', gap: spacing.sm, marginVertical: spacing.lg },
   planBtn: {
     flex: 1,

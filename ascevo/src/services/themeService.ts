@@ -220,6 +220,12 @@ export async function initializeTheme(): Promise<ResolvedTheme> {
     const systemTheme = getSystemTheme();
     currentResolvedTheme = resolveTheme(currentThemeMode, systemTheme);
 
+    // Apply web theme immediately
+    if (Platform.OS === 'web') {
+      const { applyWebTheme } = await import('./webThemeService');
+      applyWebTheme(currentResolvedTheme);
+    }
+
     // Set up system theme listener for auto mode
     if (systemThemeListener) {
       systemThemeListener.remove();
@@ -229,6 +235,14 @@ export async function initializeTheme(): Promise<ResolvedTheme> {
         const newTheme = resolveTheme('auto', colorScheme);
         if (newTheme !== currentResolvedTheme) {
           currentResolvedTheme = newTheme;
+          
+          // Apply web theme
+          if (Platform.OS === 'web') {
+            import('./webThemeService').then(({ applyWebTheme }) => {
+              applyWebTheme(newTheme);
+            });
+          }
+          
           notifyListeners(newTheme);
         }
       }
@@ -289,6 +303,13 @@ export async function setThemeMode(
     // Update resolved theme and notify if changed
     if (newTheme !== currentResolvedTheme) {
       currentResolvedTheme = newTheme;
+      
+      // Apply web theme
+      if (Platform.OS === 'web') {
+        const { applyWebTheme } = await import('./webThemeService');
+        applyWebTheme(newTheme);
+      }
+      
       notifyListeners(newTheme);
     }
 
