@@ -323,6 +323,10 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
 
   return (
     <SafeAreaView style={styles.root} testID="pillars-screen">
+      <Text style={{ color: 'red', fontSize: 24, padding: 20 }}>
+        DEBUG: PILLARS V2 RENDERED - {lessons.length} lessons
+      </Text>
+      
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Your Pillars</Text>
@@ -351,6 +355,10 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
         contentContainerStyle={styles.lessonsContentContainer}
         showsVerticalScrollIndicator={false}
       >
+        <Text style={{ color: 'yellow', fontSize: 18, marginBottom: 10 }}>
+          DEBUG: Showing {lessons.length} lessons for {selectedPillar.name}
+        </Text>
+        
         {lessons.map((lesson) => (
           <LessonCard
             key={lesson.id}

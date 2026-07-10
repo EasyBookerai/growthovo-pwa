@@ -15,25 +15,117 @@
       padding-bottom: 80px;
     }
     .container { max-width: 480px; margin: 0 auto; padding: 20px; }
-    .header { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
-    .pillars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .pillar-card {
+    .header { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+    
+    /* Filter Chips */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 8px 0;
+      margin-bottom: 20px;
+      scrollbar-width: none;
+    }
+    .filter-chips::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       background: #1A1A2E;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-left: 4px solid;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 10px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-chip.active {
+      background: var(--pillar-color);
+      color: #FFF;
+      border-color: transparent;
+    }
+    .filter-chip:not(.active) {
+      color: rgba(255,255,255,0.5);
+    }
+    .chip-emoji { font-size: 18px; }
+    .chip-text { font-size: 15px; font-weight: 600; }
+    
+    /* Lesson Cards */
+    .lessons-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .lesson-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #1A1A2E;
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
-      padding: 20px;
-      text-align: center;
+      padding: 16px;
       cursor: pointer;
       transition: all 0.2s;
-      position: relative;
     }
-    .pillar-card:hover { background: #222238; transform: translateY(-2px); }
-    .pillar-emoji { font-size: 32px; margin-bottom: 8px; }
-    .pillar-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .pillar-level { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
-    .xp-bar-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-    .xp-bar-fill { height: 100%; background: currentColor; transition: width 0.3s; }
+    .lesson-card:hover { background: #222238; }
+    .lesson-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFF;
+      flex-shrink: 0;
+    }
+    .lesson-content { flex: 1; }
+    .lesson-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .lesson-subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+    .lesson-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+    .lesson-action { font-size: 20px; }
+    
+    /* Challenge Card */
+    .challenge-card {
+      background: rgba(52, 211, 153, 0.15);
+      border: 2px solid #34D399;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    .challenge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .challenge-title { font-size: 17px; font-weight: 700; color: #34D399; }
+    .xp-badge {
+      background: #34D399;
+      color: #FFF;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .challenge-desc { font-size: 15px; color: rgba(255,255,255,0.9); margin-bottom: 16px; line-height: 1.5; }
+    .challenge-btn {
+      background: #34D399;
+      color: #FFF;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 100px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+    
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -62,10 +154,17 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="header">Your Growth Pillars</h1>
-    <div class="pillars-grid" id="pillars-grid">
-      <!-- Pillars rendered by JS -->
-    </div>
+    <h1 class="header">Your Pillars</h1>
+    <p class="subtitle">Choose your growth area</p>
+    
+    <!-- Filter Chips -->
+    <div class="filter-chips" id="filter-chips"></div>
+    
+    <!-- Lessons List -->
+    <div class="lessons-list" id="lessons-list"></div>
+    
+    <!-- Daily Challenge -->
+    <div class="challenge-card" id="challenge-card" style="display:none;"></div>
   </div>
 
   <div class="bottom-nav">
@@ -95,43 +194,104 @@
   <script src="lesson-service.js"></script>
   <script>
     const pillars = [
-      { id: "mental-health", name: "Mental Health", emoji: "🧠", color: "#A78BFA" },
-      { id: "relationships", name: "Relationships", emoji: "💬", color: "#F472B6" },
+      { id: "mental-health", name: "Mental", emoji: "🧠", color: "#A78BFA" },
+      { id: "relationships", name: "Relations", emoji: "💬", color: "#F472B6" },
       { id: "career", name: "Career", emoji: "💼", color: "#60A5FA" },
       { id: "fitness", name: "Fitness", emoji: "💪", color: "#34D399" },
       { id: "finance", name: "Finance", emoji: "💰", color: "#FBBF24" },
       { id: "hobbies", name: "Hobbies", emoji: "🎨", color: "#F87171" }
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const grid = document.getElementById('pillars-grid');
-      const progress = getLessonProgress();
-      
+    const challenges = {
+      "mental-health": "Take 3 deep breaths before your next meeting or task",
+      "relationships": "Send a genuine compliment to someone you care about",
+      "career": "Spend 10 minutes updating your resume or LinkedIn",
+      "fitness": "Do 20 bodyweight squats or a 5-minute walk",
+      "finance": "Review your last 3 purchases and categorize them",
+      "hobbies": "Dedicate 15 minutes to something purely for fun"
+    };
+
+    let selectedPillar = "mental-health";
+    const progress = getLessonProgress();
+
+    function renderChips() {
+      const container = document.getElementById('filter-chips');
+      container.innerHTML = '';
       pillars.forEach(p => {
-        const lessons = allLessons[p.id] || [];
-        const completedCount = lessons.filter(l => progress[p.id]?.[l.id]?.completed).length;
-        const level = Math.floor(completedCount / 3) + 1;
-        const xpInLevel = completedCount % 3;
-        const xpProgress = (xpInLevel / 3) * 100;
-        
+        const chip = document.createElement('div');
+        chip.className = 'filter-chip' + (p.id === selectedPillar ? ' active' : '');
+        chip.style.setProperty('--pillar-color', p.color);
+        chip.onclick = () => {
+          selectedPillar = p.id;
+          render();
+        };
+        chip.innerHTML = `
+          <span class="chip-emoji">${p.emoji}</span>
+          <span class="chip-text">${p.name}</span>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function renderLessons() {
+      const container = document.getElementById('lessons-list');
+      container.innerHTML = '';
+      const lessons = allLessons[selectedPillar] || [];
+      const pillar = pillars.find(p => p.id === selectedPillar);
+      
+      lessons.forEach((lesson, idx) => {
+        const isCompleted = progress[selectedPillar]?.[lesson.id]?.completed;
         const card = document.createElement('div');
-        card.className = 'pillar-card';
-        card.style.borderLeftColor = p.color;
-        card.style.color = p.color;
+        card.className = 'lesson-card';
         card.onclick = () => {
-          window.location.href = `skill-tree.html?pillar=${p.id}`;
+          window.location.href = `lesson.html?pillar=${selectedPillar}&lesson=${lesson.id}`;
         };
         card.innerHTML = `
-          <div class="pillar-emoji">${p.emoji}</div>
-          <div class="pillar-name">${p.name}</div>
-          <div class="pillar-level">Level ${level}</div>
-          <div class="xp-bar-container">
-            <div class="xp-bar-fill" style="width: ${xpProgress}%; background: ${p.color};"></div>
+          <div class="lesson-icon" style="background: ${pillar.color};">
+            ${idx + 1}
+          </div>
+          <div class="lesson-content">
+            <div class="lesson-title">${lesson.title}</div>
+            <div class="lesson-subtitle">${lesson.content.paragraphs[0].substring(0, 50)}...</div>
+            <div class="lesson-meta">
+              <span>${lesson.duration}</span>
+              <span>•</span>
+              <span>${lesson.difficulty}</span>
+            </div>
+          </div>
+          <div class="lesson-action">
+            ${isCompleted ? '✓' : '→'}
           </div>
         `;
-        grid.appendChild(card);
+        container.appendChild(card);
       });
-    });
+    }
+
+    function renderChallenge() {
+      const card = document.getElementById('challenge-card');
+      const pillar = pillars.find(p => p.id === selectedPillar);
+      card.style.display = 'block';
+      card.innerHTML = `
+        <div class="challenge-header">
+          <div class="challenge-title">Today's ${pillar.name} Challenge</div>
+          <div class="xp-badge">+30 XP</div>
+        </div>
+        <div class="challenge-desc">${challenges[selectedPillar]}</div>
+        <button class="challenge-btn" onclick="acceptChallenge()">Accept Challenge →</button>
+      `;
+    }
+
+    function acceptChallenge() {
+      alert('Challenge accepted! +30 XP earned');
+    }
+
+    function render() {
+      renderChips();
+      renderLessons();
+      renderChallenge();
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
   </script>
 </body>
 </html>
