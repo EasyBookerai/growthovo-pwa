@@ -18,7 +18,7 @@ import { completeLesson } from '../../services/pillarLessonService';
 import { useButtonPressAnimation } from '../../hooks/useButtonPressAnimation';
 
 /**
- * Enhanced PillarsScreen V2
+ * Enhanced PillarsScreen V2 - PRODUCTION VERSION
  * 
  * Layout:
  * - Header: "Your Pillars" + subtitle
@@ -300,6 +300,11 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
   const lessons = Object.values(LESSON_CONTENT).filter(
     (lesson) => lesson.pillarKey === selectedPillar.key
   ).sort((a, b) => a.number - b.number);
+
+  console.log('Selected Pillar:', selectedPillar.key);
+  console.log('Total Lessons Available:', Object.values(LESSON_CONTENT).length);
+  console.log('Filtered Lessons:', lessons.length);
+  console.log('First Lesson:', lessons[0]?.title);
 
   const challenge = DAILY_CHALLENGES[selectedPillar.key];
 
