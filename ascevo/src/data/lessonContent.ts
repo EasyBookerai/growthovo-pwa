@@ -90,17 +90,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'mental-health-lesson-4',
     pillarKey: 'mental-health',
     number: 4,
-    title: 'Building a Journaling Habit',
+    title: 'Building Emotional Awareness',
+    duration: '6 min',
+    difficulty: 'Beginner',
+    content: {
+      paragraphs: [
+        'Emotional awareness is the ability to recognize and name what you\'re feeling in real-time. Most people live on emotional autopilot, reacting to feelings without understanding them. Building awareness creates space between stimulus and response, giving you choice instead of reactivity.',
+        'Start by learning the emotion wheel. Beyond "good" and "bad," there are dozens of specific emotions: frustrated, disappointed, overwhelmed, anxious, content, proud, grateful. The more precisely you can name an emotion, the better you can understand and address it.',
+        'Practice the STOP technique throughout your day: Stop what you\'re doing, Take a breath, Observe your emotions and body sensations, Proceed with awareness. This 30-second check-in builds the habit of tuning into your internal state instead of ignoring it until you explode.',
+        'Keep a simple emotion log for one week. Three times per day, write down one emotion you\'re feeling and what triggered it. Patterns will emerge—certain situations consistently trigger specific emotions. This data shows you where to focus your emotional regulation efforts.'
+      ],
+      keyTakeaway: 'Name it to tame it—recognizing emotions reduces their control over you'
+    }
+  },
+  
+  'mental-health-lesson-5': {
+    id: 'mental-health-lesson-5',
+    pillarKey: 'mental-health',
+    number: 5,
+    title: 'Managing Overwhelm',
+    duration: '8 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Overwhelm happens when your to-do list feels infinite and your capacity feels finite. Your brain perceives threat, triggering stress responses that make clear thinking impossible. You freeze, procrastinate, or frantically switch between tasks without completing anything. The solution isn\'t doing more—it\'s thinking smaller.',
+        'Use the brain dump technique: write every task, worry, and thought bouncing around your head onto paper. Don\'t organize or prioritize yet—just get it all out. This externalization reduces mental load immediately. Your brain can stop using energy to remember everything and start using energy to think clearly.',
+        'Now categorize: what must happen today? What can wait until next week? What can you delegate or delete entirely? Most overwhelm comes from treating everything as urgent. In reality, 2-3 things truly matter today. Focus there. The rest is noise.',
+        'Break overwhelming tasks into 10-minute chunks. "Finish the project" feels impossible. "Draft the first paragraph" feels doable. When you complete a small chunk, your brain gets a dopamine hit, making the next chunk easier to start. Progress creates momentum, which reduces overwhelm.'
+      ],
+      keyTakeaway: 'Break big into small—overwhelm shrinks when tasks become manageable'
+    }
+  },
+  
+  'mental-health-lesson-6': {
+    id: 'mental-health-lesson-6',
+    pillarKey: 'mental-health',
+    number: 6,
+    title: 'Sleep Hygiene Basics',
     duration: '5 min',
     difficulty: 'Beginner',
     content: {
       paragraphs: [
-        'Journaling is one of the most researched mental health practices. Studies show it reduces anxiety, improves mood, and helps process difficult emotions. The act of writing moves thoughts from your head to paper, creating distance and clarity.',
-        'You don\'t need to write pages or be poetic. Start with three simple prompts: "What am I feeling right now?", "What\'s one thing that went well today?", and "What\'s one thing I\'m worried about?" Write 2-3 sentences for each. That\'s it.',
-        'The best time to journal is either first thing in the morning to set intentions, or last thing at night to process the day. Pick one time and stick with it for two weeks. Keep your journal and pen in the same visible spot as a reminder.',
-        'If you miss a day, don\'t quit. Just start again the next day. The goal isn\'t perfection—it\'s creating a space to check in with yourself regularly.'
+        'Sleep is the foundation of mental health. Poor sleep amplifies anxiety, weakens emotional regulation, and makes everything harder. Yet most people treat sleep like it\'s optional, scrolling phones until midnight and wondering why they wake up exhausted. Sleep hygiene—the habits surrounding sleep—matters as much as sleep duration.',
+        'Create a consistent sleep schedule. Go to bed and wake up at the same time every day, including weekends. Your body craves rhythm. After two weeks of consistency, you\'ll naturally feel tired at bedtime and alert at wake time. This circadian alignment makes sleep effortless.',
+        'Build a 30-minute wind-down routine. Dim lights an hour before bed—bright lights suppress melatonin production. Put phones in another room or use night mode. Try reading, gentle stretching, or journaling. Signal to your brain that it\'s time to shift from doing mode to rest mode.',
+        'Optimize your sleep environment: keep your room cool (65-68°F), dark (blackout curtains or eye mask), and quiet (white noise if needed). Reserve your bed for sleep only—no work, no scrolling. Your brain should associate bed with sleep, not with stress or stimulation.'
       ],
-      keyTakeaway: 'Five minutes, three sentences, one habit—that\'s all you need'
+      keyTakeaway: 'Consistent schedule, dark room, cool temperature—sleep hygiene unlocks better rest'
     }
   },
 
@@ -166,17 +202,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'relationships-lesson-4',
     pillarKey: 'relationships',
     number: 4,
-    title: 'Deepening Emotional Intimacy',
+    title: 'Expressing Appreciation',
     duration: '5 min',
     difficulty: 'Beginner',
     content: {
       paragraphs: [
-        'Emotional intimacy is the feeling of being truly known and accepted by another person. It\'s built through vulnerability—sharing your inner world and creating space for others to share theirs. Many relationships stay surface-level because both people are afraid to go deeper.',
-        'Start small by sharing something you don\'t usually talk about: a fear, a dream, a childhood memory, or something you\'re struggling with. Vulnerability is contagious. When you open up authentically, you give others permission to do the same.',
-        'Ask deeper questions beyond "How was your day?" Try: "What\'s been on your mind lately?" or "What\'s something you\'re proud of this week?" or "What\'s one thing you wish people understood about you?" Then listen without trying to fix or advise—just be present.',
-        'Emotional intimacy requires consistency. Set aside 15 minutes a week for intentional connection time with important people in your life. No phones, no distractions—just honest conversation. This practice transforms relationships over time.'
+        'Appreciation is oxygen for relationships. When people feel valued, connection deepens. When they feel taken for granted, resentment builds. Yet most people drastically under-communicate appreciation, assuming others "just know" they\'re valued. They don\'t. Say it out loud.',
+        'Specific appreciation matters more than generic compliments. Instead of "You\'re great," try "I noticed you stayed up late to help me finish that project. That meant a lot to me." Specificity shows you\'re paying attention and creates emotional resonance.',
+        'Make appreciation a daily habit. Each evening, identify one person and one specific thing they did that you\'re grateful for. Text them, call them, or tell them in person. This practice rewires your brain to notice the good in people instead of focusing on what\'s wrong.',
+        'Don\'t wait for big moments. Appreciate the small things: a thoughtful text, a home-cooked meal, showing up on time. When you consistently acknowledge small kindnesses, people feel seen and valued, strengthening your bond over time.'
       ],
-      keyTakeaway: 'Vulnerability builds intimacy—share your inner world to deepen connection'
+      keyTakeaway: 'Specific appreciation builds connection—tell people exactly what you value'
+    }
+  },
+  
+  'relationships-lesson-5': {
+    id: 'relationships-lesson-5',
+    pillarKey: 'relationships',
+    number: 5,
+    title: 'Understanding Love Languages',
+    duration: '7 min',
+    difficulty: 'Beginner',
+    content: {
+      paragraphs: [
+        'People give and receive love in different ways. Gary Chapman identified five love languages: words of affirmation, quality time, physical touch, acts of service, and gifts. You might feel most loved through quality time, while your partner feels most loved through words of affirmation. Misalignment creates disconnection—you\'re both trying, but speaking different languages.',
+        'Identify your primary love language by noticing what you request most from others and what absence causes you pain. Do you complain when someone doesn\'t spend time with you? Quality time is likely your language. Do you feel unloved without physical affection? Touch is your language.',
+        'Discover others\' love languages by observing how they express love. People tend to give love in the way they want to receive it. If your friend always gives thoughtful gifts, gifts likely matter to them. If they frequently offer help, acts of service speak loudest.',
+        'Once you know someone\'s language, speak it intentionally even if it\'s not your native tongue. If your partner\'s language is words of affirmation and yours is acts of service, practice verbal appreciation even though you\'d rather show love through actions. Love is about what they need, not just what comes naturally to you.'
+      ],
+      keyTakeaway: 'Speak their love language, not just your own—connection requires translation'
+    }
+  },
+  
+  'relationships-lesson-6': {
+    id: 'relationships-lesson-6',
+    pillarKey: 'relationships',
+    number: 6,
+    title: 'Repairing After Arguments',
+    duration: '6 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Every relationship has conflict. What matters isn\'t avoiding arguments—it\'s repairing afterward. John Gottman\'s research shows that successful couples aren\'t those who never fight; they\'re those who repair quickly and effectively. Without repair, resentment accumulates until the relationship breaks.',
+        'Initiate repair as soon as you\'re calm enough to think clearly, ideally within 24 hours. Waiting too long lets wounds fester. Start with a repair attempt: "I\'m sorry for how I spoke to you earlier. Can we talk?" Even if you still disagree on the issue, acknowledging impact matters.',
+        'Use the repair formula: acknowledge your part, express what you actually need, and ask about their experience. "I got defensive when you brought up the budget. I felt attacked, but I realize I shut down instead of listening. I need us to talk about money without blame. How did that conversation feel from your side?"',
+        'Accept repair attempts from others gracefully. When someone extends an olive branch, don\'t keep punishing them. Say "thank you for apologizing" and engage genuinely. Refusing repair attempts trains people not to try, which slowly kills intimacy.'
+      ],
+      keyTakeaway: 'Repair quickly after conflict—apologize, listen, reconnect within 24 hours'
     }
   },
 
@@ -242,17 +314,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'career-lesson-4',
     pillarKey: 'career',
     number: 4,
-    title: 'Negotiation Fundamentals',
+    title: 'Time Management for Professionals',
+    duration: '6 min',
+    difficulty: 'Beginner',
+    content: {
+      paragraphs: [
+        'Time management isn\'t about cramming more tasks into your day—it\'s about protecting time for what matters most. The Eisenhower Matrix helps you categorize tasks: urgent and important (do now), important but not urgent (schedule), urgent but not important (delegate), neither (delete).',
+        'Start each week by identifying your 3 Most Important Tasks (MITs). These are high-impact activities that move your career forward: finishing a critical project, having a difficult conversation, or developing a new skill. Schedule these first, during your peak energy hours, before meetings fill your calendar.',
+        'Use time blocking to protect deep work. Instead of keeping your calendar open for anyone to book meetings, block 2-hour chunks for focused work. Treat these blocks as unmovable appointments. When someone requests a meeting during that time, offer alternative slots.',
+        'Say no to meetings that don\'t require your input. Before accepting, ask: "What value will I add?" and "Could this be an email?" Your calendar reflects your priorities. If it\'s filled with other people\'s agendas, you\'re not managing your time—you\'re letting others manage it for you.'
+      ],
+      keyTakeaway: 'Block time for what matters most—your calendar is your priority list'
+    }
+  },
+  
+  'career-lesson-5': {
+    id: 'career-lesson-5',
+    pillarKey: 'career',
+    number: 5,
+    title: 'Networking Without Awkwardness',
+    duration: '7 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Networking feels transactional and awkward because most people approach it wrong. They think "What can this person do for me?" instead of "How can I add value?" Authentic networking is about building genuine relationships, not collecting business cards or LinkedIn connections.',
+        'Start by showing up in communities where your ideal connections already gather: industry conferences, online communities, local meetups, or professional associations. Don\'t pitch yourself immediately. Listen, contribute valuable insights, ask thoughtful questions. Be helpful without expecting immediate returns.',
+        'Follow the give-first principle. When you meet someone interesting, think: "What can I offer them?" Share a useful article, make an introduction, offer feedback on their work. Generosity without expectation creates goodwill. When you need help later, people remember who added value.',
+        'Master the warm follow-up. After meeting someone, send a personalized message within 48 hours. Reference something specific from your conversation and suggest a low-pressure next step: "Enjoyed talking about remote work policies. I\'d love to hear more about how your company implemented it—coffee next week?" Keep it simple and genuine.'
+      ],
+      keyTakeaway: 'Give first, expect nothing—authentic networking builds real relationships'
+    }
+  },
+  
+  'career-lesson-6': {
+    id: 'career-lesson-6',
+    pillarKey: 'career',
+    number: 6,
+    title: 'Asking for Feedback',
     duration: '5 min',
     difficulty: 'Beginner',
     content: {
       paragraphs: [
-        'Negotiation isn\'t about being aggressive or manipulative—it\'s about advocating for your value while finding solutions that work for everyone. Most people avoid negotiating because they fear conflict or rejection. But every time you don\'t negotiate, you leave money and opportunities on the table.',
-        'Preparation is everything. Before any negotiation, research market rates for your role and experience level. Know your target number, your minimum acceptable offer, and your walk-away point. When you have data and clear boundaries, you negotiate from confidence, not desperation.',
-        'Use this simple framework: anchor high with your target number, explain your value with specific examples, then pause and let them respond. Silence is powerful—resist the urge to fill it. Most people negotiate against themselves by talking too much.',
-        'Remember, negotiation isn\'t just about salary. You can negotiate remote work, flexible hours, professional development budget, title, start date, or equity. Think creatively about what matters to you beyond base pay.'
+        'Most people avoid feedback because they fear criticism. But feedback is the fastest path to improvement. Without it, you\'re guessing what to improve. With it, you get specific direction. The key is asking the right questions to the right people at the right time.',
+        'Ask specific questions instead of "How am I doing?" Try: "What\'s one thing I could do to make my presentations more engaging?" or "Where do you see the biggest gap in my technical skills?" Specific questions get actionable answers. Vague questions get vague platitudes.',
+        'Choose the right people: those who have the expertise you want, who have seen your work directly, and who care about your growth. Don\'t ask your best friend for career advice if they\'ve never worked in your field. Seek feedback from people whose opinion actually matters.',
+        'Receive feedback gracefully. Listen without defending or explaining. Say "Thank you, I hadn\'t considered that" even if you disagree. You don\'t have to act on every piece of feedback, but you must listen respectfully. People stop giving honest feedback when you argue with it.'
       ],
-      keyTakeaway: 'Negotiate every offer—your future self will thank you for it'
+      keyTakeaway: 'Ask specific questions, listen without defending—feedback accelerates growth'
     }
   },
 
@@ -318,17 +426,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'fitness-lesson-4',
     pillarKey: 'fitness',
     number: 4,
-    title: 'Progressive Overload Explained',
+    title: 'Bodyweight Strength Training',
+    duration: '7 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'You don\'t need a gym to build strength. Bodyweight training uses your own weight as resistance, making it accessible anywhere. Push-ups, squats, lunges, planks, and pull-ups (or assisted variations) target every major muscle group effectively.',
+        'Start with fundamental movement patterns: push (push-ups, dips), pull (rows, pull-ups), squat (bodyweight squats, lunges), hinge (glute bridges, single-leg deadlifts), and core (planks, dead bugs). Master these basics with proper form before adding complexity.',
+        'Progression doesn\'t require equipment. Make exercises harder by changing leverage, tempo, or range of motion. Can\'t do a full push-up? Start on your knees. Too easy? Elevate your feet or slow down the descent to 3 seconds. Push-ups too easy? Try archer push-ups or one-arm variations.',
+        'Build a simple 3-day routine: Day 1 (Push focus): push-ups, pike push-ups, tricep dips, planks. Day 2 (Pull focus): inverted rows, pull-up progressions, bicep curls with resistance bands. Day 3 (Legs focus): squats, lunges, single-leg deadlifts, calf raises. Do 3 sets of 8-12 reps per exercise.'
+      ],
+      keyTakeaway: 'Your body is the gym—master bodyweight basics before adding equipment'
+    }
+  },
+  
+  'fitness-lesson-5': {
+    id: 'fitness-lesson-5',
+    pillarKey: 'fitness',
+    number: 5,
+    title: 'Preventing Workout Injuries',
+    duration: '6 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Most workout injuries are preventable. They happen when you push too hard too fast, use poor form, or skip warm-ups. Smart training prioritizes longevity over intensity. You can\'t build strength if you\'re constantly injured and unable to train.',
+        'Always warm up for 5-10 minutes before training. Start with light cardio (jumping jacks, jogging in place) to increase blood flow, then do dynamic stretches that mimic your workout movements. If you\'re squatting, do bodyweight squats. If you\'re doing upper body, do arm circles and light push-ups.',
+        'Form beats weight every time. Using proper technique with lighter weight is safer and more effective than lifting heavy with poor form. If you can\'t complete a rep with full range of motion and control, the weight is too heavy. Drop the ego, reduce the weight, and master the movement pattern first.',
+        'Listen to your body. Muscle soreness is normal. Sharp pain, joint discomfort, or pain that worsens during exercise is a red flag—stop immediately. Pushing through injury-type pain turns minor issues into major problems that sideline you for weeks or months. Rest and recover when needed.'
+      ],
+      keyTakeaway: 'Form over weight, warm-ups over skipping—injury prevention enables long-term gains'
+    }
+  },
+  
+  'fitness-lesson-6': {
+    id: 'fitness-lesson-6',
+    pillarKey: 'fitness',
+    number: 6,
+    title: 'Recovery and Rest Days',
     duration: '5 min',
     difficulty: 'Beginner',
     content: {
       paragraphs: [
-        'Progressive overload is the principle of gradually increasing the demands on your body to drive continuous improvement. If you do the same workout with the same weight every week, your body adapts and stops changing. To get stronger, you need to progressively challenge yourself.',
-        'There are several ways to apply progressive overload: increase the weight you lift, add more repetitions, perform more sets, reduce rest time between sets, or improve your form and range of motion. You don\'t need to do all of these at once—pick one variable to progress each week.',
-        'Start conservatively. If you\'re lifting weights, increase by 5-10 pounds when you can complete all sets with good form. If you\'re doing bodyweight exercises, add one or two reps per set each week. Small, consistent increases compound into significant strength gains over months.',
-        'Track your workouts in a simple notebook or app. Write down exercises, sets, reps, and weight used. This data shows you exactly when to progress and prevents you from guessing. What gets measured gets improved.'
+        'Rest days aren\'t lazy—they\'re strategic. When you strength train, you create microscopic tears in muscle fibers. During rest, your body repairs these tears, making muscles stronger and larger. Without adequate rest, you\'re breaking down tissue faster than you can rebuild it, leading to overtraining, fatigue, and injury.',
+        'Plan at least 1-2 full rest days per week. A rest day doesn\'t mean lying on the couch all day (though that\'s fine too). You can do light activity: walking, gentle yoga, swimming, or stretching. The key is avoiding intense training that taxes the same muscle groups.',
+        'Pay attention to recovery signals. Persistent fatigue, declining performance, mood changes, disrupted sleep, or elevated resting heart rate indicate your body needs more rest. When in doubt, take an extra rest day. One extra rest day won\'t hurt your progress, but training through exhaustion can set you back weeks.',
+        'Active recovery accelerates healing. Light movement increases blood flow to muscles, delivering nutrients and removing waste products. A 20-minute walk or gentle stretching session on rest days can actually speed recovery compared to complete inactivity.'
       ],
-      keyTakeaway: 'Small, consistent increases compound into major strength gains over time'
+      keyTakeaway: 'Muscles grow during rest, not workouts—recovery is when progress happens'
     }
   },
 
@@ -394,17 +538,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'finance-lesson-4',
     pillarKey: 'finance',
     number: 4,
-    title: 'Eliminating Bad Debt Fast',
-    duration: '5 min',
-    difficulty: 'Beginner',
+    title: 'Understanding Credit Scores',
+    duration: '8 min',
+    difficulty: 'Intermediate',
     content: {
       paragraphs: [
-        'Not all debt is equal. "Good debt" like a mortgage or student loan can build assets or increase earning potential. "Bad debt" like high-interest credit cards or payday loans drains your wealth through interest. If you\'re paying 18-25% interest on credit card balances, that debt is actively working against your financial future.',
-        'Use the debt avalanche method to eliminate bad debt efficiently. List all debts with their interest rates. Make minimum payments on everything, then throw every extra euro at the debt with the highest interest rate. Once that\'s gone, move to the next highest. This method saves you the most money in interest over time.',
-        'Alternatively, use the debt snowball method for psychological wins. List debts from smallest to largest balance. Pay minimums on everything, then attack the smallest debt first. When it\'s gone, roll that payment into the next smallest. The quick wins build momentum and motivation, even if you pay slightly more interest overall.',
-        'Stop adding new debt while paying off old debt. Cut up credit cards if needed, or freeze them in a block of ice—literally. Use cash or debit for purchases. Every euro you don\'t spend on interest is a euro that can go toward savings, investing, or things you actually value.'
+        'Your credit score is a three-digit number that determines your financial opportunities: mortgage rates, car loans, apartment rentals, even job prospects. Scores range from 300-850. Above 700 is good, above 750 is excellent. Below 650 makes borrowing expensive or impossible.',
+        'Five factors determine your score: payment history (35%)—pay on time, every time; credit utilization (30%)—keep balances below 30% of limits; length of credit history (15%)—older accounts help; credit mix (10%)—having different types helps slightly; new credit (10%)—too many recent inquiries hurt.',
+        'Build credit strategically: get a secured credit card if you\'re starting from zero, use it for small purchases, and pay the full balance monthly. Never carry a balance to "build credit"—that\'s a myth that costs you interest. On-time payments and low utilization build credit. Paying interest does nothing extra.',
+        'Check your credit report annually for free at AnnualCreditReport.com. Look for errors, fraudulent accounts, or incorrect late payments. Dispute any errors immediately—they can drag your score down unfairly. Monitoring your credit helps you catch identity theft early and understand what\'s helping or hurting your score.'
       ],
-      keyTakeaway: 'High-interest debt is an emergency—attack it with focus and intensity'
+      keyTakeaway: 'Pay on time, keep balances low—credit scores unlock financial opportunities'
+    }
+  },
+  
+  'finance-lesson-5': {
+    id: 'finance-lesson-5',
+    pillarKey: 'finance',
+    number: 5,
+    title: 'Investing for Beginners',
+    duration: '10 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Investing grows wealth through compound returns. When you earn returns on your initial investment plus returns on those returns, growth becomes exponential over decades. €1,000 invested at 8% annual returns becomes €10,000 in 30 years without adding another euro. Time is your greatest asset.',
+        'Start with tax-advantaged accounts: retirement accounts offer tax benefits that accelerate growth. In the US, that\'s a 401(k) or IRA. In Europe, look for pension schemes or ISAs. Max out employer matches first—that\'s free money. Then contribute what you can afford monthly.',
+        'Invest in low-cost index funds, not individual stocks. Index funds own hundreds or thousands of companies, spreading risk. When the overall market grows, you grow with it. Individual stock picking requires expertise, time, and luck. Index investing requires only patience and consistency.',
+        'Ignore market timing. Nobody—not professionals, not billionaires—can consistently predict market highs and lows. Instead, use dollar-cost averaging: invest the same amount monthly regardless of market conditions. You\'ll buy more shares when prices are low and fewer when prices are high, averaging out your cost over time. Stay invested through market drops. Historically, markets always recover and reach new highs given enough time.'
+      ],
+      keyTakeaway: 'Invest early, invest consistently, think decades—compound growth builds wealth'
+    }
+  },
+  
+  'finance-lesson-6': {
+    id: 'finance-lesson-6',
+    pillarKey: 'finance',
+    number: 6,
+    title: 'Debt Payoff Strategies',
+    duration: '7 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Debt comes in two categories: "good debt" that can build wealth (like mortgages or education loans with reasonable rates) and "bad debt" that drains wealth (high-interest credit cards, payday loans, consumer debt). Bad debt is an emergency—every month you carry it, you\'re throwing money away on interest instead of building your future.',
+        'Choose your payoff strategy: debt avalanche (highest interest rate first) or debt snowball (smallest balance first). Avalanche saves the most money mathematically. Snowball provides quick psychological wins. Both work if you stick with them. Pick the one that keeps you motivated.',
+        'Make minimum payments on all debts, then throw every extra euro at your target debt. When that\'s eliminated, roll that payment into the next debt. Your payment amount stays the same, but the impact accelerates as debts disappear. This creates momentum—the "snowball" or "avalanche" effect.',
+        'Stop adding new debt while paying off old debt. This is non-negotiable. Cut up credit cards if needed. Use cash or debit only. Every euro spent on interest is a euro not building your emergency fund, not invested, not spent on things that matter. Get angry about debt—let that anger fuel your intensity to eliminate it fast.'
+      ],
+      keyTakeaway: 'Choose your method, attack aggressively—debt freedom unlocks financial opportunity'
     }
   },
 
@@ -470,17 +650,53 @@ export const LESSON_CONTENT: Record<string, LessonData> = {
     id: 'hobbies-lesson-4',
     pillarKey: 'hobbies',
     number: 4,
-    title: 'Building a Creative Habit',
-    duration: '5 min',
-    difficulty: 'Beginner',
+    title: 'Overcoming Creative Blocks',
+    duration: '6 min',
+    difficulty: 'Intermediate',
     content: {
       paragraphs: [
-        'Creativity isn\'t a lightning bolt that strikes randomly—it\'s a muscle you strengthen through regular use. Professional creatives don\'t wait for inspiration. They show up consistently and create whether they feel inspired or not. The habit of creating generates more ideas than waiting for the perfect moment ever will.',
-        'Build your creative habit by linking it to an existing routine. This is called habit stacking. After your morning coffee, write for 10 minutes. After dinner, sketch for 15 minutes. After your workout, practice your instrument. The existing habit acts as a trigger for the new one, making it easier to remember and execute.',
-        'Create a dedicated space for your hobby, even if it\'s just a corner of a room. When you sit in that space, your brain knows it\'s time to create. This environmental cue reduces friction and makes starting easier. Keep your tools visible and accessible—guitar on a stand, sketchbook on the desk, camera by the door.',
-        'Lower the barrier to starting. The hardest part of any creative session is beginning. Make it as easy as possible: pre-mix your paints, keep your journal open to a blank page, leave your instrument tuned and ready. When starting requires minimal effort, you\'re more likely to actually start.'
+        'Creative blocks happen when your inner critic overpowers your inner creator. You sit down to make something, and suddenly everything you produce feels terrible. The blank page stays blank. This isn\'t a lack of ideas—it\'s fear masquerading as "not feeling inspired."',
+        'Lower the stakes by giving yourself permission to create garbage. Tell yourself "I\'m going to make the worst painting possible" or "I\'m going to write the most boring paragraph ever." Paradoxically, removing the pressure to create something good often unlocks flow. You can always improve garbage. You can\'t improve nothing.',
+        'Change your environment or medium when stuck. If writing feels impossible, switch to sketching. If painting feels blocked, try photography. Movement breaks help too—a 10-minute walk often brings clarity that sitting and staring at a screen never will. Your brain keeps problem-solving in the background.',
+        'Use constraints to spark creativity. Limits force creative solutions. Try the Pomodoro technique: create for 25 minutes, no editing, no judgment. Or limit yourself to three colors, 50 words, or five minutes. Constraints eliminate decision paralysis and push you toward action.'
       ],
-      keyTakeaway: 'Creativity is a habit, not a gift—show up regularly and inspiration follows'
+      keyTakeaway: 'Lower the stakes, change the environment—action beats perfection every time'
+    }
+  },
+  
+  'hobbies-lesson-5': {
+    id: 'hobbies-lesson-5',
+    pillarKey: 'hobbies',
+    number: 5,
+    title: 'Building a Practice Routine',
+    duration: '8 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Deliberate practice—focused, structured repetition with immediate feedback—is how mastery happens. Random noodling feels good but doesn\'t drive improvement. A practice routine focuses your limited time on high-leverage activities that directly improve your weakest areas.',
+        'Structure your practice sessions: Start with a 5-minute warm-up (scales if music, gesture drawing if art, freewriting if writing). Then spend 70% of your time on deliberate practice—working specifically on your weakest skill. End with 10 minutes of free creation—playing, exploring, having fun. This structure balances growth with enjoyment.',
+        'Identify your current bottleneck—the skill that, if improved, would elevate everything else. Can\'t keep rhythm? Focus exclusively on timing exercises for two weeks. Struggle with proportions in drawing? Drill proportions daily. Attack weaknesses systematically rather than practicing only what you\'re already good at.',
+        'Track progress with specific metrics. Record yourself playing an instrument weekly. Take photos of your art progression monthly. Save writing samples to review quarterly. Concrete progress evidence keeps you motivated when improvement feels slow. You\'re always better than you were three months ago—you just forget without documentation.'
+      ],
+      keyTakeaway: 'Target weaknesses systematically—focused practice beats random repetition'
+    }
+  },
+  
+  'hobbies-lesson-6': {
+    id: 'hobbies-lesson-6',
+    pillarKey: 'hobbies',
+    number: 6,
+    title: 'Sharing Your Work',
+    duration: '7 min',
+    difficulty: 'Intermediate',
+    content: {
+      paragraphs: [
+        'Sharing creative work feels vulnerable. What if people don\'t like it? What if they judge you? This fear keeps countless projects hidden in drawers and hard drives. But sharing is essential for growth—feedback shows you what works, community keeps you motivated, and accountability pushes you to finish projects.',
+        'Start small and specific. Don\'t announce "I\'m now a writer" on social media and share nothing. Instead, post one paragraph to a writing group. Share one sketch with a trusted friend. Show one song to a musician you respect. Small shares build confidence without triggering overwhelming vulnerability.',
+        'Reframe criticism as data, not judgment. When someone says "the perspective feels off" in your drawing, they\'re identifying an area to improve, not attacking your worth as a person. Separate your identity from your creations. You are not your work. Your work is simply your current skill level expressed through practice.',
+        'Find your audience gradually. Join online communities in your creative field. Share work-in-progress, not just finished pieces. Ask specific questions: "Does this melody feel too repetitive?" or "Is this character believable?" Specific asks get useful feedback. General "what do you think?" gets polite platitudes. Build relationships with other creators who understand the process, not just consumers who judge the result.'
+      ],
+      keyTakeaway: 'Share small, seek feedback, separate self from work—community accelerates growth'
     }
   },
 };
