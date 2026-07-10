@@ -1,0 +1,307 @@
+/**
+ * Growthovo Design System — CSS Variables
+ * Light & Dark Mode Support
+ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DARK MODE (Default)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root,
+html.dark {
+  /* Base Colors */
+  --bg-primary: #0A0A0A;
+  --bg-card: #141414;
+  --bg-card-hover: #1E1E1E;
+  --bg-elevated: #1E1E1E;
+  --border: #2A2A2A;
+  --border-strong: #3A3A3A;
+
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --text-muted: #666666;
+  --text-hint: rgba(255, 255, 255, 0.25);
+
+  /* Brand Colors */
+  --primary: #7C3AED;
+  --primary-light: #A78BFA;
+  --primary-dark: #6D28D9;
+  --primary-bg: rgba(124, 58, 237, 0.15);
+
+  /* Semantic Colors */
+  --success: #16A34A;
+  --success-light: #22C55E;
+  --success-bg: rgba(22, 163, 74, 0.15);
+  
+  --error: #DC2626;
+  --error-light: #EF4444;
+  --error-bg: rgba(220, 38, 38, 0.15);
+  
+  --warning: #EA580C;
+  --warning-light: #F97316;
+  --warning-bg: rgba(234, 88, 12, 0.15);
+  
+  --info: #2563EB;
+  --info-light: #3B82F6;
+  --info-bg: rgba(37, 99, 235, 0.15);
+
+  /* Gamification Colors */
+  --xp-gold: #F59E0B;
+  --heart-red: #EF4444;
+  --streak-orange: #F97316;
+  --league-gold: #EAB308;
+  --league-silver: #94A3B8;
+  --league-bronze: #B45309;
+  --promotion-green: #22C55E;
+  --relegation-red: #EF4444;
+  --teal: #34D399;
+
+  /* Pillar Colors */
+  --pillar-mind: #7C3AED;
+  --pillar-discipline: #DC2626;
+  --pillar-communication: #2563EB;
+  --pillar-money: #16A34A;
+  --pillar-career: #EA580C;
+  --pillar-relationships: #DB2777;
+
+  /* Navigation */
+  --bottom-nav-bg: #0F0F1A;
+  --bottom-nav-text: #666666;
+  --bottom-nav-active: #7C3AED;
+
+  /* Overlays & Shadows */
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.4);
+  --shadow-lg: rgba(0, 0, 0, 0.5);
+
+  /* Glassmorphism */
+  --glass-bg-light: rgba(20, 20, 20, 0.5);
+  --glass-bg-medium: rgba(10, 10, 10, 0.7);
+  --glass-bg-heavy: rgba(10, 10, 10, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 20px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LIGHT MODE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+html.light {
+  /* Base Colors */
+  --bg-primary: #FFFFFF;
+  --bg-card: #F5F5F5;
+  --bg-card-hover: #F0F0F8;
+  --bg-elevated: #FFFFFF;
+  --border: #E5E5E5;
+  --border-strong: #D4D4D4;
+
+  /* Text Colors */
+  --text-primary: #0A0A0A;
+  --text-secondary: #525252;
+  --text-muted: #A3A3A3;
+  --text-hint: rgba(0, 0, 0, 0.25);
+
+  /* Brand Colors */
+  --primary: #7C3AED;
+  --primary-light: #6D28D9;
+  --primary-dark: #5B21B6;
+  --primary-bg: rgba(124, 58, 237, 0.1);
+
+  /* Semantic Colors */
+  --success: #16A34A;
+  --success-light: #15803D;
+  --success-bg: rgba(22, 163, 74, 0.1);
+  
+  --error: #DC2626;
+  --error-light: #B91C1C;
+  --error-bg: rgba(220, 38, 38, 0.1);
+  
+  --warning: #EA580C;
+  --warning-light: #C2410C;
+  --warning-bg: rgba(234, 88, 12, 0.1);
+  
+  --info: #2563EB;
+  --info-light: #1D4ED8;
+  --info-bg: rgba(37, 99, 235, 0.1);
+
+  /* Gamification Colors */
+  --xp-gold: #F59E0B;
+  --heart-red: #EF4444;
+  --streak-orange: #F97316;
+  --league-gold: #EAB308;
+  --league-silver: #64748B;
+  --league-bronze: #92400E;
+  --promotion-green: #22C55E;
+  --relegation-red: #EF4444;
+  --teal: #059669;
+
+  /* Pillar Colors (same in light mode) */
+  --pillar-mind: #7C3AED;
+  --pillar-discipline: #DC2626;
+  --pillar-communication: #2563EB;
+  --pillar-money: #16A34A;
+  --pillar-career: #EA580C;
+  --pillar-relationships: #DB2777;
+
+  /* Navigation */
+  --bottom-nav-bg: #FFFFFF;
+  --bottom-nav-text: #A3A3A3;
+  --bottom-nav-active: #7C3AED;
+
+  /* Overlays & Shadows */
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+  --shadow-sm: rgba(0, 0, 0, 0.1);
+  --shadow-md: rgba(0, 0, 0, 0.15);
+  --shadow-lg: rgba(0, 0, 0, 0.2);
+
+  /* Glassmorphism */
+  --glass-bg-light: rgba(255, 255, 255, 0.6);
+  --glass-bg-medium: rgba(245, 245, 245, 0.8);
+  --glass-bg-heavy: rgba(245, 245, 245, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-blur: 20px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SMOOTH TRANSITIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ANIMATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Screen Enter Animation */
+.screen-enter {
+  animation: screenEnter 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes screenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Confetti Animation */
+.confetti {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* XP Gain Animation */
+.xp-gain {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--xp-gold);
+  animation: xpRise 1s ease-out forwards;
+}
+
+@keyframes xpRise {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+}
+
+/* Pulse Animation (for unlocked capsules) */
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+/* Shimmer Loading Animation */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UTILITY CLASSES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.button-press {
+  transform: scale(0.96);
+  transition: transform 0.1s ease;
+}
+
+.glow-primary {
+  box-shadow: 0 0 16px var(--primary);
+}
+
+.glow-success {
+  box-shadow: 0 0 16px var(--success);
+}
+
+/* Glassmorphism Utility */
+.glass {
+  background: var(--glass-bg-medium);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-light {
+  background: var(--glass-bg-light);
+}
+
+.glass-heavy {
+  background: var(--glass-bg-heavy);
+}

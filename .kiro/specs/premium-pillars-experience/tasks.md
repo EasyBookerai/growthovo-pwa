@@ -31,7 +31,7 @@ This implementation plan transforms the Growthovo Pillars screen into a fully in
   - Test that any XP value saved to localStorage can be retrieved correctly
   - Test across multiple save/load cycles
 
-- [-] 2. Implement enhanced PillarCard component
+- [x] 2. Implement enhanced PillarCard component
   - [x] 2.1 Add level badge display to PillarCard
     - Display "Lvl {level}" text in 12px font with purple (#7C3AED) background
     - Position badge in top-right corner of card
@@ -72,7 +72,7 @@ This implementation plan transforms the Growthovo Pillars screen into a fully in
   - Test accent border uses correct color for each pillar
   - Test lesson count displays correctly
 
-- [ ] 3. Checkpoint - Ensure all tests pass
+- [-] 3. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 4. Enhance DetailView modal with header and stats

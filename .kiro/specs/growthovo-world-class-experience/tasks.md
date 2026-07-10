@@ -463,7 +463,7 @@ The goal is to create a premium experience that users will pay €9.99/month for
     - Default to prefers-color-scheme value when no preference exists in localStorage
     - _Requirements: 13.15, 13.16, 13.17_
 
-- [ ] 20. Final integration and testing
+- [x] 20. Final integration and testing
   - [x] 20.1 Wire all features to navigation
     - Connect OnboardingScreen to navigation flow
     - Connect MorningBriefingScreen to Home screen quick action

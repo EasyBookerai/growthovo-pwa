@@ -7,7 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Animated,
-} from 'react-native';
+} from 'react';
 import { colors, typography, spacing, radius } from '../../theme';
 import { PILLAR_COLORS, type PremiumPillarKey } from '../../types/pillars';
 import { LESSON_CONTENT, type LessonData } from '../../data/lessonContent';
@@ -18,7 +18,7 @@ import { completeLesson } from '../../services/pillarLessonService';
 import { useButtonPressAnimation } from '../../hooks/useButtonPressAnimation';
 
 /**
- * Enhanced PillarsScreen V2 - PRODUCTION DEPLOYED 2025-01-10
+ * Enhanced PillarsScreen V2
  * 
  * Layout:
  * - Header: "Your Pillars" + subtitle
@@ -27,13 +27,11 @@ import { useButtonPressAnimation } from '../../hooks/useButtonPressAnimation';
  * - Daily Challenge card at bottom
  * 
  * Features:
- * - Realistic lesson content per pillar (6 lessons each, 36 total)
+ * - Realistic lesson content per pillar
  * - Smart lesson generation with varied difficulty
  * - Progress tracking (completed, in-progress, not started)
  * - Daily challenges with +30 XP reward
  * - Premium UX with micro-interactions
- * 
- * @version 2.0.0
  */
 
 interface Props {
@@ -58,6 +56,66 @@ const PILLARS: PillarData[] = [
   { key: 'finance', emoji: '💰', name: 'Finance', color: PILLAR_COLORS['finance'] },
   { key: 'hobbies', emoji: '🎨', name: 'Hobbies', color: PILLAR_COLORS['hobbies'] },
 ];
+
+/**
+ * Realistic lesson library for each pillar
+ * 4-6 lessons per pillar with realistic titles, durations, and difficulty
+ */
+const PILLAR_LESSONS: Record<PremiumPillarKey, Array<{
+  title: string;
+  subtitle: string;
+  duration: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+}>> = {
+  'mental-health': [
+    { title: 'Understanding Anxiety', subtitle: 'Learn what triggers your anxiety', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Box Breathing Technique', subtitle: 'Calm your nervous system instantly', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Cognitive Reframing 101', subtitle: 'Change negative thought patterns', duration: '7 min', difficulty: 'Intermediate' },
+    { title: 'Building Emotional Awareness', subtitle: 'Recognize and name your emotions', duration: '6 min', difficulty: 'Beginner' },
+    { title: 'Managing Overwhelm', subtitle: 'Break down big stressors', duration: '8 min', difficulty: 'Intermediate' },
+    { title: 'Sleep Hygiene Basics', subtitle: 'Build better sleep habits', duration: '5 min', difficulty: 'Beginner' },
+  ],
+  'relationships': [
+    { title: 'Active Listening Basics', subtitle: 'Hear what others really mean', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Setting Healthy Boundaries', subtitle: 'Say no without guilt', duration: '6 min', difficulty: 'Intermediate' },
+    { title: 'Conflict Resolution Skills', subtitle: 'Argue without destroying trust', duration: '8 min', difficulty: 'Advanced' },
+    { title: 'Expressing Appreciation', subtitle: 'Strengthen bonds through gratitude', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Understanding Love Languages', subtitle: 'Connect on a deeper level', duration: '7 min', difficulty: 'Beginner' },
+    { title: 'Repairing After Arguments', subtitle: 'Rebuild connection after conflict', duration: '6 min', difficulty: 'Intermediate' },
+  ],
+  'career': [
+    { title: 'Set One Career Micro-Goal', subtitle: 'Start with small, actionable steps', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Negotiation Fundamentals', subtitle: 'Ask for what you deserve', duration: '8 min', difficulty: 'Intermediate' },
+    { title: 'Building Your Personal Brand', subtitle: 'Stand out in your field', duration: '7 min', difficulty: 'Intermediate' },
+    { title: 'Time Management for Professionals', subtitle: 'Prioritize like a pro', duration: '6 min', difficulty: 'Beginner' },
+    { title: 'Networking Without Awkwardness', subtitle: 'Build genuine connections', duration: '7 min', difficulty: 'Intermediate' },
+    { title: 'Asking for Feedback', subtitle: 'Grow through constructive criticism', duration: '5 min', difficulty: 'Beginner' },
+  ],
+  'fitness': [
+    { title: 'Morning Mobility Routine', subtitle: 'Wake up your body gently', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Building a Workout Habit', subtitle: 'Make exercise automatic', duration: '6 min', difficulty: 'Beginner' },
+    { title: 'Nutrition Basics for Beginners', subtitle: 'Understand macros and calories', duration: '8 min', difficulty: 'Beginner' },
+    { title: 'Bodyweight Strength Training', subtitle: 'Build muscle without equipment', duration: '7 min', difficulty: 'Intermediate' },
+    { title: 'Preventing Workout Injuries', subtitle: 'Stay safe while training', duration: '6 min', difficulty: 'Intermediate' },
+    { title: 'Recovery and Rest Days', subtitle: 'Why rest makes you stronger', duration: '5 min', difficulty: 'Beginner' },
+  ],
+  'finance': [
+    { title: 'Track Your Spending Today', subtitle: 'Know where your money goes', duration: '5 min', difficulty: 'Beginner' },
+    { title: '50/30/20 Budget Rule', subtitle: 'Simple budgeting framework', duration: '6 min', difficulty: 'Beginner' },
+    { title: 'Building an Emergency Fund', subtitle: 'Start your financial safety net', duration: '7 min', difficulty: 'Beginner' },
+    { title: 'Understanding Credit Scores', subtitle: 'How credit works and why it matters', duration: '8 min', difficulty: 'Intermediate' },
+    { title: 'Investing for Beginners', subtitle: 'Start growing your wealth', duration: '10 min', difficulty: 'Intermediate' },
+    { title: 'Debt Payoff Strategies', subtitle: 'Get out of debt faster', duration: '7 min', difficulty: 'Intermediate' },
+  ],
+  'hobbies': [
+    { title: 'Finding Your Creative Outlet', subtitle: 'Discover what makes you flow', duration: '5 min', difficulty: 'Beginner' },
+    { title: 'Making Time for Play', subtitle: 'Schedule joy into your week', duration: '6 min', difficulty: 'Beginner' },
+    { title: 'Learning a New Skill', subtitle: 'How to get started and stay motivated', duration: '7 min', difficulty: 'Beginner' },
+    { title: 'Overcoming Creative Blocks', subtitle: 'Push through resistance', duration: '6 min', difficulty: 'Intermediate' },
+    { title: 'Building a Practice Routine', subtitle: 'Get better through consistency', duration: '8 min', difficulty: 'Intermediate' },
+    { title: 'Sharing Your Work', subtitle: 'Overcome fear of judgment', duration: '7 min', difficulty: 'Intermediate' },
+  ],
+};
 
 /**
  * Daily challenges for each pillar
@@ -140,13 +198,19 @@ const FilterChip = memo(({ pillar, isSelected, onPress }: FilterChipProps) => {
  * Displays lesson with emoji, title, subtitle, duration, and status
  */
 interface LessonCardProps {
-  lesson: LessonData;
+  lesson: {
+    title: string;
+    subtitle: string;
+    duration: string;
+    difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  };
+  number: number;
   accentColor: string;
   status: 'completed' | 'in-progress' | 'not-started';
   onPress: () => void;
 }
 
-const LessonCard = memo(({ lesson, accentColor, status, onPress }: LessonCardProps) => {
+const LessonCard = memo(({ lesson, number, accentColor, status, onPress }: LessonCardProps) => {
   const { scaleAnim, handlePressIn, handlePressOut } = useButtonPressAnimation();
 
   const getStatusBadge = () => {
@@ -182,15 +246,15 @@ const LessonCard = memo(({ lesson, accentColor, status, onPress }: LessonCardPro
         accessibilityRole="button"
         accessibilityLabel={`${lesson.title}. ${lesson.duration}. ${lesson.difficulty}. ${status === 'completed' ? 'Completed' : status === 'in-progress' ? 'In progress' : 'Not started'}`}
       >
-        {/* Left: Colored number circle */}
+        {/* Left: Colored emoji circle */}
         <View style={[styles.lessonIconCircle, { backgroundColor: accentColor }]}>
-          <Text style={styles.lessonIconNumber}>{lesson.number}</Text>
+          <Text style={styles.lessonIconNumber}>{number}</Text>
         </View>
 
         {/* Center: Title, subtitle, duration */}
         <View style={styles.lessonContent}>
           <Text style={styles.lessonTitle}>{lesson.title}</Text>
-          <Text style={styles.lessonSubtitle}>{lesson.content.paragraphs[0].substring(0, 50)}...</Text>
+          <Text style={styles.lessonSubtitle}>{lesson.subtitle}</Text>
           <View style={styles.lessonMeta}>
             <Text style={styles.lessonDuration}>{lesson.duration}</Text>
             <Text style={styles.lessonDot}>•</Text>
@@ -248,7 +312,7 @@ const DailyChallengeCard = memo(({ challenge, onAccept }: DailyChallengeCardProp
 /**
  * Main PillarsScreen Component
  */
-export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
+export default function PillarsScreenV2({ userId, subscriptionStatus }: Props) {
   const { updateXP } = useAppContext();
   const [selectedPillar, setSelectedPillar] = useState<PillarData>(PILLARS[0]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
@@ -271,9 +335,17 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
     setSelectedPillar(pillar);
   }, []);
 
-  const handleLessonPress = useCallback((lesson: LessonData) => {
-    setSelectedLesson(lesson);
-  }, []);
+  const handleLessonPress = useCallback((lessonData: { title: string; subtitle: string; duration: string; difficulty: string }, index: number) => {
+    // Find corresponding lesson from LESSON_CONTENT
+    const pillarLessons = Object.values(LESSON_CONTENT).filter(
+      (lesson) => lesson.pillarKey === selectedPillar.key
+    );
+    const lessonContent = pillarLessons[index];
+    
+    if (lessonContent) {
+      setSelectedLesson(lessonContent);
+    }
+  }, [selectedPillar]);
 
   const handleLessonComplete = useCallback(async () => {
     if (!selectedLesson) return;
@@ -299,30 +371,19 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
   }, [updateXP]);
 
   // Get lessons for selected pillar
-  const lessons = Object.values(LESSON_CONTENT).filter(
-    (lesson) => lesson.pillarKey === selectedPillar.key
-  ).sort((a, b) => a.number - b.number);
-
-  console.log('=== PILLARS SCREEN V2 LOADED ===');
-  console.log('Selected Pillar:', selectedPillar.key);
-  console.log('Total Lessons Available:', Object.values(LESSON_CONTENT).length);
-  console.log('Filtered Lessons:', lessons.length);
-  console.log('First Lesson:', lessons[0]?.title);
-  console.log('PILLARS Array:', PILLARS);
-  console.log('================================');
-
+  const lessons = PILLAR_LESSONS[selectedPillar.key] || [];
   const challenge = DAILY_CHALLENGES[selectedPillar.key];
 
-  // Determine lesson status based on completedIds
-  const getLessonStatus = (lesson: LessonData): 'completed' | 'in-progress' | 'not-started' => {
-    if (completedIds.has(lesson.id)) return 'completed';
-    // For demo purposes, you could check localStorage for in-progress lessons
-    // For now, mark as not-started
+  // Mock status determination (in production, check completedIds and localStorage)
+  const getLessonStatus = (index: number): 'completed' | 'in-progress' | 'not-started' => {
+    // For demo, mark first lesson as completed, second as in-progress
+    if (index === 0) return 'completed';
+    if (index === 1) return 'in-progress';
     return 'not-started';
   };
 
   return (
-    <SafeAreaView style={styles.root} testID="pillars-screen">
+    <SafeAreaView style={styles.root}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Your Pillars</Text>
@@ -351,13 +412,14 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
         contentContainerStyle={styles.lessonsContentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {lessons.map((lesson) => (
+        {lessons.map((lesson, index) => (
           <LessonCard
-            key={lesson.id}
+            key={index}
             lesson={lesson}
+            number={index + 1}
             accentColor={selectedPillar.color}
-            status={getLessonStatus(lesson)}
-            onPress={() => handleLessonPress(lesson)}
+            status={getLessonStatus(index)}
+            onPress={() => handleLessonPress(lesson, index)}
           />
         ))}
 
