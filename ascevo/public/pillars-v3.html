@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pillars - Growthovo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F3F4F6;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+    
+    /* Header with gradient */
+    .header {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 20px;
+      padding-top: 40px;
+      color: white;
+    }
+    
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .stats-badges {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .stat-badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    
+    /* Rex Character */
+    .rex-container {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      margin: -40px 20px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    
+    .rex-character {
+      font-size: 120px;
+      margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .mission-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1A1A2E;
+      margin-bottom: 8px;
+    }
+    
+    .mission-subtitle {
+      font-size: 14px;
+      color: #6B7280;
+      margin-bottom: 20px;
+    }
+    
+    .start-button {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s;
+    }
+    
+    .start-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* Mission Progress */
+    .mission-progress {
+      margin: 20px;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .progress-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1A1A2E;
+      margin-bottom: 16px;
+    }
+    
+    .progress-path {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .progress-step {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      border: 3px solid #E5E7EB;
+      background: white;
+    }
+    
+    .progress-step.active {
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      border-color: #F59E0B;
+      color: white;
+    }
+    
+    .progress-step.completed {
+      background: linear-gradient(135deg, #10B981, #059669);
+      border-color: #10B981;
+      color: white;
+    }
+    
+    .progress-line {
+      width: 20px;
+      height: 4px;
+      background: #E5E7EB;
+      border-radius: 2px;
+    }
+    
+    .progress-line.completed {
+      background: #10B981;
+    }
+    
+    .progress-description {
+      text-align: center;
+      font-size: 14px;
+      color: #6B7280;
+    }
+    
+    /* Lessons List */
+    .lessons-container {
+      padding: 0 20px 20px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1A1A2E;
+      margin-bottom: 16px;
+    }
+    
+    .lesson-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .lesson-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .lesson-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    .lesson-content {
+      flex: 1;
+    }
+    
+    .lesson-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1A1A2E;
+      margin-bottom: 4px;
+    }
+    
+    .lesson-meta {
+      font-size: 13px;
+      color: #6B7280;
+    }
+    
+    .lesson-status {
+      font-size: 24px;
+    }
+    
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #E5E7EB;
+      padding: 12px 20px 20px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #9CA3AF;
+      transition: all 0.2s;
+    }
+    .nav-item.active {
+      color: #10B981;
+    }
+    .nav-icon {
+      font-size: 24px;
+    }
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-title">Rex's Daily Mission</div>
+      <div class="stats-badges">
+        <div class="stat-badge">
+          <span>🔥</span>
+          <span id="streak">12</span>
+        </div>
+        <div class="stat-badge">
+          <span>⚡</span>
+          <span id="xp">500</span>
+        </div>
+        <div class="stat-badge">
+          <span>❤️</span>
+          <span id="lives">5</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rex Character & Mission -->
+  <div class="rex-container">
+    <div class="rex-character">🤖</div>
+    <div class="mission-title">Complete Lesson 1</div>
+    <div class="mission-subtitle">Understanding Anxiety</div>
+    <button class="start-button" onclick="startLesson()">
+      START: Complete for +50 XP
+    </button>
+  </div>
+
+  <!-- Mission Progress -->
+  <div class="mission-progress">
+    <div class="progress-title">Today's Progress</div>
+    <div class="progress-path">
+      <div class="progress-step completed">✓</div>
+      <div class="progress-line completed"></div>
+      <div class="progress-step completed">✓</div>
+      <div class="progress-line completed"></div>
+      <div class="progress-step active">1</div>
+      <div class="progress-line"></div>
+      <div class="progress-step">🔒</div>
+    </div>
+    <div class="progress-description">
+      Complete Lesson 1 and earn 30 Bonus XP!
+    </div>
+  </div>
+
+  <!-- Lessons List -->
+  <div class="lessons-container">
+    <div class="section-title">Mental Health Lessons</div>
+    
+    <div class="lesson-card" onclick="openLesson('mh-1')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">1</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Understanding Your Anxiety</div>
+        <div class="lesson-meta">5 min • Beginner</div>
+      </div>
+      <div class="lesson-status">▶️</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson('mh-2')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">2</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Box Breathing Technique</div>
+        <div class="lesson-meta">5 min • Beginner</div>
+      </div>
+      <div class="lesson-status">▶️</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson('mh-3')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">3</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Cognitive Reframing 101</div>
+        <div class="lesson-meta">5 min • Beginner</div>
+      </div>
+      <div class="lesson-status">▶️</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson('mh-4')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">4</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Building Emotional Awareness</div>
+        <div class="lesson-meta">6 min • Beginner</div>
+      </div>
+      <div class="lesson-status">▶️</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson('mh-5')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">5</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Managing Overwhelm</div>
+        <div class="lesson-meta">8 min • Intermediate</div>
+      </div>
+      <div class="lesson-status">🔒</div>
+    </div>
+
+    <div class="lesson-card" onclick="openLesson('mh-6')">
+      <div class="lesson-number" style="background: linear-gradient(135deg, #A78BFA, #7C3AED);">6</div>
+      <div class="lesson-content">
+        <div class="lesson-title">Sleep Hygiene Basics</div>
+        <div class="lesson-meta">5 min • Beginner</div>
+      </div>
+      <div class="lesson-status">🔒</div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="home.html" class="nav-item">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Home</div>
+    </a>
+    <a href="pillars-v3.html" class="nav-item active">
+      <div class="nav-icon">🎯</div>
+      <div class="nav-label">Pillars</div>
+    </a>
+    <a href="rex.html" class="nav-item">
+      <div class="nav-icon">💬</div>
+      <div class="nav-label">Rex</div>
+    </a>
+    <a href="league.html" class="nav-item">
+      <div class="nav-icon">🏆</div>
+      <div class="nav-label">League</div>
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label">Profile</div>
+    </a>
+  </div>
+
+  <script src="lesson-service.js"></script>
+  <script>
+    function startLesson() {
+      window.location.href = 'lesson.html?pillar=mental-health&lesson=mh-1';
+    }
+
+    function openLesson(lessonId) {
+      window.location.href = `lesson.html?pillar=mental-health&lesson=${lessonId}`;
+    }
+
+    // Load stats
+    function loadStats() {
+      const progress = getLessonProgress();
+      const streak = localStorage.getItem('streak') || 12;
+      const xp = Object.keys(progress['mental-health'] || {}).length * 50;
+      
+      document.getElementById('streak').textContent = streak;
+      document.getElementById('xp').textContent = xp;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStats);
+  </script>
+</body>
+</html>

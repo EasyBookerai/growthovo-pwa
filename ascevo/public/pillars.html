@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=pillars-v3.html">
   <title>Pillars - Growthovo</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -190,7 +191,7 @@
     </a>
   </div>
 
-  <script src="lessons.js"></script>
+  <script src="pillars-lessons.js"></script>
   <script src="lesson-service.js"></script>
   <script>
     const pillars = [
@@ -234,10 +235,18 @@
     }
 
     function renderLessons() {
+      console.log('renderLessons called');
+      console.log('selectedPillar:', selectedPillar);
+      console.log('allLessons:', allLessons);
+      console.log('allLessons[selectedPillar]:', allLessons[selectedPillar]);
+      
       const container = document.getElementById('lessons-list');
       container.innerHTML = '';
       const lessons = allLessons[selectedPillar] || [];
       const pillar = pillars.find(p => p.id === selectedPillar);
+      
+      console.log('lessons found:', lessons.length);
+      console.log('pillar found:', pillar);
       
       lessons.forEach((lesson, idx) => {
         const isCompleted = progress[selectedPillar]?.[lesson.id]?.completed;

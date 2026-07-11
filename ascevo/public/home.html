@@ -9,68 +9,185 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #0A0A12;
-      color: #FFFFFF;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding-bottom: 80px;
+      padding: 20px;
+      padding-bottom: 100px;
     }
-    .container { max-width: 480px; margin: 0 auto; padding: 20px; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .greeting { font-size: 24px; font-weight: 700; }
-    .greeting-name { color: #A78BFA; }
-    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 16px;
-      text-align: center;
-    }
-    .stat-value { font-size: 28px; font-weight: 700; color: #A78BFA; }
-    .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
-    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
-    .mission-card {
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(167,139,250,0.1));
-      border: 1px solid rgba(124,58,237,0.3);
-      border-radius: 20px;
+    
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border-radius: 24px;
       padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 24px;
     }
-    .mission-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .mission-desc { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
-    .mission-reward {
-      display: inline-flex;
-      background: rgba(52,211,153,0.15);
-      border: 1px solid rgba(52,211,153,0.3);
-      border-radius: 100px;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #34D399;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1A1A2E;
     }
-    .cta-btn {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, #7C3AED, #A78BFA);
-      border: none;
-      border-radius: 100px;
-      font-weight: 600;
-      font-size: 16px;
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
-      cursor: pointer;
-      margin-bottom: 16px;
+      font-size: 20px;
     }
+    .profile-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: 3px solid #E0E0E0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    /* Stats Row */
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      gap: 12px;
+    }
+    .stat-item {
+      flex: 1;
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1A1A2E;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #6B7280;
+    }
+    
+    /* Pillars Grid */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    
+    .pillar-card {
+      background: #FFFFFF;
+      border: 2px solid #E5E7EB;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    
+    .pillar-card.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .pillar-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .pillar-icon {
+      font-size: 40px;
+    }
+    
+    .pillar-progress {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: white;
+      border-radius: 12px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .pillar-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1A1A2E;
+      margin-bottom: 4px;
+    }
+    
+    .lock-icon {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 20px;
+      color: #9CA3AF;
+    }
+    
+    /* Colors for each pillar */
+    .pillar-mental .pillar-icon-wrapper { background: linear-gradient(135deg, #A78BFA, #7C3AED); }
+    .pillar-relationships .pillar-icon-wrapper { background: linear-gradient(135deg, #F472B6, #EC4899); }
+    .pillar-career .pillar-icon-wrapper { background: linear-gradient(135deg, #60A5FA, #3B82F6); }
+    .pillar-fitness .pillar-icon-wrapper { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+    .pillar-finance .pillar-icon-wrapper { background: linear-gradient(135deg, #34D399, #10B981); }
+    .pillar-hobbies .pillar-icon-wrapper { background: linear-gradient(135deg, #A78BFA, #8B5CF6); }
+    
+    /* Bottom Nav */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(8,8,15,0.95);
-      backdrop-filter: blur(24px);
-      border-top: 1px solid rgba(255,255,255,0.08);
+      background: white;
+      border-top: 1px solid #E5E7EB;
       padding: 12px 20px 20px;
       display: flex;
       justify-content: space-around;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
     }
     .nav-item {
       display: flex;
@@ -79,101 +196,112 @@
       gap: 4px;
       cursor: pointer;
       text-decoration: none;
-      color: rgba(255,255,255,0.5);
+      color: #9CA3AF;
+      transition: all 0.2s;
     }
-    .nav-item.active { color: #A78BFA; }
-    .nav-icon { font-size: 24px; }
-    .nav-label { font-size: 11px; }
+    .nav-item.active {
+      color: #667eea;
+    }
+    .nav-icon {
+      font-size: 24px;
+    }
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
   </style>
-  <script>
-    // Load saved data on page load
-    window.onload = function() {
-      const xp = localStorage.getItem('growthovo_xp') || '0';
-      const streak = calculateStreak();
-      const level = Math.floor(parseInt(xp) / 100) + 1;
-      
-      document.querySelectorAll('.stat-value')[0].textContent = streak;
-      document.querySelectorAll('.stat-value')[1].textContent = xp;
-      document.querySelectorAll('.stat-value')[2].textContent = level;
-
-      // Check if already checked in today
-      const lastCheckin = localStorage.getItem('growthovo_last_checkin');
-      const today = new Date().toISOString().split('T')[0];
-      if (lastCheckin === today) {
-        const ctaBtn = document.querySelector('.cta-btn');
-        ctaBtn.textContent = '✓ Check-in Completed Today';
-        ctaBtn.style.background = '#16A34A';
-        ctaBtn.style.cursor = 'default';
-        ctaBtn.onclick = null;
-      }
-    };
-
-    function calculateStreak() {
-      const lastCheckin = localStorage.getItem('growthovo_last_checkin');
-      const today = new Date().toISOString().split('T')[0];
-      let streak = 0;
-      if (lastCheckin) {
-        let checkDate = new Date(lastCheckin);
-        const todayDate = new Date(today);
-        const diffTime = Math.abs(todayDate - checkDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        if (diffDays <= 1) {
-          streak = parseInt(localStorage.getItem('growthovo_streak') || '0');
-          if (lastCheckin !== today) {
-            streak += 1;
-            localStorage.setItem('growthovo_streak', streak.toString());
-          }
-        } else {
-          streak = 0;
-          localStorage.setItem('growthovo_streak', '0');
-        }
-      }
-      return streak;
-    }
-
-    function startCheckin() {
-      window.location.href = 'checkin.html';
-    }
-  </script>
 </head>
 <body>
   <div class="container">
+    <!-- Header -->
     <div class="header">
-      <div class="greeting">Hey, <span class="greeting-name">Champion</span>! 👋</div>
+      <div class="logo">
+        <div class="logo-icon">🚀</div>
+        Growthovo
+      </div>
+      <div class="profile-btn" onclick="window.location.href='profile.html'">
+        👤
+      </div>
     </div>
 
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-value">0</div>
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value" id="streak-count">0</div>
         <div class="stat-label">Day Streak</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">0</div>
-        <div class="stat-label">XP Points</div>
+      <div class="stat-item">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" id="xp-count">0</div>
+        <div class="stat-label">Total XP</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">1</div>
+      <div class="stat-item">
+        <div class="stat-icon">💎</div>
+        <div class="stat-value" id="level-count">1</div>
         <div class="stat-label">Level</div>
       </div>
     </div>
 
-    <h2 class="section-title">Today's Mission</h2>
-    <div class="mission-card">
-      <div class="mission-title">🎯 Complete Your First Check-in</div>
-      <div class="mission-desc">Take 2 minutes to reflect on your day and set your intentions</div>
-      <span class="mission-reward">+50 XP 💎</span>
-    </div>
+    <!-- Pillars Grid -->
+    <div class="pillars-grid">
+      <div class="pillar-card pillar-mental" onclick="window.location.href='pillars-v3.html'">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">🧠</div>
+          <div class="pillar-progress">15%</div>
+        </div>
+        <div class="pillar-name">Mental Health</div>
+      </div>
 
-    <button class="cta-btn" onclick="startCheckin()">Start Daily Check-in →</button>
+      <div class="pillar-card pillar-relationships locked">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">💬</div>
+        </div>
+        <div class="pillar-name">Relationships</div>
+        <div class="lock-icon">🔒</div>
+      </div>
+
+      <div class="pillar-card pillar-career locked">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">💼</div>
+        </div>
+        <div class="pillar-name">Career</div>
+        <div class="lock-icon">🔒</div>
+      </div>
+
+      <div class="pillar-card pillar-fitness">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">💪</div>
+          <div class="pillar-progress">5%</div>
+        </div>
+        <div class="pillar-name">Fitness</div>
+      </div>
+
+      <div class="pillar-card pillar-finance locked">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">💰</div>
+        </div>
+        <div class="pillar-name">Finance</div>
+        <div class="lock-icon">🔒</div>
+      </div>
+
+      <div class="pillar-card pillar-hobbies locked">
+        <div class="pillar-icon-wrapper">
+          <div class="pillar-icon">🎨</div>
+        </div>
+        <div class="pillar-name">Hobbies</div>
+        <div class="lock-icon">🔒</div>
+      </div>
+    </div>
   </div>
 
+  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <a href="home.html" class="nav-item active">
       <div class="nav-icon">🏠</div>
       <div class="nav-label">Home</div>
     </a>
-    <a href="pillars.html" class="nav-item">
+    <a href="pillars-v3.html" class="nav-item">
       <div class="nav-icon">🎯</div>
       <div class="nav-label">Pillars</div>
     </a>
@@ -190,5 +318,33 @@
       <div class="nav-label">Profile</div>
     </a>
   </div>
+
+  <script src="lesson-service.js"></script>
+  <script>
+    // Load user stats
+    function loadStats() {
+      const progress = getLessonProgress();
+      const allPillars = ['mental-health', 'relationships', 'career', 'fitness', 'finance', 'hobbies'];
+      
+      let totalCompleted = 0;
+      allPillars.forEach(pillar => {
+        if (progress[pillar]) {
+          totalCompleted += Object.keys(progress[pillar]).length;
+        }
+      });
+      
+      const xp = totalCompleted * 50; // 50 XP per lesson
+      const level = Math.floor(xp / 100) + 1;
+      
+      document.getElementById('xp-count').textContent = xp;
+      document.getElementById('level-count').textContent = level;
+      
+      // Load streak (from localStorage)
+      const streak = localStorage.getItem('streak') || 0;
+      document.getElementById('streak-count').textContent = streak;
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadStats);
+  </script>
 </body>
 </html>
