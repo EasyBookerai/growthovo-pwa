@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pillars - Growthovo</title>
+    <style>
+        :root {
+            --bg-dark: #0A0A12;
+            --bg-dark-secondary: #111111;
+            --card-dark: #1A1A2E;
+            --card-slate-teal: #1A2A2A;
+            --text-white: #FFFFFF;
+            --text-light-gray: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --purple-premium: #7C3AED;
+            --teal-premium: #34D399;
+            --gold-matte: #D4AF37;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            
+            /* Pillar Accent Colors */
+            --mental-health: #A78BFA;
+            --relationships: #F472B6;
+            --career: #60A5FA;
+            --fitness: #34D399;
+            --finance: #FBBF24;
+            --hobbies: #F87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
+        }
+
+        /* Browser Window Context */
+        .browser-window {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100vh;
+            background: var(--bg-dark-secondary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .browser-tabs {
+            background: #202020;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-bottom: 1px solid #333;
+        }
+
+        .browser-tab {
+            background: var(--bg-dark);
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            font-size: 12px;
+            color: var(--text-light-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .browser-tab.active {
+            color: var(--text-white);
+        }
+
+        .browser-address-bar {
+            background: #181818;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #333;
+        }
+
+        .address-input {
+            flex: 1;
+            background: var(--bg-dark);
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: var(--text-light-gray);
+            font-size: 13px;
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #444;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--bg-dark);
+        }
+
+        /* Top Stats Bar */
+        .top-stats {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 40px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+        }
+
+        .stat-value {
+            color: var(--text-white);
+        }
+
+        /* Rex Avatar & Daily Mission */
+        .daily-mission-hero {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .rex-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            background: var(--card-slate-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            border: 4px solid var(--teal-premium);
+            box-shadow: 0 8px 32px rgba(52, 211, 153, 0.2);
+        }
+
+        .mission-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* Pillar Grid */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pillar-card {
+            background: var(--card-slate-teal);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .pillar-card.mental-health { border-left-color: var(--mental-health); }
+        .pillar-card.relationships { border-left-color: var(--relationships); }
+        .pillar-card.career { border-left-color: var(--career); }
+        .pillar-card.fitness { border-left-color: var(--fitness); }
+        .pillar-card.finance { border-left-color: var(--finance); }
+        .pillar-card.hobbies { border-left-color: var(--hobbies); }
+
+        .pillar-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .pillar-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .pillar-level {
+            display: inline-block;
+            background: var(--purple-premium);
+            color: var(--text-white);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--teal-premium);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            top: 150px;
+            width: 280px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .side-panel.left {
+            left: 20px;
+        }
+
+        .side-panel.right {
+            right: 20px;
+        }
+
+        .panel-card {
+            background: var(--card-slate-teal);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-collection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .badge-item {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            position: relative;
+        }
+
+        .badge-item.locked::after {
+            content: '🔒';
+            position: absolute;
+            font-size: 16px;
+            bottom: 4px;
+            right: 4px;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .rank-number {
+            font-size: 18px;
+            font-weight: 700;
+            width: 32px;
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--purple-premium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-xp {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .countdown-timer {
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid var(--teal-premium);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .countdown-time {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: var(--teal-premium);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-dark);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            max-width: 200px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--purple-premium);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .side-panel {
+                display: none;
+            }
+
+            .pillars-grid {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pillars-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .pillar-icon {
+                font-size: 48px;
+            }
+
+            .pillar-name {
+                font-size: 16px;
+            }
+
+            .mission-title {
+                font-size: 32px;
+            }
+
+            .rex-avatar {
+                width: 150px;
+                height: 150px;
+                font-size: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .top-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .pillar-card.active {
+            animation: pulse 2s infinite;
+            border-color: var(--gold-matte) !important;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Loading States */
+        .loading-skeleton {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.05) 25%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--card-dark);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--purple-premium);
+        }
+    </style>
+</head>
+<body>
+    <!-- Browser Window Context -->
+    <div class="browser-window">
+        <!-- Browser Tabs -->
+        <div class="browser-tabs">
+            <div class="browser-tab active">
+                <span>🌱</span>
+                <span>Pillars - Growthovo</span>
+            </div>
+            <div class="browser-tab">
+                <span>📊</span>
+                <span>Deployments - Vercel</span>
+            </div>
+            <div class="control-btn" style="margin-left: auto;">+</div>
+        </div>
+
+        <!-- Address Bar -->
+        <div class="browser-address-bar">
+            <div class="browser-controls">
+                <div class="control-btn">←</div>
+                <div class="control-btn">→</div>
+                <div class="control-btn">⟳</div>
+            </div>
+            <input type="text" class="address-input" value="growthovo.com/pillars-v3.html" readonly>
+            <div class="browser-controls">
+                <div class="control-btn">⭐</div>
+                <div class="control-btn">☰</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Stats Bar -->
+            <div class="top-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">❤️</span>
+                    <span class="stat-value">12</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-value">1500 XP</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🏆</span>
+                    <span class="stat-value">Bronze Lvl 34</span>
+                </div>
+            </div>
+
+            <!-- Rex & Daily Mission Hero -->
+            <div class="daily-mission-hero">
+                <div class="rex-avatar">🤖</div>
+                <h1 class="mission-title">REX CENTRAL: 6 PILLARS HUB</h1>
+            </div>
+
+            <!-- Pillars Grid -->
+            <div class="pillars-grid">
+                <!-- Career Pillar -->
+                <div class="pillar-card career" onclick="openPillarDetail('career')">
+                    <div class="pillar-icon">💼</div>
+                    <div class="pillar-name">CAREER</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+
+                <!-- Fitness Pillar -->
+                <div class="pillar-card fitness" onclick="openPillarDetail('fitness')">
+                    <div class="pillar-icon">🏋️</div>
+                    <div class="pillar-name">FITNESS</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+
+                <!-- Creativity/Hobbies Pillar -->
+                <div class="pillar-card hobbies" onclick="openPillarDetail('hobbies')">
+                    <div class="pillar-icon">💡</div>
+                    <div class="pillar-name">CREATIVITY</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+
+                <!-- Mindfulness/Mental Health Pillar -->
+                <div class="pillar-card mental-health" onclick="openPillarDetail('mental-health')">
+                    <div class="pillar-icon">🧘</div>
+                    <div class="pillar-name">MINDFULNESS</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+
+                <!-- Relationships Pillar -->
+                <div class="pillar-card relationships" onclick="openPillarDetail('relationships')">
+                    <div class="pillar-icon">💙</div>
+                    <div class="pillar-name">RELATIONSHIPS</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+
+                <!-- Finance Pillar -->
+                <div class="pillar-card finance" onclick="openPillarDetail('finance')">
+                    <div class="pillar-icon">💰</div>
+                    <div class="pillar-name">FINANCE</div>
+                    <div class="pillar-level">Lvl 3</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-text">300 / 500 XP</div>
+                </div>
+            </div>
+
+            <!-- Left Side Panel: Weekly Challenge & Badge Collection -->
+            <div class="side-panel left">
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>⚡</span>
+                        <span>WEEKLY CHALLENGE</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-light-gray); margin-bottom: 16px;">
+                        Mindfulness Mastery
+                    </p>
+                    <div class="countdown-timer">
+                        <div class="countdown-label">Complete 5 lessons this week</div>
+                        <div style="font-size: 14px; color: var(--teal-premium); margin-top: 8px;">
+                            3/5 Completed
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>🏅</span>
+                        <span>Badge Collection</span>
+                    </div>
+                    <div class="badge-collection">
+                        <div class="badge-item">🏆</div>
+                        <div class="badge-item">🥇</div>
+                        <div class="badge-item">💎</div>
+                        <div class="badge-item locked"></div>
+                        <div class="badge-item locked"></div>
+                        <div class="badge-item locked"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Panel: Leaderboard & Countdown -->
+            <div class="side-panel right">
+                <div class="panel-card">
+                    <div class="panel-title">
+                        <span>🏆</span>
+                        <span>League Leaderboard</span>
+                    </div>
+                    <div class="leaderboard-entry">
+                        <div class="rank-number">1</div>
+                        <div class="user-avatar">👤</div>
+                        <div class="user-info">
+                            <div class="user-name">Champion (You)</div>
+                            <div class="user-xp">1500 XP</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-entry">
+                        <div class="rank-number">2</div>
+                        <div class="user-avatar">🤖</div>
+                        <div class="user-info">
+                            <div class="user-name">Rex</div>
+                            <div class="user-xp">1350 XP</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-entry">
+                        <div class="rank-number">3</div>
+                        <div class="user-avatar">😄</div>
+                        <div class="user-info">
+                            <div class="user-name">Joka</div>
+                            <div class="user-xp">1200 XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="countdown-timer">
+                        <div class="countdown-label">Next TIER Unlock</div>
+                        <div class="countdown-time" id="countdown">00:25:23</div>
+                        <div style="margin-top: 12px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div style="width: 75%; height: 100%; background: var(--teal-premium);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Padding for Navigation -->
+            <div style="height: 80px;"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" onclick="navigate('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item active" onclick="navigate('pillars')">
+                <span class="nav-icon">🎯</span>
+                <span class="nav-label">Pillars</span>
+            </button>
+            <button class="nav-item" onclick="navigate('rex')">
+                <span class="nav-icon">💬</span>
+                <span class="nav-label">Rex</span>
+            </button>
+            <button class="nav-item" onclick="navigate('league')">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">League</span>
+            </button>
+            <button class="nav-item" onclick="navigate('profile')">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function navigate(page) {
+            console.log('Navigating to:', page);
+            // Remove active class from all items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Add active class to clicked item
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // In a real app, this would navigate to different pages
+            const pages = {
+                home: 'home.html',
+                pillars: 'pillars-v3.html',
+                rex: 'rex.html',
+                league: 'league.html',
+                profile: 'profile.html'
+            };
+            
+            if (pages[page] && page !== 'pillars') {
+                window.location.href = pages[page];
+            }
+        }
+
+        function openPillarDetail(pillarKey) {
+            console.log('Opening pillar detail for:', pillarKey);
+            // In a real app, this would open a modal or navigate to detail page
+            // For now, we'll just add a visual indicator
+            document.querySelectorAll('.pillar-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.pillar-card').classList.add('active');
+            
+            // Simulate opening lesson path (would navigate to skill-tree.html)
+            setTimeout(() => {
+                window.location.href = `skill-tree.html?pillar=${pillarKey}`;
+            }, 500);
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            if (!countdownEl) return;
+            
+            let [hours, minutes, seconds] = countdownEl.textContent.split(':').map(Number);
+            
+            seconds--;
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+                if (minutes < 0) {
+                    minutes = 59;
+                    hours--;
+                    if (hours < 0) {
+                        hours = 0;
+                        minutes = 0;
+                        seconds = 0;
+                    }
+                }
+            }
+            
+            countdownEl.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Simulate loading states
+        window.addEventListener('load', () => {
+            console.log('Growthovo Pillars Interface Loaded');
+            
+            // Add hover effects with haptic-like feedback (visual)
+            document.querySelectorAll('.pillar-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (!card.classList.contains('active')) {
+                        card.style.transform = '';
+                    }
+                });
+            });
+        });
+
+        // Responsive side panel handling
+        function handleResize() {
+            const sidePanels = document.querySelectorAll('.side-panel');
+            if (window.innerWidth < 1200) {
+                sidePanels.forEach(panel => panel.style.display = 'none');
+            } else {
+                sidePanels.forEach(panel => panel.style.display = 'block');
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial check
+    </script>
+</body>
+</html>
