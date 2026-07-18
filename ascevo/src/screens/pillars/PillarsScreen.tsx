@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo, useEffect } from 'react';
+import React, { useState, useCallback, memo, useEffect, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -148,6 +148,31 @@ interface LessonCardProps {
 
 const LessonCard = memo(({ lesson, accentColor, status, onPress }: LessonCardProps) => {
   const { scaleAnim, handlePressIn, handlePressOut } = useButtonPressAnimation();
+  const progressRotation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (status === 'in-progress') {
+      // Start rotation animation for progress ring
+      const rotation = Animated.loop(
+        Animated.timing(progressRotation, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        })
+      );
+      rotation.start();
+
+      return () => {
+        rotation.stop();
+        progressRotation.setValue(0);
+      };
+    }
+  }, [status, progressRotation]);
+
+  const rotate = progressRotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   const getStatusBadge = () => {
     if (status === 'completed') {
@@ -158,9 +183,9 @@ const LessonCard = memo(({ lesson, accentColor, status, onPress }: LessonCardPro
       );
     } else if (status === 'in-progress') {
       return (
-        <View style={[styles.progressRing, { borderColor: accentColor }]}>
+        <Animated.View style={[styles.progressRing, { borderColor: accentColor, transform: [{ rotate }] }]}>
           <View style={[styles.progressRingInner, { borderTopColor: accentColor }]} />
-        </View>
+        </Animated.View>
       );
     } else {
       return (
@@ -264,6 +289,8 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
       setCompletedIds(new Set(data.lessonIds));
     } catch (error) {
       console.error('Failed to load completed lessons:', error);
+      // Continue with empty set - app remains functional
+      setCompletedIds(new Set());
     }
   }
 
@@ -278,38 +305,45 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
   const handleLessonComplete = useCallback(async () => {
     if (!selectedLesson) return;
 
+    // Prevent duplicate completions
+    if (completedIds.has(selectedLesson.id)) {
+      console.log('Lesson already completed, ignoring duplicate request');
+      setSelectedLesson(null);
+      return;
+    }
+
     try {
       await completeLesson(selectedPillar.key, selectedLesson.id, updateXP);
       setSelectedLesson(null);
       await loadCompletedLessonsData();
     } catch (error) {
       console.error('Failed to complete lesson:', error);
+      // Close modal anyway to prevent stuck state
       setSelectedLesson(null);
     }
-  }, [selectedLesson, selectedPillar, updateXP]);
+  }, [selectedLesson, selectedPillar, updateXP, completedIds]);
 
   const handleLessonClose = useCallback(() => {
     setSelectedLesson(null);
   }, []);
 
   const handleChallengeAccept = useCallback(async () => {
-    // Award +30 XP for accepting challenge
-    await updateXP(30);
-    // In production, you'd track challenge completion in localStorage/Supabase
+    try {
+      // Award +30 XP for accepting challenge
+      await updateXP(30);
+      // In production, you'd track challenge completion in localStorage/Supabase
+    } catch (error) {
+      console.error('Failed to award challenge XP:', error);
+    }
   }, [updateXP]);
 
-  // Get lessons for selected pillar
-  const lessons = Object.values(LESSON_CONTENT).filter(
-    (lesson) => lesson.pillarKey === selectedPillar.key
-  ).sort((a, b) => a.number - b.number);
-
-  console.log('=== PILLARS SCREEN V2 LOADED ===');
-  console.log('Selected Pillar:', selectedPillar.key);
-  console.log('Total Lessons Available:', Object.values(LESSON_CONTENT).length);
-  console.log('Filtered Lessons:', lessons.length);
-  console.log('First Lesson:', lessons[0]?.title);
-  console.log('PILLARS Array:', PILLARS);
-  console.log('================================');
+  // Get lessons for selected pillar - memoized for performance
+  const lessons = useMemo(() => 
+    Object.values(LESSON_CONTENT)
+      .filter((lesson) => lesson.pillarKey === selectedPillar.key)
+      .sort((a, b) => a.number - b.number),
+    [selectedPillar.key]
+  );
 
   const challenge = DAILY_CHALLENGES[selectedPillar.key];
 
@@ -323,10 +357,6 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
 
   return (
     <SafeAreaView style={styles.root} testID="pillars-screen">
-      <Text style={{ color: 'red', fontSize: 24, padding: 20 }}>
-        DEBUG: PILLARS V2 RENDERED - {lessons.length} lessons
-      </Text>
-      
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Your Pillars</Text>
@@ -354,20 +384,23 @@ export default function PillarsScreen({ userId, subscriptionStatus }: Props) {
         style={styles.lessonsContainer}
         contentContainerStyle={styles.lessonsContentContainer}
         showsVerticalScrollIndicator={false}
+        removeClippedSubviews={true}
       >
-        <Text style={{ color: 'yellow', fontSize: 18, marginBottom: 10 }}>
-          DEBUG: Showing {lessons.length} lessons for {selectedPillar.name}
-        </Text>
-        
-        {lessons.map((lesson) => (
-          <LessonCard
-            key={lesson.id}
-            lesson={lesson}
-            accentColor={selectedPillar.color}
-            status={getLessonStatus(lesson)}
-            onPress={() => handleLessonPress(lesson)}
-          />
-        ))}
+        {lessons.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyStateText}>No lessons available for this pillar</Text>
+          </View>
+        ) : (
+          lessons.map((lesson) => (
+            <LessonCard
+              key={lesson.id}
+              lesson={lesson}
+              accentColor={selectedPillar.color}
+              status={getLessonStatus(lesson)}
+              onPress={() => handleLessonPress(lesson)}
+            />
+          ))
+        )}
 
         {/* Daily Challenge Card */}
         {challenge && (
@@ -601,5 +634,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: '#FFFFFF',
+  },
+
+  // Empty State
+  emptyState: {
+    padding: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateText: {
+    fontSize: 15,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
   },
 });

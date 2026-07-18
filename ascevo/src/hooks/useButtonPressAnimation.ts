@@ -2,10 +2,10 @@
  * useButtonPressAnimation Hook
  * 
  * Provides scale animation for button press feedback.
- * Animates from 1.0 → 0.95 → 1.0 with 100ms duration using native driver.
+ * Animates from 1.0 → 0.95 → 1.0 with 150ms duration using native driver.
  * 
  * Task: 13.4 Add button press feedback
- * Requirements: 20.5
+ * Requirements: 20.5, 11.1, 11.2, 11.3, 11.4
  * 
  * @returns {Object} Animation utilities
  * @returns {Animated.Value} scaleAnim - Animated value for scale transform
@@ -37,26 +37,26 @@ export function useButtonPressAnimation() {
 
   /**
    * Handle button press in
-   * Animates scale from 1.0 to 0.95 with 100ms duration
+   * Animates scale from 1.0 to 0.95 with 150ms duration
    * If reduced motion is enabled, sets duration to 0 (instant)
    */
   const handlePressIn = useCallback(() => {
     Animated.timing(scaleAnim, {
       toValue: 0.95,
-      duration: reduceMotionEnabled ? 0 : 100,
+      duration: reduceMotionEnabled ? 0 : 150,
       useNativeDriver: true,
     }).start();
   }, [scaleAnim, reduceMotionEnabled]);
 
   /**
    * Handle button press out
-   * Animates scale from 0.95 back to 1.0 with 100ms duration
+   * Animates scale from 0.95 back to 1.0 with 150ms duration
    * If reduced motion is enabled, sets duration to 0 (instant)
    */
   const handlePressOut = useCallback(() => {
     Animated.timing(scaleAnim, {
       toValue: 1.0,
-      duration: reduceMotionEnabled ? 0 : 100,
+      duration: reduceMotionEnabled ? 0 : 150,
       useNativeDriver: true,
     }).start();
   }, [scaleAnim, reduceMotionEnabled]);

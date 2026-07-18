@@ -146,8 +146,7 @@
       "view_all": "Tout voir",
       "you": "Vous"
     }
-  }
-},
+  },
   "streak": {
     "days": "{{count}} jours d'affilée",
     "at_risk": "Votre série est en danger !",
