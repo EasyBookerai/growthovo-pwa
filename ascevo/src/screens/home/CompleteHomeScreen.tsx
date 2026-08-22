@@ -289,53 +289,41 @@ export default function CompleteHomeScreen({ userId, subscriptionStatus, navigat
 
         <Text style={styles.rexTip}>💬 Rex: {rexTip}</Text>
 
-        {/* Mascot Widget */}
-        {mascotStatus && (
-          <TouchableOpacity
-            style={styles.mascotWidget}
-            onPress={() => navigation?.navigate('Mascot')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.mascotContent}>
-              <View style={styles.mascotDisplay}>
-                <MascotDisplay
-                  stage={mascotStatus.stageId}
-                  size={100}
-                  showGlow={mascotStatus.stageId === 4}
-                />
-              </View>
-              <View style={styles.mascotInfo}>
-                <Text style={styles.mascotTitle}>Your Growthovo</Text>
-                <Text style={styles.mascotStage}>{mascotStatus.stageName}</Text>
-                <Text style={styles.mascotLevel}>Level {mascotStatus.currentLevel}</Text>
-                {mascotStatus.stageId < 4 && (
-                  <View style={styles.mascotProgress}>
-                    <View style={styles.mascotProgressBar}>
-                      <View
-                        style={[
-                          styles.mascotProgressFill,
-                          {
-                            width: `${
-                              mascotStatus.xpForNextStage > 0
-                                ? (mascotStatus.totalXP /
-                                    (mascotStatus.totalXP + mascotStatus.xpForNextStage)) *
-                                  100
-                                : 100
-                            }%`,
-                          },
-                        ]}
-                      />
-                    </View>
-                    <Text style={styles.mascotProgressText}>
-                      {mascotStatus.xpForNextStage} XP to evolve
-                    </Text>
-                  </View>
-                )}
+        {/* Mascot Widget - Always show */}
+        <TouchableOpacity
+          style={styles.mascotWidget}
+          onPress={() => navigation?.navigate('Mascot')}
+          activeOpacity={0.85}
+        >
+          <View style={styles.mascotContent}>
+            <View style={styles.mascotDisplay}>
+              <Text style={{ fontSize: 80 }}>🥚</Text>
+            </View>
+            <View style={styles.mascotInfo}>
+              <Text style={styles.mascotTitle}>Your Growthovo</Text>
+              <Text style={styles.mascotStage}>
+                {mascotStatus?.stageName || 'Egg'}
+              </Text>
+              <Text style={styles.mascotLevel}>
+                Level {mascotStatus?.currentLevel || 1}
+              </Text>
+              <View style={styles.mascotProgress}>
+                <View style={styles.mascotProgressBar}>
+                  <View
+                    style={[
+                      styles.mascotProgressFill,
+                      { width: `${((mascotStatus?.totalXP || 0) % 100)}%` },
+                    ]}
+                  />
+                </View>
+                <Text style={styles.mascotProgressText}>
+                  {100 - ((mascotStatus?.totalXP || 0) % 100)} XP to next level
+                </Text>
               </View>
             </View>
-            <Text style={styles.mascotViewMore}>View Details →</Text>
-          </TouchableOpacity>
-        )}
+          </View>
+          <Text style={styles.mascotViewMore}>View Details →</Text>
+        </TouchableOpacity>
 
         {isMonday() && !wrappedDismissed && (
           <TouchableOpacity
