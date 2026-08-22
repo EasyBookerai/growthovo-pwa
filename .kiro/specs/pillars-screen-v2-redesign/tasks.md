@@ -75,7 +75,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Test button visibility on various screen sizes
   - _Requirements: 4.2, 4.4_
 
-- [~] 2.4 Write unit tests for status indicator rendering
+- [ ] 2.4 Write unit tests for status indicator rendering
   - Test checkmark displays when status is 'completed'
   - Test progress ring displays when status is 'in-progress'
   - Test Start button displays when status is 'not-started'
@@ -105,7 +105,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Test haptic consistency across platforms
   - _Requirements: 11.1, 11.2, 11.3_
 
-- [~] 3.4 Write integration tests for animation behavior
+- [ ] 3.4 Write integration tests for animation behavior
   - Test FilterChip animation triggers on press
   - Test LessonCard animation triggers on press
   - Test animations complete within 150ms
@@ -175,7 +175,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Add console log for debugging duplicate attempts
   - _Requirements: 6.4_
 
-- [~] 5.5 Write unit tests for error scenarios
+- [ ] 5.5 Write unit tests for error scenarios
   - Test empty lessons array renders empty state
   - Test storage load failure doesn't crash app
   - Test XP update failure shows error
@@ -202,7 +202,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Verify `completedIds` reloads correctly on mount
   - _Requirements: 8.2, 8.4_
 
-- [~] 6.4 Write integration tests for state management flows
+- [ ] 6.4 Write integration tests for state management flows
   - Test pillar selection updates lesson list within 200ms
   - Test lesson completion updates status immediately
   - Test completed lessons persist and reload correctly
@@ -219,7 +219,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
 
 ### 8. Lesson Modal Integration Testing
 
-- [~] 8.1 Test lesson modal open/close flow
+- [ ] 8.1 Test lesson modal open/close flow
   - Verify modal opens when lesson card is tapped
   - Verify modal displays correct lesson content
   - Verify modal uses correct pillar accent color
@@ -227,14 +227,14 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Verify scroll position is maintained after close
   - _Requirements: 9.1, 9.3, 9.4_
 
-- [~] 8.2 Test lesson completion in modal
+- [ ] 8.2 Test lesson completion in modal
   - Verify "Mark Complete" button awards 50 XP
   - Verify lesson status updates to "completed"
   - Verify modal closes automatically after completion
   - Verify lesson card shows checkmark after modal closes
   - _Requirements: 9.5, 6.1, 6.2_
 
-- [~] 8.3 Write integration tests for modal flows
+- [ ] 8.3 Write integration tests for modal flows
   - Test modal open/close behavior
   - Test lesson completion awards XP
   - Test lesson status updates after completion
@@ -243,21 +243,21 @@ The PillarsScreen V2 is already implemented with most features working. This pla
 
 ### 9. Daily Challenge Integration Testing
 
-- [~] 9.1 Test challenge content switches with pillar selection
+- [ ] 9.1 Test challenge content switches with pillar selection
   - Select each pillar and verify challenge updates
   - Verify challenge title includes pillar name
   - Verify challenge description matches pillar-specific content
   - Verify update happens within 200ms of pillar change
   - _Requirements: 5.7, 15.1-15.6_
 
-- [~] 9.2 Test challenge acceptance flow
+- [ ] 9.2 Test challenge acceptance flow
   - Tap "Accept Challenge" button
   - Verify +30 XP is awarded
   - Verify XP updates within 500ms
   - Verify button press animation plays
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [~] 9.3 Write unit tests for challenge component
+- [ ] 9.3 Write unit tests for challenge component
   - Test challenge renders with correct title and description
   - Test XP badge displays "+30 XP"
   - Test button calls onAccept callback
@@ -286,7 +286,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Check that state updates are batched correctly
   - _Requirements: 1.5, 2.3_
 
-- [~] 10.4 Write performance benchmark tests
+- [ ] 10.4 Write performance benchmark tests
   - Benchmark lesson filtering time (target < 200ms)
   - Benchmark status lookup time (target < 1ms)
   - Benchmark scroll FPS (target 60fps)
@@ -314,7 +314,7 @@ The PillarsScreen V2 is already implemented with most features working. This pla
   - Run linter and fix all warnings
   - _Requirements: N/A (code quality)_
 
-- [~] 11.4 Write comprehensive integration test suite
+- [ ] 11.4 Write comprehensive integration test suite
   - Test complete user journey: pillar select → lesson open → complete → challenge accept
   - Test edge cases: empty state, storage failure, XP failure
   - Test accessibility with screen reader simulation

@@ -1,0 +1,1266 @@
+{
+  "total": 113,
+  "highQuality": 69,
+  "needsImprovement": 44,
+  "challenges": [
+    {
+      "number": 1,
+      "id": "33333333-0300-0001-0000-000000000001",
+      "title": "Why Your Voice Shakes",
+      "challenge": "Right now, before your next moment of speaking — class, call, conversation — feel the nerves. Don't push them down. Say out loud: \"I'm excited.\" Then speak immediately. Don't wait for the feeling to change. The excitement label comes first, the feeling follows. Do this once today. Notice that speaking while \"excited\" feels different than speaking while \"nervous,\" even though your body is doing the exact same thing.",
+      "wordCount": 68,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 2,
+      "id": "33333333-0300-0001-0000-000000000002",
+      "title": "The First 10 Seconds",
+      "challenge": "Record yourself giving a 30-second opening on any topic — something you know, something you care about. Listen back. Did you start with the most interesting part? Or did you warm up first? Now rerecord it: first sentence should be your strongest point, the thing that makes someone want to hear the rest. No introduction, no setup. Just the hook. Compare the two. That's the difference between being ignored and being heard.",
+      "wordCount": 72,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 3,
+      "id": "33333333-0300-0001-0000-000000000003",
+      "title": "Filler Words and Why They Kill You",
+      "challenge": "Right now, record a 60-second voice memo about anything — your day, your plans, something you're working on. Don't prepare, just talk. Play it back and count every um, uh, like, so, you know, basically. Write that number down. That's your baseline. Tomorrow, record another 60 seconds on a different topic. Count again. Repeat for five days. Watch the number drop without trying to force it. Awareness is 80% of the fix.",
+      "wordCount": 72,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 4,
+      "id": "33333333-0300-0001-0000-000000000004",
+      "title": "Pace — Too Fast, Too Slow, Just Right",
+      "challenge": "Read one paragraph of anything out loud, deliberately slower than feels natural. Then read it again at normal pace. Notice the difference in how it lands.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 26 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 5,
+      "id": "33333333-0300-0001-0000-000000000005",
+      "title": "How to Structure Anything You Say",
+      "challenge": "Answer this question out loud right now, using PREP: \"What's one thing you're working on improving about yourself?\" Point — state your answer in one sentence. Reason — give one reason why it matters. Example — give one specific instance. Point again — restate your answer in different words. Time yourself. Under 45 seconds is the goal. Do it twice. Notice how much clearer the second one feels.",
+      "wordCount": 68,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 6,
+      "id": "33333333-0300-0001-0000-000000000007",
+      "title": "The Power of the Pause",
+      "challenge": "In your next conversation today, pause for a full two seconds before answering any question. Don't fill the gap. Just breathe, think, then answer. Count it in your head: one-Mississippi, two-Mississippi. Do it three times in the same conversation. Notice: does the silence feel as long to the other person as it does to you? Do they seem more engaged when you finally answer? That's the power of the pause.",
+      "wordCount": 70,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 7,
+      "id": "33333333-0300-0001-0000-000000000008",
+      "title": "How to Open Strong Every Time",
+      "challenge": "Pick a topic you know well. Write three different openings for it: (1) One surprising fact that contradicts common belief. (2) One question that creates tension or uncertainty. (3) The first line of a story, starting in the middle of action. Read all three out loud. Which one makes you want to hear the next sentence? That's the one to use. Try it in your next conversation, presentation, or message. Notice if people respond differently.",
+      "wordCount": 75,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 8,
+      "id": "33333333-0300-0002-0000-000000000002",
+      "title": "What to Do When You Go Blank",
+      "challenge": "Practice going blank on purpose. Right now, start talking about anything for 30 seconds. Mid-sentence, stop. Breathe. Pause for 3 seconds. Then pick up where you left off without apologizing. Do this three times. Make the recovery feel normal. Going blank is not the enemy — it's a skill to practice. The more comfortable you are with pausing and resetting, the less terrifying it becomes when it happens for real.",
+      "wordCount": 70,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 9,
+      "id": "33333333-0300-0002-0000-000000000003",
+      "title": "Disagreeing Without Backing Down",
+      "challenge": "Disagree with someone today — out loud, clearly, respectfully. It can be small: a friend's movie recommendation, a classmate's interpretation of a reading, a coworker's suggestion. Use the formula: acknowledge their point, state yours, give one reason. Don't soften it. Don't apologize for thinking differently. Just state your view and hold it. Notice: does the conversation end? Or does it deepen? Most of the time, it deepens.",
+      "wordCount": 67,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 10,
+      "id": "33333333-0300-0002-0000-000000000004",
+      "title": "Saying No Out Loud",
+      "challenge": "Say no to one thing today that you would normally say yes to out of obligation. It can be small: covering someone's shift, attending an event you don't want to go to, doing a favor that will drain you. Say it clearly: \"No, I can't do that.\" One brief reason if you want. Then stop explaining. Notice: does the person push back? Do they respect it? Does the world end? It won't. And the guilt will pass faster than you think.",
+      "wordCount": 81,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 11,
+      "id": "33333333-0300-0002-0000-000000000005",
+      "title": "Holding Your Ground in an Argument",
+      "challenge": "In your next disagreement or argument, pause and ask yourself: \"Is this new information, or just more pressure?\" If it's new information — data you didn't have, a perspective you hadn't considered, a flaw in your reasoning — update your position. If it's just pressure — they're louder, more frustrated, more insistent — hold your ground. Do this once today. Notice: does separating logic from pressure change how you argue?",
+      "wordCount": 70,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 12,
+      "id": "33333333-0300-0002-0000-000000000006",
+      "title": "Speaking Up in Groups",
+      "challenge": "In your next group setting — class, meeting, group chat, team call — set a timer for five minutes. Say something before it goes off. A question counts. Agreement with someone else's point counts. A clarifying statement counts. It doesn't have to be profound. It just has to be within the first five minutes. Do this once today. Notice how much easier the second contribution feels compared to the first.",
+      "wordCount": 70,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 13,
+      "id": "33333333-0300-0002-0000-000000000007",
+      "title": "Recovering When You Mess Up Mid-Speech",
+      "challenge": "Deliberately stumble or mispronounce something in a low-stakes conversation today. Then recover without apologizing — either acknowledge it with brief humor or just keep going as if it didn't happen. Do it once. Notice that the other person doesn't care nearly as much as you think they will. Notice that the world doesn't end. That's what mistakes feel like to everyone else — small, forgettable, human.",
+      "wordCount": 66,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 14,
+      "id": "33333333-0300-0002-0000-000000000008",
+      "title": "The Art of Staying Calm When Challenged",
+      "challenge": "Next time someone challenges or criticizes you today — in a meeting, in class, in conversation — respond at half your normal speed. Consciously slow down every word. Lower your voice slightly. Don't rush to fill silence. Take a breath before you respond. Do this once. Notice: does slowing down change how the other person responds? Do they become less aggressive? Does the conversation shift? That's the power of controlled calm.",
+      "wordCount": 71,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 15,
+      "id": "33333333-0300-0003-0000-000000000001",
+      "title": "What Charisma Actually Is",
+      "challenge": "In your next conversation today — with anyone — give them your complete, undivided attention. Phone away. Eyes on them. Brain on what they're saying, not on what you'll say next. No mental planning. Just listen. Do this for one full conversation. Notice: how does the other person respond? Do they open up more? Do they seem more engaged? That's charisma. It's not complicated. It's just rare.",
+      "wordCount": 67,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 16,
+      "id": "33333333-0300-0004-0000-000000000001",
+      "title": "Why We Avoid Hard Conversations",
+      "challenge": "Identify one conversation you've been avoiding. Write down what you're afraid will happen if you have it. Then write what will happen if you never have it. Decide which outcome is worse.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 17,
+      "id": "33333333-0300-0004-0000-000000000002",
+      "title": "How to Start Without Starting a Fight",
+      "challenge": "Write the opening line of a hard conversation you need to have. Make sure it starts with \"I\" and describes your experience, not their behaviour. That's the whole task.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 18,
+      "id": "33333333-0300-0004-0000-000000000003",
+      "title": "Saying What You Mean Without Being Mean",
+      "challenge": "Give one piece of specific, direct feedback to someone today. Focus on the behaviour, not the person. Keep it to one sentence. Say it clearly.",
+      "wordCount": 25,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 25 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 19,
+      "id": "33333333-0300-0004-0000-000000000004",
+      "title": "Receiving Criticism Without Collapsing",
+      "challenge": "Ask someone for one piece of honest feedback today. When they give it, say \"thank you\" and ask one follow-up question. Don't defend yourself. Just listen and learn.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 20,
+      "id": "33333333-0300-0004-0000-000000000005",
+      "title": "Apologising Properly",
+      "challenge": "Think of one person you owe a real apology to. Write the three-part apology: what you did, why it was wrong, what you'll do differently. Send it today if you can.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 21,
+      "id": "33333333-0300-0004-0000-000000000006",
+      "title": "Confronting Someone You Care About",
+      "challenge": "Write down one thing you've been wanting to say to someone you care about. Write the opening line that leads with the relationship. You don't have to send it today — but write it.",
+      "wordCount": 34,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 22,
+      "id": "33333333-0300-0004-0000-000000000007",
+      "title": "Setting a Boundary Out Loud",
+      "challenge": "Identify one boundary you need to set with someone in your life. Write the exact words you would say. Say them out loud to yourself three times. Then decide when you'll say them for real.",
+      "wordCount": 35,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 23,
+      "id": "33333333-0300-0004-0000-000000000008",
+      "title": "Ending Conversations That Need Ending",
+      "challenge": "End one conversation today with a clear, deliberate close. Summarise, state next steps if any, and close with a specific line. Notice how much cleaner it feels than trailing off.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 24,
+      "id": "33333333-0100-0001-0000-000000000001",
+      "title": "What Anxiety Actually Is",
+      "challenge": "Next time you feel anxious today, say out loud or write: \"I notice I'm feeling anxious.\" Don't try to fix it. Just name it. Notice what happens to the intensity.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 25,
+      "id": "33333333-0100-0001-0000-000000000002",
+      "title": "Your Brain Is Lying to You",
+      "challenge": "Write down one anxious thought you've had today. Then write: \"Is this a fact or a feeling?\" Write the evidence for and against it. See what's actually true.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 26,
+      "id": "33333333-0100-0001-0000-000000000003",
+      "title": "The Anxiety Loop and How to Break It",
+      "challenge": "Identify one small thing you've been avoiding because of anxiety. Do a 10% version of it today. Not the full thing — just a step toward it. Notice that you survived.",
+      "wordCount": 31,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 27,
+      "id": "33333333-0100-0001-0000-000000000004",
+      "title": "Triggers — What Sets You Off and Why",
+      "challenge": "Write down one thing that reliably triggers a strong emotional reaction in you. Write one sentence about where you think it comes from. That awareness is the first step to changing the response.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 28,
+      "id": "33333333-0100-0001-0000-000000000005",
+      "title": "The Physical Side of Anxiety",
+      "challenge": "Do a body scan right now. Start at your feet and move up. Where are you holding tension? Breathe into that spot and consciously release it. Do this for two minutes.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 29,
+      "id": "33333333-0100-0001-0000-000000000006",
+      "title": "Social Anxiety Specifically",
+      "challenge": "Go to one social situation today that you'd normally avoid or leave early. Stay for 10 minutes longer than you want to. Notice that nothing catastrophic happens.",
+      "wordCount": 27,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ TOO SHORT - 27 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 30,
+      "id": "33333333-0100-0001-0000-000000000007",
+      "title": "Anticipatory Anxiety — Dreading Before It Happens",
+      "challenge": "Write down one thing you're dreading. Write the most likely outcome — not the worst case. Then write what you'll do after it's over. Remind yourself it will be over.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 31,
+      "id": "33333333-0100-0001-0000-000000000008",
+      "title": "Anxiety vs Intuition — How to Tell the Difference",
+      "challenge": "Think of a decision you're currently facing. Write down what your gut says. Then ask: is this a vague dread or a specific concern? Write the answer. Let it inform your decision.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 32,
+      "id": "33333333-0100-0003-0000-000000000001",
+      "title": "Emotions Are Information Not Instructions",
+      "challenge": "Next time you feel a strong emotion today, pause and ask: \"What is this telling me?\" Write the answer. Then decide what, if anything, to do with that information.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 33,
+      "id": "33333333-0100-0003-0000-000000000002",
+      "title": "The Space Between Stimulus and Response",
+      "challenge": "In your next emotionally charged moment today, count to three before responding. Even if it's just a text message. Notice how different your response is when you give yourself three seconds.",
+      "wordCount": 31,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 34,
+      "id": "33333333-0100-0003-0000-000000000004",
+      "title": "Processing Without Suppressing",
+      "challenge": "Set a 10-minute timer. Sit with one difficult emotion you've been avoiding. Don't try to fix it or analyse it. Just feel it. When the timer goes off, write one sentence about what you noticed.",
+      "wordCount": 35,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 35,
+      "id": "33333333-0100-0003-0000-000000000007",
+      "title": "Loneliness vs Being Alone",
+      "challenge": "Spend 30 minutes alone today with no phone, no music, no podcast. Just you. Notice what comes up. Write one sentence about how it felt.",
+      "wordCount": 25,
+      "issues": [
+        "⚠️ TOO SHORT - 25 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 36,
+      "id": "33333333-0100-0003-0000-000000000008",
+      "title": "How to Sit With Discomfort",
+      "challenge": "Sit with one uncomfortable feeling for five minutes today. Don't try to fix it, analyse it, or escape it. Just observe it. Write one word that describes what you noticed.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 37,
+      "id": "33333333-0100-0005-0000-000000000001",
+      "title": "Building Mental Toughness",
+      "challenge": "Do one hard thing today that you've been avoiding. Not the hardest thing — just one step harder than comfortable. Write down how you feel after you do it.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 38,
+      "id": "33333333-0100-0005-0000-000000000002",
+      "title": "Acceptance vs Giving Up",
+      "challenge": "Write down one thing you've been fighting against accepting. Write: \"This is true. I can't change it. What can I do from here?\" Focus on the last question.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 39,
+      "id": "33333333-0100-0005-0000-000000000003",
+      "title": "Rumination — When Thinking Becomes Harmful",
+      "challenge": "Set a 10-minute timer right now. Think about one thing you've been ruminating on. When the timer goes off, stand up, walk around, and redirect your attention to something in the present. Notice the shift.",
+      "wordCount": 35,
+      "issues": [
+        "⚠️ VAGUE ACTION - Opens with \"try to\", \"think about\", or similar weak phrasing"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 40,
+      "id": "33333333-0100-0005-0000-000000000004",
+      "title": "The Negativity Bias and How to Counter It",
+      "challenge": "Write three specific good things that happened today. Not general — specific moments. Hold each one in your mind for 20 seconds before writing the next. Do this every night this week.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 41,
+      "id": "33333333-0100-0005-0000-000000000005",
+      "title": "Mindfulness Without the Clichés",
+      "challenge": "Set a timer for two minutes right now. Focus only on your breath. When your mind wanders, bring it back without judgment. That's it. That's mindfulness. Do it once today.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 42,
+      "id": "33333333-0100-0005-0000-000000000006",
+      "title": "Decision Making Under Pressure",
+      "challenge": "Think of a decision you're currently facing. Write: \"What would I advise a close friend to do in this exact situation?\" Write the answer. Notice if it's different from what you've been planning.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 43,
+      "id": "33333333-0100-0005-0000-000000000007",
+      "title": "Building Psychological Safety With Yourself",
+      "challenge": "Write down one recent mistake. Write what you'd say to a close friend who made the same mistake. Then say that to yourself. Read it out loud. Mean it.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 44,
+      "id": "33333333-0100-0005-0000-000000000008",
+      "title": "The Mind of Someone Who Has Figured It Out",
+      "challenge": "Write down one thing you've been waiting to feel ready for. Decide to do one step of it today, before you feel ready. That's the whole practice. That's the whole lesson.",
+      "wordCount": 31,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 45,
+      "id": "33333333-0400-0001-0000-000000000001",
+      "title": "What Money Actually Is",
+      "challenge": "Write down three beliefs about money you grew up with. For each one, write: \"Is this true, or is this just what I was taught?\" Notice which ones are limiting you.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 46,
+      "id": "33333333-0400-0001-0000-000000000002",
+      "title": "The Money Story You Inherited",
+      "challenge": "Write your money story in three sentences. Where did it come from? Is it serving you? Write the money story you want to have instead.",
+      "wordCount": 25,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 25 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 47,
+      "id": "33333333-0400-0001-0000-000000000003",
+      "title": "Scarcity vs Abundance Thinking",
+      "challenge": "Write down one financial decision you've been avoiding out of scarcity thinking. Ask: \"What would I do if I believed I could create more?\" Write the answer. Take one step toward it.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 48,
+      "id": "33333333-0400-0001-0000-000000000004",
+      "title": "Why Smart People Are Broke",
+      "challenge": "Write down your three biggest spending categories last month. For each one, ask: \"Is this building my future or funding my image?\" Be honest. Write what you find.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 49,
+      "id": "33333333-0400-0001-0000-000000000005",
+      "title": "The Emotional Relationship With Spending",
+      "challenge": "Track your spending today and write one word next to each purchase describing how you felt when you made it. At the end of the day, look for the pattern.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 50,
+      "id": "33333333-0400-0001-0000-000000000006",
+      "title": "Money and Self-Worth",
+      "challenge": "Write down three things about yourself that have nothing to do with money or achievement. Read them out loud. These are also true. These also matter.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 26 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 51,
+      "id": "33333333-0400-0001-0000-000000000007",
+      "title": "Delayed Gratification and Wealth",
+      "challenge": "Identify one thing you spend money on regularly that you could reduce or eliminate. Calculate how much that would be in a year. Write what you could do with that money instead.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 52,
+      "id": "33333333-0400-0002-0000-000000000001",
+      "title": "Why Budgets Fail",
+      "challenge": "Write down your top three financial goals. Then build a budget that funds those goals first. Everything else is secondary. Start with the goals, not the restrictions.",
+      "wordCount": 27,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 27 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 53,
+      "id": "33333333-0400-0002-0000-000000000002",
+      "title": "The 50/30/20 Rule — And When to Break It",
+      "challenge": "Calculate your current 50/30/20 split. What percentage actually goes to needs, wants, and savings? Write the numbers. Then write what you want them to be. That gap is your plan.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 54,
+      "id": "33333333-0400-0002-0000-000000000003",
+      "title": "Tracking Spending Without Obsessing",
+      "challenge": "Track every purchase today. Write it down as you make it — not at the end of the day. At the end of today, look at the list. Notice anything surprising.",
+      "wordCount": 31,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 55,
+      "id": "33333333-0400-0002-0000-000000000004",
+      "title": "Fixed vs Variable — Know Your Numbers",
+      "challenge": "Write down all your fixed costs for this month. Then estimate your variable costs. Track the variable costs for one week and compare to your estimate. The gap is your opportunity.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 56,
+      "id": "33333333-0400-0002-0000-000000000005",
+      "title": "Subscriptions Are Bleeding You",
+      "challenge": "Open your bank statement right now. Find every recurring charge. Write them all down. Cancel any you haven't used in the last 30 days. Do it before you close this app.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 57,
+      "id": "33333333-0400-0002-0000-000000000006",
+      "title": "The Latte Factor — Real or Myth?",
+      "challenge": "Identify your three biggest monthly expenses. For each one, ask: \"Is there a version of this that costs 20% less?\" Write the answer. One of them probably has a yes.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 58,
+      "id": "33333333-0400-0002-0000-000000000007",
+      "title": "Emergency Fund — Why and How Much",
+      "challenge": "Calculate three months of your essential expenses. That's your emergency fund target. Write the number. Then write how much you currently have. The gap is your savings goal.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 59,
+      "id": "33333333-0400-0002-0000-000000000008",
+      "title": "Automating Your Finances",
+      "challenge": "Set up one automatic transfer today. Even €10 to a savings account on payday. Go to your banking app right now and set it up. The amount is not the point. The automation is.",
+      "wordCount": 34,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 60,
+      "id": "33333333-0400-0003-0000-000000000001",
+      "title": "The Fastest Way to Earn More Right Now",
+      "challenge": "Write down three things you know how to do that someone else would pay for. For each one, write one person or type of person who would pay for it. That's your starting point.",
+      "wordCount": 34,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 61,
+      "id": "33333333-0400-0003-0000-000000000002",
+      "title": "Selling — The Skill Everything Else Depends On",
+      "challenge": "Practise selling yourself today. Tell one person about one thing you're good at and how it could help someone. Keep it to two sentences. Notice how it feels.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 62,
+      "id": "33333333-0400-0003-0000-000000000003",
+      "title": "Your First €100 Online",
+      "challenge": "Make a plan to earn €100 online this week. Write down exactly how you'll do it. Then take the first step today — list something, send one message, post one offer. Start.",
+      "wordCount": 32,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 63,
+      "id": "33333333-0400-0004-0000-000000000001",
+      "title": "Why You Must Invest (Not Optional)",
+      "challenge": "Calculate what €100/month invested at 7% annual return would be worth in 20 years. Use a compound interest calculator online. Write the number. Let it motivate you.",
+      "wordCount": 27,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 27 words (target: 50-75)"
+      ],
+      "qualityScore": 2
+    },
+    {
+      "number": 64,
+      "id": "33333333-0400-0004-0000-000000000002",
+      "title": "Compound Interest — The Eighth Wonder",
+      "challenge": "Open a compound interest calculator. Enter €50/month, 7% return, 40 years. Write the result. Then enter the same but starting 10 years later. Write that result. The difference is the cost of waiting.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 65,
+      "id": "33333333-0400-0004-0000-000000000003",
+      "title": "Index Funds — The Simple Strategy That Wins",
+      "challenge": "Research one low-cost index fund available in your country. Write its name, its annual fee (expense ratio), and its 10-year return. That's your first investment candidate.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 26 words (target: 50-75)",
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 66,
+      "id": "33333333-0400-0004-0000-000000000004",
+      "title": "Risk — What It Actually Means",
+      "challenge": "Write down your biggest fear about investing. Then write the actual probability of that outcome over a 20-year horizon. Research it if you need to. The fear is probably bigger than the risk.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 67,
+      "id": "33333333-0400-0004-0000-000000000006",
+      "title": "Starting With Nothing",
+      "challenge": "Open an investment account today if you don't have one. Research one option available in your country. If you already have one, make one investment — even €10. Do it before tonight.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 68,
+      "id": "33333333-0400-0004-0000-000000000007",
+      "title": "The Biggest Investment Mistakes Young People Make",
+      "challenge": "Write down the four biggest investment mistakes. For each one, write whether you've made it or are at risk of making it. Write one thing you'll do differently.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 69,
+      "id": "33333333-0400-0004-0000-000000000008",
+      "title": "Your First Investment This Week",
+      "challenge": "Make your first investment this week. If you already invest, increase your monthly contribution by €10. Write down what you invested in and how much. That's the whole challenge.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 70,
+      "id": "33333333-0400-0005-0000-000000000001",
+      "title": "Taxes — What You Need to Know",
+      "challenge": "Research one tax deduction or tax-advantaged account available in your country that you're not currently using. Write what it is and how much it could save you. That's your next financial move.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 71,
+      "id": "33333333-0400-0005-0000-000000000002",
+      "title": "Debt — Good vs Bad",
+      "challenge": "List all your debts with their interest rates. Rank them from highest to lowest rate. Write a plan to attack the highest-rate debt first. That's your debt strategy.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 72,
+      "id": "33333333-0400-0005-0000-000000000003",
+      "title": "Building Credit When You Have None",
+      "challenge": "Check your credit score today if you can. Write it down. If you don't have a credit card, research one with no annual fee. If you have one, check your utilisation rate. Keep it under 30%.",
+      "wordCount": 36,
+      "issues": [
+        "⚠️ POSSIBLY TOO COMPLEX - May take >10 minutes"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 73,
+      "id": "33333333-0400-0005-0000-000000000004",
+      "title": "The Psychology of Pricing",
+      "challenge": "Next time you make a purchase today, identify one pricing tactic being used on you. Write it down. Then decide if you'd still make the purchase if the tactic wasn't there.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 74,
+      "id": "33333333-0400-0005-0000-000000000005",
+      "title": "Negotiation — Everything Is Negotiable",
+      "challenge": "Negotiate one thing today. Call your phone provider, your gym, or your insurance company. Ask for a better rate. Use this script: \"I've been a customer for X years. Is there a better rate available?\" See what happens.",
+      "wordCount": 38,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 75,
+      "id": "33333333-0400-0005-0000-000000000006",
+      "title": "Building Wealth vs Looking Wealthy",
+      "challenge": "Write down three things you spend money on to signal status rather than for genuine enjoyment. For each one, ask: \"Would I buy this if no one could see it?\" Be honest.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 76,
+      "id": "33333333-0400-0005-0000-000000000007",
+      "title": "Financial Independence — What It Actually Means",
+      "challenge": "Calculate your financial independence number: multiply your annual expenses by 25. Write the number. Then calculate how long it would take to reach it investing your current savings rate. That's your timeline.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 77,
+      "id": "33333333-0400-0005-0000-000000000008",
+      "title": "The Money Identity",
+      "challenge": "Write this sentence: \"I am someone who builds wealth.\" Write three actions that person takes regularly. Do one of those actions today. That's your vote for the new identity.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 78,
+      "id": "33333333-0500-0001-0000-000000000001",
+      "title": "Why Personal Brand Matters Now More Than Ever",
+      "challenge": "Google yourself right now. Write down what you find. Is this the impression you want to make? Write one thing you'll change or add to your online presence this week.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 79,
+      "id": "33333333-0500-0001-0000-000000000002",
+      "title": "What You Stand For",
+      "challenge": "Write your professional point of view in one sentence. What do you believe that most people in your field don't? That sentence is the foundation of your brand.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 80,
+      "id": "33333333-0500-0001-0000-000000000003",
+      "title": "Finding Your Niche — Specific Beats General",
+      "challenge": "Write your current professional description. Then make it 50% more specific. Add an industry, a type of client, or a specific problem you solve. Read both versions. Notice which one is more compelling.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 81,
+      "id": "33333333-0500-0001-0000-000000000004",
+      "title": "Your Online Presence Audit",
+      "challenge": "Audit your LinkedIn and one other platform today. Check: profile photo, bio, recent posts. Write three things you'll update. Do at least one of them today.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ TOO SHORT - 26 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 82,
+      "id": "33333333-0500-0001-0000-000000000006",
+      "title": "The Bio That Makes People Want to Know More",
+      "challenge": "Write a new bio for one platform today. Include: what you do, who you help, and one thing that makes you interesting. Keep it under 160 characters. Write three versions and pick the best one.",
+      "wordCount": 35,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 83,
+      "id": "33333333-0500-0001-0000-000000000007",
+      "title": "Consistency — The Brand Killer and Maker",
+      "challenge": "Commit to one posting schedule for one platform. Write it down: \"I will post on [platform] every [day] about [topic].\" Set a reminder. Post something today to start the streak.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 84,
+      "id": "33333333-0500-0001-0000-000000000008",
+      "title": "Personal Brand vs Fake Brand",
+      "challenge": "Write down three things you genuinely believe about your field that most people don't say out loud. Pick one and write a post about it. That's authentic content. Post it today.",
+      "wordCount": 31,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 85,
+      "id": "33333333-0500-0002-0000-000000000001",
+      "title": "Marketing Is Not Bragging",
+      "challenge": "Share one thing you've worked on or learned this week on any platform. One post, one message, one conversation. Tell someone what you're building. Do it today.",
+      "wordCount": 27,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 27 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 86,
+      "id": "33333333-0500-0002-0000-000000000002",
+      "title": "Content That Demonstrates Value",
+      "challenge": "Write one piece of content today that answers a question someone in your field regularly asks. Post it somewhere. It doesn't have to be long. One useful insight is enough.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 87,
+      "id": "33333333-0500-0002-0000-000000000003",
+      "title": "The Hook — First Line Is Everything",
+      "challenge": "Write five different hooks for the same piece of content. Pick the one that makes you most want to read the rest. Use that one. Throw the others away.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 88,
+      "id": "33333333-0500-0002-0000-000000000004",
+      "title": "Storytelling for Career Growth",
+      "challenge": "Write a two-minute story about a professional challenge you faced and how you solved it. Include: the situation, the obstacle, what you did, and the result. Practise saying it out loud once.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 89,
+      "id": "33333333-0500-0002-0000-000000000005",
+      "title": "Building in Public",
+      "challenge": "Share one thing you're currently working on — not finished, just in progress. A sketch, a draft, a question you're trying to answer. Post it somewhere today. The imperfection is the point.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 90,
+      "id": "33333333-0500-0002-0000-000000000006",
+      "title": "The Portfolio That Speaks For Itself",
+      "challenge": "Review your portfolio or work samples today. Remove anything that doesn't represent your best work. Add context to your best three pieces: the problem, your approach, the result.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 91,
+      "id": "33333333-0500-0002-0000-000000000007",
+      "title": "Email That Gets Replies",
+      "challenge": "Write one professional email today using the formula: one sentence of context, one clear ask, one easy next step. Keep it under 100 words. Send it.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 26 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 92,
+      "id": "33333333-0500-0002-0000-000000000008",
+      "title": "Going Viral Is Not the Goal",
+      "challenge": "Write down your content goal. Not \"get more followers\" — something specific: \"get one client inquiry per month\" or \"get invited to speak at one event.\" Write the content strategy that serves that goal.",
+      "wordCount": 34,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 93,
+      "id": "33333333-0500-0003-0000-000000000001",
+      "title": "Why Networking Has a Bad Name",
+      "challenge": "Reach out to one person you find interesting today. Not to ask for anything — just to say you've been following their work and found it valuable. One genuine message. No agenda.",
+      "wordCount": 32,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 94,
+      "id": "33333333-0500-0003-0000-000000000002",
+      "title": "How to Approach Someone You Admire",
+      "challenge": "Find one person you admire online. Write a specific, genuine message about something they've created or said that affected you. Send it today. No ask. Just genuine appreciation.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 95,
+      "id": "33333333-0500-0003-0000-000000000005",
+      "title": "Giving Before Asking",
+      "challenge": "Make one introduction today between two people in your network who should know each other. Write a two-sentence email introducing them and why they should connect. Send it.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 96,
+      "id": "33333333-0500-0003-0000-000000000006",
+      "title": "Online Networking Without Being Annoying",
+      "challenge": "Find three people you want to connect with online. Comment on one piece of their content today with a genuine, specific thought. Not \"great post\" — a real reaction or question.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 97,
+      "id": "33333333-0500-0003-0000-000000000007",
+      "title": "Turning Contacts Into Relationships",
+      "challenge": "Pick five people in your network you want to build a real relationship with. Write their names. Engage with something they've shared or send a brief, genuine message to one of them today.",
+      "wordCount": 33,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 98,
+      "id": "33333333-0500-0003-0000-000000000008",
+      "title": "The Network That Opens Doors",
+      "challenge": "Look at your network. Write down the industries represented. Identify one industry you're not connected to that could be valuable. Find one person in that industry and reach out today.",
+      "wordCount": 30,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 99,
+      "id": "33333333-0500-0005-0000-000000000001",
+      "title": "AI Tools That Give You an Unfair Advantage",
+      "challenge": "Pick one task you do regularly that takes more than 30 minutes. Try using an AI tool to do a first draft of it today. Spend your time improving the output instead of creating from scratch.",
+      "wordCount": 36,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 100,
+      "id": "33333333-0500-0005-0000-000000000002",
+      "title": "Deep Work in a Distracted World",
+      "challenge": "Block two hours tomorrow morning for deep work. No email, no phone, no meetings. Write what you'll work on. Protect the block. Do it.",
+      "wordCount": 24,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 24 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 101,
+      "id": "33333333-0500-0005-0000-000000000003",
+      "title": "Managing Up — Working With People Above You",
+      "challenge": "Send your manager or a senior stakeholder a brief update today. Three lines: what you've done, what you're working on, what you need. Do it before end of day.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 102,
+      "id": "33333333-0500-0005-0000-000000000004",
+      "title": "Leadership Before the Title",
+      "challenge": "Identify one leadership behaviour you can demonstrate today without a title. Mentor someone, solve a problem, take initiative on something no one asked you to do. Do it.",
+      "wordCount": 28,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 28 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 103,
+      "id": "33333333-0500-0005-0000-000000000005",
+      "title": "Saying No to the Wrong Opportunities",
+      "challenge": "Write down your top career goal for the next three years. Then look at your current commitments. Identify one thing that doesn't serve that goal. Write what you'd do if you said no to it.",
+      "wordCount": 35,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 104,
+      "id": "33333333-0500-0005-0000-000000000006",
+      "title": "Building a Business While Employed",
+      "challenge": "Write down one business idea you've been thinking about. Write the smallest possible version you could test this week without quitting anything. Take one step toward that test today.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 105,
+      "id": "33333333-0500-0005-0000-000000000007",
+      "title": "The Career Decisions That Compound",
+      "challenge": "Think of a career decision you're currently facing. Ask: \"Does this compound?\" Write the 5-year version of both options. Choose the one that builds something.",
+      "wordCount": 25,
+      "issues": [
+        "⚠️ NO TIME-BOUND ELEMENT - Missing \"right now\", \"today\", or specific timeframe",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 25 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 106,
+      "id": "33333333-0500-0005-0000-000000000008",
+      "title": "The Person Who Gets What They Want",
+      "challenge": "Write down exactly what you want in your career in the next two years. Be specific. Then tell one person — a manager, a mentor, a colleague — what you want. Say it out loud. Today.",
+      "wordCount": 36,
+      "issues": [],
+      "qualityScore": 6
+    },
+    {
+      "number": 107,
+      "id": "33333333-0600-0001-0000-000000000001",
+      "title": "Why Genuine Connection Is Rare",
+      "challenge": "Have one genuinely honest conversation today. Share something real — not just facts about your life, but how you actually feel about something. Notice how the other person responds.",
+      "wordCount": 29,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ TOO SHORT - 29 words (target: 50-75)"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 108,
+      "id": "33333333-0600-0001-0000-000000000002",
+      "title": "The Art of Actually Listening",
+      "challenge": "In your next conversation today, put your phone away and give the other person your complete attention. When they finish speaking, summarise what they said before responding. Do it once.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    },
+    {
+      "number": 109,
+      "id": "33333333-0600-0001-0000-000000000003",
+      "title": "Asking Better Questions",
+      "challenge": "Replace \"how are you?\" with one better question in every conversation today. Write the question you'll use before you start. Notice how different the conversations are.",
+      "wordCount": 26,
+      "issues": [
+        "⚠️ TOO SHORT - 26 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 110,
+      "id": "33333333-0600-0001-0000-000000000004",
+      "title": "Vulnerability Without Oversharing",
+      "challenge": "Share one genuine opinion or feeling in a conversation today that you'd normally keep to yourself. Not your deepest secret — just something real. Notice how the other person responds.",
+      "wordCount": 30,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 111,
+      "id": "33333333-0600-0001-0000-000000000005",
+      "title": "Making Friends as an Adult",
+      "challenge": "Initiate one social plan today. Text someone you'd like to know better and suggest something specific: \"Want to grab coffee this week?\" Specific beats vague. Send it.",
+      "wordCount": 27,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt",
+        "⚠️ TOO SHORT - 27 words (target: 50-75)"
+      ],
+      "qualityScore": 3
+    },
+    {
+      "number": 112,
+      "id": "33333333-0600-0001-0000-000000000006",
+      "title": "Being Interested vs Being Interesting",
+      "challenge": "In your next social interaction, ask three questions before sharing anything about yourself. Genuine questions, not small talk. Notice how the conversation changes.",
+      "wordCount": 23,
+      "issues": [
+        "⚠️ TOO SHORT - 23 words (target: 50-75)"
+      ],
+      "qualityScore": 5
+    },
+    {
+      "number": 113,
+      "id": "33333333-0600-0001-0000-000000000007",
+      "title": "How to Keep Friendships Alive",
+      "challenge": "Think of one friend you haven't spoken to in a while. Send them one message today — not a long catch-up, just something that made you think of them. That's it.",
+      "wordCount": 31,
+      "issues": [
+        "⚠️ WEAK ACTION - No clear imperative verb in opening",
+        "⚠️ UNCLEAR SUCCESS CRITERIA - No \"notice\", measurement, or reflection prompt"
+      ],
+      "qualityScore": 4
+    }
+  ]
+}

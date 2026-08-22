@@ -614,3 +614,23 @@ export interface UserPreference {
   createdAt: string;
   updatedAt: string;
 }
+
+// ============================================================
+// Mascot Evolution System — New Types
+// ============================================================
+
+export {
+  MascotStage,
+  MASCOT_STAGE_NAMES,
+  DEFAULT_MASCOT_ANIMATION,
+} from './mascot';
+
+export type {
+  MascotStageData,
+  UserMascotProgress,
+  MascotStatus,
+  MascotEvolutionEvent,
+  MascotEvolutionHistory,
+  MascotDisplayProps,
+  MascotAnimationConfig,
+} from './mascot';

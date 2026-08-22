@@ -44,6 +44,7 @@ import ComebackSuccessScreen from './src/screens/relapse/ComebackSuccessScreen';
 import StartFreshScreen from './src/screens/relapse/StartFreshScreen';
 import SpeakingNavigator from './src/screens/speaking/SpeakingNavigator';
 import RexScreen from './src/screens/rex/RexScreen';
+import MascotScreen from './src/screens/MascotScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -405,6 +406,11 @@ export default function App() {
                     subscriptionStatus={subscriptionStatus}
                     language={userProfile?.language || 'en'}
                   />
+                )}
+              </Stack.Screen>
+              <Stack.Screen name="Mascot">
+                {(props) => (
+                  <MascotScreen {...props} />
                 )}
               </Stack.Screen>
               <Stack.Screen name="Paywall">

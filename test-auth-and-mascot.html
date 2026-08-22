@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Growthovo Auth & Mascot</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: monospace; padding: 20px; background: #0A0A12; color: #fff;">
+    <h1>🔍 Growthovo Debug Tool</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message, type = 'info') {
+            const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#fff';
+            output.innerHTML += `<div style="color: ${color}; margin: 5px 0;">${message}</div>`;
+        }
+
+        async function test() {
+            try {
+                // Get env vars from .env (you'll need to paste them here)
+                const SUPABASE_URL = 'PASTE_YOUR_URL_HERE';
+                const SUPABASE_ANON_KEY = 'PASTE_YOUR_KEY_HERE';
+
+                if (SUPABASE_URL === 'PASTE_YOUR_URL_HERE') {
+                    log('❌ ERROR: Edit this file and paste your Supabase URL and Key', 'error');
+                    return;
+                }
+
+                log('🔄 Connecting to Supabase...');
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+                // Test 1: Check current session
+                log('\n📋 Test 1: Checking session...');
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    log(`✅ Logged in as: ${session.user.email}`, 'success');
+                    log(`   User ID: ${session.user.id}`);
+                    
+                    // Test 2: Check if mascot data exists
+                    log('\n📋 Test 2: Checking mascot data...');
+                    const { data: mascotData, error: mascotError } = await supabase
+                        .from('user_mascot_progress')
+                        .select('*')
+                        .eq('user_id', session.user.id);
+                    
+                    if (mascotError) {
+                        log(`❌ Mascot query error: ${mascotError.message}`, 'error');
+                    } else if (mascotData && mascotData.length > 0) {
+                        log(`✅ Mascot data found:`, 'success');
+                        log(`   Stage: ${mascotData[0].current_stage}`);
+                        log(`   Level: ${mascotData[0].current_level}`);
+                        log(`   XP: ${mascotData[0].total_xp}`);
+                    } else {
+                        log(`⚠️ No mascot data for this user`, 'error');
+                    }
+                    
+                    // Test 3: Test the RPC function
+                    log('\n📋 Test 3: Testing RPC function...');
+                    const { data: rpcData, error: rpcError } = await supabase
+                        .rpc('get_user_mascot_status', { p_user_id: session.user.id });
+                    
+                    if (rpcError) {
+                        log(`❌ RPC error: ${rpcError.message}`, 'error');
+                        log(`   Hint: The function might not exist or has wrong permissions`);
+                    } else if (rpcData && rpcData.length > 0) {
+                        log(`✅ RPC function works!`, 'success');
+                        log(`   Returns: ${JSON.stringify(rpcData[0], null, 2)}`);
+                    } else {
+                        log(`⚠️ RPC function returns empty`, 'error');
+                    }
+                    
+                } else {
+                    log('❌ Not logged in', 'error');
+                    log('   Go to your app and sign in first, then refresh this page');
+                }
+                
+            } catch (err) {
+                log(`❌ Error: ${err.message}`, 'error');
+            }
+        }
+
+        test();
+    </script>
+</body>
+</html>

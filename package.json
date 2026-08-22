@@ -6,6 +6,7 @@
     "build": "cd growthovo && npm install && npx expo export:web"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "openai": "^6.39.1"
   }
 }

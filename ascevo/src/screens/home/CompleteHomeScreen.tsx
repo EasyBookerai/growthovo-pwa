@@ -16,6 +16,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../../services/supabaseClient';
 import { colors, typography, spacing } from '../../theme';
 import CheckInModal from '../../components/CheckInModal';
+import { MascotDisplay } from '../../components/MascotDisplay';
+import { MascotEvolutionModal } from '../../components/MascotEvolutionModal';
+import { useMascot } from '../../hooks/useMascot';
 import { useAppContext } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -63,6 +66,23 @@ const REX_MOTIVATIONS = [
 export default function CompleteHomeScreen({ userId, subscriptionStatus, navigation }: Props) {
   const { xp, streak, level, updateXP, updateStreak, error, clearError } = useAppContext();
   const { showToast } = useToast();
+  
+  // Mascot system integration
+  const {
+    status: mascotStatus,
+    showEvolutionModal,
+    lastEvolution,
+    dismissEvolutionModal,
+  } = useMascot(userId);
+
+  // DEBUG: Log mascot status
+  useEffect(() => {
+    console.log('🦅 Mascot Debug:', {
+      mascotStatus,
+      userId,
+      hasMascotStatus: !!mascotStatus,
+    });
+  }, [mascotStatus, userId]);
 
   const [checkInVisible, setCheckInVisible] = useState(false);
   const [sosVisible, setSosVisible] = useState(false);
@@ -268,6 +288,54 @@ export default function CompleteHomeScreen({ userId, subscriptionStatus, navigat
         </View>
 
         <Text style={styles.rexTip}>💬 Rex: {rexTip}</Text>
+
+        {/* Mascot Widget */}
+        {mascotStatus && (
+          <TouchableOpacity
+            style={styles.mascotWidget}
+            onPress={() => navigation?.navigate('Mascot')}
+            activeOpacity={0.85}
+          >
+            <View style={styles.mascotContent}>
+              <View style={styles.mascotDisplay}>
+                <MascotDisplay
+                  stage={mascotStatus.stageId}
+                  size={100}
+                  showGlow={mascotStatus.stageId === 4}
+                />
+              </View>
+              <View style={styles.mascotInfo}>
+                <Text style={styles.mascotTitle}>Your Growthovo</Text>
+                <Text style={styles.mascotStage}>{mascotStatus.stageName}</Text>
+                <Text style={styles.mascotLevel}>Level {mascotStatus.currentLevel}</Text>
+                {mascotStatus.stageId < 4 && (
+                  <View style={styles.mascotProgress}>
+                    <View style={styles.mascotProgressBar}>
+                      <View
+                        style={[
+                          styles.mascotProgressFill,
+                          {
+                            width: `${
+                              mascotStatus.xpForNextStage > 0
+                                ? (mascotStatus.totalXP /
+                                    (mascotStatus.totalXP + mascotStatus.xpForNextStage)) *
+                                  100
+                                : 100
+                            }%`,
+                          },
+                        ]}
+                      />
+                    </View>
+                    <Text style={styles.mascotProgressText}>
+                      {mascotStatus.xpForNextStage} XP to evolve
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
+            <Text style={styles.mascotViewMore}>View Details →</Text>
+          </TouchableOpacity>
+        )}
 
         {isMonday() && !wrappedDismissed && (
           <TouchableOpacity
@@ -483,6 +551,17 @@ export default function CompleteHomeScreen({ userId, subscriptionStatus, navigat
           </Pressable>
         </Pressable>
       </Modal>
+
+      {/* Mascot Evolution Modal */}
+      {showEvolutionModal && lastEvolution && (
+        <MascotEvolutionModal
+          visible={showEvolutionModal}
+          fromStage={lastEvolution.fromStage}
+          toStage={lastEvolution.toStage}
+          newLevel={lastEvolution.levelAtEvolution}
+          onClose={dismissEvolutionModal}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -845,5 +924,65 @@ const styles = StyleSheet.create({
   sosBackButtonText: {
     ...typography.body,
     color: '#A78BFA',
+  },
+  // Mascot Widget Styles
+  mascotWidget: {
+    backgroundColor: '#1A1A2E',
+    borderRadius: 16,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  mascotContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  mascotDisplay: {
+    marginRight: spacing.md,
+  },
+  mascotInfo: {
+    flex: 1,
+  },
+  mascotTitle: {
+    ...typography.small,
+    color: 'rgba(255,255,255,0.5)',
+    marginBottom: 4,
+  },
+  mascotStage: {
+    ...typography.h3,
+    color: colors.text,
+    marginBottom: 2,
+  },
+  mascotLevel: {
+    ...typography.body,
+    color: '#A78BFA',
+    marginBottom: spacing.sm,
+  },
+  mascotProgress: {
+    marginTop: spacing.xs,
+  },
+  mascotProgressBar: {
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginBottom: 4,
+  },
+  mascotProgressFill: {
+    height: '100%',
+    backgroundColor: '#FFD700',
+    borderRadius: 3,
+  },
+  mascotProgressText: {
+    ...typography.caption,
+    color: 'rgba(255,255,255,0.4)',
+    fontSize: 11,
+  },
+  mascotViewMore: {
+    ...typography.small,
+    color: '#A78BFA',
+    textAlign: 'center',
   },
 });

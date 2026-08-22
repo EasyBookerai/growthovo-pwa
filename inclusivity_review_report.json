@@ -1,0 +1,76 @@
+{
+  "total_lessons": 200,
+  "character_diversity": {
+    "total_characters": 51,
+    "unique_names": 16,
+    "european_common": 27,
+    "global_diverse": 18,
+    "other": 6,
+    "all_names": {
+      "Lily": 4,
+      "Ben": 2,
+      "Chris": 1,
+      "Jade": 1,
+      "Marcus": 7,
+      "Sofia": 8,
+      "Ryan": 4,
+      "Zara": 2,
+      "Chloe": 3,
+      "Jake": 2,
+      "Kai": 1,
+      "Noah": 2,
+      "Ava": 6,
+      "James": 3,
+      "Aiden": 4,
+      "Emma": 1
+    },
+    "diversity_percentage": "35.29"
+  },
+  "age_distribution": {
+    "age_range": "19-25",
+    "average_age": "21.9",
+    "age_distribution": {
+      "19": 3,
+      "20": 8,
+      "21": 9,
+      "22": 13,
+      "23": 10,
+      "24": 4,
+      "25": 4
+    }
+  },
+  "context_diversity": {
+    "academic": 2,
+    "work": 13,
+    "personal": 4,
+    "fitness": 0,
+    "other": 32
+  },
+  "body_image_issues": [
+    {
+      "lesson_title": "Multiple Income Streams — When and How",
+      "is_fitness": false,
+      "term": "thin",
+      "context": " as a way to avoid mastering one thing. Spreading thin is not diversification — it s distraction. One st"
+    },
+    {
+      "lesson_title": "Managing Up — Working With People Above You",
+      "is_fitness": false,
+      "term": "look good",
+      "context": "ance fastest are the ones who make their managers look good, communicate proactively, and solve problems befo"
+    }
+  ],
+  "gender_instances": [],
+  "ability_instances": [
+    {
+      "lesson_title": "Why Personal Brand Matters Now More Than Ever",
+      "term": "anyone can",
+      "context": "re not in the room. In a world where anyone can be googled in 10 seconds, your online presence is your first impression. You either control the nar"
+    }
+  ],
+  "positive_fitness_language": {
+    "fitness_lessons": 0,
+    "positive_term_instances": 0,
+    "average_per_lesson": 0
+  }
+}
