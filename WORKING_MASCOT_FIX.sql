@@ -1,10 +1,11 @@
 -- ============================================================================
--- FINAL MASCOT FIX - Complete Solution (CORRECTED SYNTAX)
+-- WORKING MASCOT FIX - Complete Solution with Proper Syntax
 -- ============================================================================
 -- Run this entire file in Supabase SQL Editor
+-- This version fixes the SQL syntax errors in the previous version
 -- ============================================================================
 
--- Step 1: Drop and recreate the function to match exact table structure
+-- Step 1: Drop and recreate the function with CORRECT syntax
 DROP FUNCTION IF EXISTS get_user_mascot_status(uuid);
 
 CREATE OR REPLACE FUNCTION get_user_mascot_status(p_user_id uuid)
@@ -84,7 +85,7 @@ CREATE POLICY "Mascot stages are viewable by all"
   ON mascot_stages FOR SELECT 
   USING (true);
 
--- Step 5: Create mascot for ALL existing users
+-- Step 5: Create mascot for ALL existing users (if not already created)
 INSERT INTO user_mascot_progress (user_id, current_stage, total_xp, current_level)
 SELECT 
   id,
@@ -123,5 +124,27 @@ BEGIN
 END $$;
 
 -- ============================================================================
--- Done! Now refresh your app (F5 or Ctrl+Shift+R) and the mascot should appear
+-- VERIFICATION: Check that everything is working
+-- ============================================================================
+
+-- Check mascot stages exist
+SELECT 'Mascot Stages:' AS info, COUNT(*) AS count FROM mascot_stages;
+
+-- Check user mascot progress
+SELECT 'User Mascot Progress:' AS info, COUNT(*) AS count FROM user_mascot_progress;
+
+-- Test the function for all users
+SELECT 
+  'Function Test:' AS info,
+  u.email,
+  ms.*
+FROM auth.users u
+CROSS JOIN LATERAL get_user_mascot_status(u.id) ms
+LIMIT 5;
+
+-- ============================================================================
+-- Done! Now:
+-- 1. Hard refresh your browser (Ctrl+Shift+R or Cmd+Shift+R)
+-- 2. Open browser console (F12) and look for "🦅 Mascot Debug" logs
+-- 3. The mascot should now appear on your home screen!
 -- ============================================================================
