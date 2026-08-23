@@ -289,41 +289,43 @@ export default function CompleteHomeScreen({ userId, subscriptionStatus, navigat
 
         <Text style={styles.rexTip}>💬 Rex: {rexTip}</Text>
 
-        {/* Mascot Widget - Always show */}
-        <TouchableOpacity
-          style={styles.mascotWidget}
-          onPress={() => navigation?.navigate('Mascot')}
-          activeOpacity={0.85}
-        >
+        {/* DEBUG: Test visibility */}
+        <View style={{ backgroundColor: 'red', padding: 20, margin: 10 }}>
+          <Text style={{ color: 'white', fontSize: 24 }}>🔴 TEST: Can you see this red box?</Text>
+        </View>
+
+        {/* Mascot Widget - HARDCODED FOR DEBUGGING */}
+        <View style={styles.mascotWidget}>
           <View style={styles.mascotContent}>
             <View style={styles.mascotDisplay}>
               <Text style={{ fontSize: 80 }}>🥚</Text>
             </View>
             <View style={styles.mascotInfo}>
               <Text style={styles.mascotTitle}>Your Growthovo</Text>
-              <Text style={styles.mascotStage}>
-                {mascotStatus?.stageName || 'Egg'}
-              </Text>
-              <Text style={styles.mascotLevel}>
-                Level {mascotStatus?.currentLevel || 1}
-              </Text>
+              <Text style={styles.mascotStage}>Egg</Text>
+              <Text style={styles.mascotLevel}>Level 1</Text>
               <View style={styles.mascotProgress}>
                 <View style={styles.mascotProgressBar}>
                   <View
                     style={[
                       styles.mascotProgressFill,
-                      { width: `${((mascotStatus?.totalXP || 0) % 100)}%` },
+                      { width: '0%' },
                     ]}
                   />
                 </View>
                 <Text style={styles.mascotProgressText}>
-                  {100 - ((mascotStatus?.totalXP || 0) % 100)} XP to next level
+                  100 XP to next level
                 </Text>
               </View>
             </View>
           </View>
-          <Text style={styles.mascotViewMore}>View Details →</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation?.navigate('Mascot')}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.mascotViewMore}>View Details →</Text>
+          </TouchableOpacity>
+        </View>
 
         {isMonday() && !wrappedDismissed && (
           <TouchableOpacity
