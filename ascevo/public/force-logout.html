@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Force Logout - Growthovo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    h1 {
+      font-size: 32px;
+      color: #1a202c;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    
+    p {
+      font-size: 16px;
+      color: #4a5568;
+      margin-bottom: 32px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-bottom: 16px;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    #status {
+      background: #f7fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 24px;
+      display: none;
+    }
+    
+    #status.show {
+      display: block;
+    }
+    
+    #status p {
+      margin: 8px 0;
+      text-align: left;
+      font-size: 14px;
+    }
+    
+    #status .success {
+      color: #48bb78;
+    }
+    
+    #status .error {
+      color: #f56565;
+    }
+    
+    .code {
+      background: #2d3748;
+      color: #48bb78;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin-top: 24px;
+      overflow-x: auto;
+      display: none;
+    }
+    
+    .code.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔓 Force Logout</h1>
+    <p>Click the button below to completely clear all authentication data and redirect to the login screen.</p>
+    
+    <button onclick="forceLogout()">Force Logout Now</button>
+    
+    <div id="status">
+      <p><strong>Logout Process:</strong></p>
+      <p id="step1">⏳ Clearing localStorage...</p>
+      <p id="step2">⏳ Clearing sessionStorage...</p>
+      <p id="step3">⏳ Clearing cookies...</p>
+      <p id="step4">⏳ Clearing IndexedDB...</p>
+      <p id="step5">⏳ Signing out from Supabase...</p>
+      <p id="step6">⏳ Redirecting to login...</p>
+    </div>
+    
+    <div class="code" id="manualCode">
+      <strong>Manual Method (if button doesn't work):</strong><br><br>
+      Open browser console (F12) and paste:<br><br>
+      localStorage.clear();<br>
+      sessionStorage.clear();<br>
+      document.cookie.split(";").forEach(c => {<br>
+      &nbsp;&nbsp;document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");<br>
+      });<br>
+      indexedDB.databases().then(dbs => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));<br>
+      location.href = '/login';
+    </div>
+  </div>
+
+  <script>
+    async function forceLogout() {
+      const status = document.getElementById('status');
+      status.classList.add('show');
+      
+      try {
+        // Step 1: Clear localStorage
+        localStorage.clear();
+        document.getElementById('step1').className = 'success';
+        document.getElementById('step1').textContent = '✓ localStorage cleared';
+        await sleep(300);
+        
+        // Step 2: Clear sessionStorage
+        sessionStorage.clear();
+        document.getElementById('step2').className = 'success';
+        document.getElementById('step2').textContent = '✓ sessionStorage cleared';
+        await sleep(300);
+        
+        // Step 3: Clear cookies
+        document.cookie.split(";").forEach(function(c) { 
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        document.getElementById('step3').className = 'success';
+        document.getElementById('step3').textContent = '✓ Cookies cleared';
+        await sleep(300);
+        
+        // Step 4: Clear IndexedDB
+        if (window.indexedDB && window.indexedDB.databases) {
+          const databases = await window.indexedDB.databases();
+          for (const db of databases) {
+            if (db.name) {
+              window.indexedDB.deleteDatabase(db.name);
+            }
+          }
+        }
+        document.getElementById('step4').className = 'success';
+        document.getElementById('step4').textContent = '✓ IndexedDB cleared';
+        await sleep(300);
+        
+        // Step 5: Try to sign out from Supabase (if available)
+        try {
+          // This might fail if Supabase isn't loaded, but that's okay
+          if (window.supabase) {
+            await window.supabase.auth.signOut();
+          }
+        } catch (e) {
+          // Ignore errors here
+        }
+        document.getElementById('step5').className = 'success';
+        document.getElementById('step5').textContent = '✓ Signed out from Supabase';
+        await sleep(300);
+        
+        // Step 6: Redirect
+        document.getElementById('step6').className = 'success';
+        document.getElementById('step6').textContent = '✓ Redirecting to login...';
+        await sleep(500);
+        
+        // Redirect to login
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Logout error:', error);
+        document.getElementById('manualCode').classList.add('show');
+        alert('Automatic logout failed. Please use the manual method shown below.');
+      }
+    }
+    
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+</body>
+</html>
