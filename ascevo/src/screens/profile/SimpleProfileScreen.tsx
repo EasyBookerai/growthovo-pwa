@@ -100,6 +100,7 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
    * 
    * Shows confirmation alert before signing out.
    * Uses Supabase Auth to sign out the user.
+   * On web, uses window.confirm; on mobile, uses Alert.alert
    * 
    * Alert options:
    * - Cancel: Dismisses alert, no action taken
@@ -108,20 +109,41 @@ export default function SimpleProfileScreen({ userId, navigation }: Props) {
    * @async
    */
   async function handleLogOut() {
-    Alert.alert(
-      'Log Out',
-      'Are you sure you want to log out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Log Out',
-          style: 'destructive',
-          onPress: async () => {
-            await supabase.auth.signOut();
+    // Check if running on web
+    const isWeb = typeof window !== 'undefined' && window.confirm;
+    
+    if (isWeb) {
+      // Use browser confirm dialog for web
+      const confirmed = window.confirm('Are you sure you want to log out?');
+      if (confirmed) {
+        try {
+          await supabase.auth.signOut();
+          // Clear local storage to ensure clean logout
+          if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('supabase.auth.token');
+          }
+        } catch (error) {
+          console.error('Logout error:', error);
+          window.alert('Error logging out. Please try again.');
+        }
+      }
+    } else {
+      // Use React Native Alert for mobile
+      Alert.alert(
+        'Log Out',
+        'Are you sure you want to log out?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Log Out',
+            style: 'destructive',
+            onPress: async () => {
+              await supabase.auth.signOut();
+            },
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   }
 
   /**
