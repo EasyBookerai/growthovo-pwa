@@ -47,6 +47,17 @@ export default function AuthNavigator({ needsEmailVerification = false }: AuthNa
   const [route, setRoute] = useState<AuthRoute>(
     needsEmailVerification ? 'verify-email' : getInitialRoute()
   );
+  const [forceShowAuth, setForceShowAuth] = useState(false);
+
+  // Debug: Check URL for ?showAuth=true to force show auth screens
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('showAuth') === 'true') {
+        setForceShowAuth(true);
+      }
+    }
+  }, []);
 
   const navigate = useCallback((next: AuthRoute) => {
     setRoute(next);

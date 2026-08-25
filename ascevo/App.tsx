@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { StyleSheet, View, Text, ActivityIndicator, AppState } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, AppState, Platform } from 'react-native';
 import { Analytics } from '@vercel/analytics/react';
 import { registerPushToken, scheduleDefaultNotifications, scheduleMorningBriefingNotification, scheduleEveningDebriefNotification, scheduleWeeklyReportNotification } from './src/services/notificationService';
 import { initI18n } from './src/services/i18nService';
@@ -134,7 +134,18 @@ function AppContent() {
   const auth = useAuth();
   const [i18nReady, setI18nReady] = useState(false);
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
+  const [forceShowAuth, setForceShowAuth] = useState(false);
   const { setLanguage: setStoreLanguage } = useLanguageStore();
+
+  // Check for ?showAuth=true in URL to force show auth screens
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('showAuth') === 'true') {
+        setForceShowAuth(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     async function bootstrap() {
@@ -216,7 +227,7 @@ function AppContent() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!auth.isAuthenticated ? (
+        {!auth.isAuthenticated || forceShowAuth ? (
           <Stack.Screen name="Auth">
             {() => <AuthNavigator needsEmailVerification={false} />}
           </Stack.Screen>
