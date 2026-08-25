@@ -18,6 +18,12 @@ module.exports = async function (env, argv) {
     'react-native': 'react-native-web',
   };
 
+  config.resolve.fallback = {
+    ...config.resolve.fallback,
+    crypto: require.resolve('crypto-browserify'),
+    stream: require.resolve('stream-browserify'),
+  };
+
   // Support platform-specific file extensions with proper resolution order
   config.resolve.extensions = [
     '.web.tsx',
@@ -31,7 +37,7 @@ module.exports = async function (env, argv) {
   ];
 
   // Configure output for optimized bundles
-  if (argv.mode === 'production') {
+  if (argv?.mode === 'production') {
     config.optimization = {
       ...config.optimization,
       splitChunks: {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
   AuthLayout,
@@ -31,6 +31,8 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
+  const [attemptCount, setAttemptCount] = useState(0);
+  const passwordInputRef = useRef<any>(null);
 
   useEffect(() => {
     syncWebPath('/login');
@@ -42,7 +44,16 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
     });
   }, []);
 
+  // Rate limiting UI feedback
+  const isRateLimited = attemptCount >= 5;
+  const rateLimitMessage = isRateLimited ? 'Too many attempts. Please wait a moment.' : '';
+
   async function handleSignIn() {
+    if (isRateLimited) {
+      setError(rateLimitMessage);
+      return;
+    }
+
     const emailErr = validateEmail(email);
     const passwordErr = !password ? 'Password is required.' : null;
     setFieldErrors({ email: emailErr ?? undefined, password: passwordErr ?? undefined });
@@ -53,23 +64,60 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
     try {
       await signIn(email.trim().toLowerCase(), password, rememberMe);
       if (!rememberMe) await setRememberedEmail(null);
+      // Success - auth context will handle navigation
     } catch (e: any) {
-      setError(e.message ?? t('errors.sign_in_failed'));
+      setAttemptCount((c) => c + 1);
+      // User-friendly error messages
+      const message = e.message ?? t('errors.sign_in_failed');
+      if (message.toLowerCase().includes('invalid') || message.toLowerCase().includes('incorrect')) {
+        setError('Email or password doesn't look right. Check your details and try again.');
+      } else if (message.toLowerCase().includes('network') || message.toLowerCase().includes('connection')) {
+        setError('Something went wrong. Check your connection and try again.');
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
   }
 
   async function handleGoogle() {
+    if (isRateLimited) {
+      setError(rateLimitMessage);
+      return;
+    }
+
     setError('');
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
     } catch (e: any) {
-      setError(e.message ?? t('errors.generic'));
+      setAttemptCount((c) => c + 1);
+      const message = e.message ?? t('errors.generic');
+      if (message.toLowerCase().includes('popup') || message.toLowerCase().includes('cancelled')) {
+        setError('Google sign-in was cancelled. Please try again.');
+      } else {
+        setError(message);
+      }
       setGoogleLoading(false);
     }
   }
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    setFieldErrors((e) => ({ ...e, email: undefined }));
+    if (error) setError('');
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    setFieldErrors((e) => ({ ...e, password: undefined }));
+    if (error) setError('');
+  };
+
+  const handleEmailSubmit = () => {
+    passwordInputRef.current?.focus();
+  };
 
   return (
     <AuthLayout>
@@ -84,25 +132,32 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
         label={t('auth.email', 'Email address')}
         icon="✉"
         value={email}
-        onChangeText={(v) => { setEmail(v); setFieldErrors((e) => ({ ...e, email: undefined })); }}
+        onChangeText={handleEmailChange}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
         textContentType="emailAddress"
         returnKeyType="next"
+        onSubmitEditing={handleEmailSubmit}
         error={fieldErrors.email}
+        editable={!loading && !googleLoading}
       />
       <AuthInput
+        ref={passwordInputRef}
         label={t('auth.password', 'Password')}
         icon="🔒"
         value={password}
-        onChangeText={(v) => { setPassword(v); setFieldErrors((e) => ({ ...e, password: undefined })); }}
+        onChangeText={handlePasswordChange}
         isPassword
         autoComplete="password"
         textContentType="password"
         returnKeyType="go"
-        onSubmitEditing={handleSignIn}
+        onSubmitEditing={() => {
+          Keyboard.dismiss();
+          handleSignIn();
+        }}
         error={fieldErrors.password}
+        editable={!loading && !googleLoading}
       />
 
       <View style={styles.row}>
@@ -118,8 +173,11 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
           onPress={onNavigateToForgotPassword}
           accessibilityRole="link"
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          disabled={loading || googleLoading}
         >
-          <Text style={styles.forgot}>{t('auth.forgot_password', 'Forgot password?')}</Text>
+          <Text style={[styles.forgot, (loading || googleLoading) && styles.forgotDisabled]}>
+            {t('auth.forgot_password', 'Forgot password?')}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -128,7 +186,7 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
         onPress={handleSignIn}
         loading={loading}
         loadingLabel={t('auth.signing_in', 'Signing in...')}
-        disabled={googleLoading}
+        disabled={googleLoading || isRateLimited}
       />
 
       <AuthDivider />
@@ -138,7 +196,7 @@ export default function LoginScreen({ onNavigateToSignUp, onNavigateToForgotPass
         onPress={handleGoogle}
         loading={googleLoading}
         loadingLabel={t('auth.connecting_google', 'Connecting...')}
-        disabled={loading}
+        disabled={loading || isRateLimited}
         variant="google"
         icon={<GoogleIcon />}
       />
@@ -166,5 +224,8 @@ const styles = StyleSheet.create({
   forgot: {
     ...authTypography.link,
     color: authColors.primaryLight,
+  },
+  forgotDisabled: {
+    opacity: 0.5,
   },
 });

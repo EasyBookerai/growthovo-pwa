@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Text, StyleSheet, Keyboard } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
   AuthLayout,
@@ -37,10 +37,44 @@ export default function SignUpScreen({ onNavigateToSignIn }: Props) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  const emailInputRef = useRef<any>(null);
+  const passwordInputRef = useRef<any>(null);
+  const confirmPasswordInputRef = useRef<any>(null);
 
   useEffect(() => {
     syncWebPath('/signup');
   }, []);
+
+  // Real-time validation for touched fields
+  useEffect(() => {
+    if (!touchedFields.size) return;
+    const errors: Record<string, string> = {};
+
+    if (touchedFields.has('username')) {
+      if (!username.trim()) errors.username = 'Username is required.';
+      else if (username.trim().length < 3) errors.username = 'Username must be at least 3 characters.';
+    }
+
+    if (touchedFields.has('email')) {
+      const emailErr = validateEmail(email);
+      if (emailErr) errors.email = emailErr;
+    }
+
+    if (touchedFields.has('password')) {
+      const passErr = validatePassword(password);
+      if (passErr) errors.password = passErr;
+    }
+
+    if (touchedFields.has('confirmPassword')) {
+      if (password !== confirmPassword && confirmPassword) {
+        errors.confirmPassword = 'Passwords do not match.';
+      }
+    }
+
+    setFieldErrors(errors);
+  }, [username, email, password, confirmPassword, touchedFields]);
 
   function validateForm(): boolean {
     const errors: Record<string, string> = {};
@@ -62,6 +96,8 @@ export default function SignUpScreen({ onNavigateToSignIn }: Props) {
   }
 
   async function handleSignUp() {
+    // Mark all fields as touched
+    setTouchedFields(new Set(['username', 'email', 'password', 'confirmPassword']));
     if (!validateForm()) return;
 
     setError('');
@@ -77,7 +113,12 @@ export default function SignUpScreen({ onNavigateToSignIn }: Props) {
       }
       setSuccess(true);
     } catch (e: any) {
-      setError(e.message);
+      const message = e.message;
+      if (message.toLowerCase().includes('already') || message.toLowerCase().includes('exists')) {
+        setError('An account with this email already exists. Try signing in instead.');
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -89,10 +130,39 @@ export default function SignUpScreen({ onNavigateToSignIn }: Props) {
     try {
       await signInWithGoogle();
     } catch (e: any) {
-      setError(e.message);
+      const message = e.message;
+      if (message.toLowerCase().includes('popup') || message.toLowerCase().includes('cancelled')) {
+        setError('Google sign-up was cancelled. Please try again.');
+      } else {
+        setError(message);
+      }
       setGoogleLoading(false);
     }
   }
+
+  const markTouched = (field: string) => {
+    setTouchedFields((prev) => new Set([...prev, field]));
+  };
+
+  const handleUsernameChange = (text: string) => {
+    setUsername(text);
+    if (error) setError('');
+  };
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    if (error) setError('');
+  };
+
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+    if (error) setError('');
+  };
+
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text);
+    if (error) setError('');
+  };
 
   if (success) {
     return (
@@ -122,39 +192,62 @@ export default function SignUpScreen({ onNavigateToSignIn }: Props) {
         label={t('auth.username', 'Username')}
         icon="👤"
         value={username}
-        onChangeText={(v) => { setUsername(v); setFieldErrors((e) => ({ ...e, username: undefined })); }}
+        onChangeText={handleUsernameChange}
+        onBlur={() => markTouched('username')}
         autoCapitalize="none"
         autoComplete="username-new"
-        error={fieldErrors.username}
+        returnKeyType="next"
+        onSubmitEditing={() => emailInputRef.current?.focus()}
+        error={touchedFields.has('username') ? fieldErrors.username : undefined}
+        editable={!loading && !googleLoading}
       />
       <AuthInput
+        ref={emailInputRef}
         label={t('auth.email', 'Email address')}
         icon="✉"
         value={email}
-        onChangeText={(v) => { setEmail(v); setFieldErrors((e) => ({ ...e, email: undefined })); }}
+        onChangeText={handleEmailChange}
+        onBlur={() => markTouched('email')}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
-        error={fieldErrors.email}
+        returnKeyType="next"
+        onSubmitEditing={() => passwordInputRef.current?.focus()}
+        error={touchedFields.has('email') ? fieldErrors.email : undefined}
+        editable={!loading && !googleLoading}
       />
       <AuthInput
+        ref={passwordInputRef}
         label={t('auth.password', 'Password')}
         icon="🔒"
         value={password}
-        onChangeText={(v) => { setPassword(v); setFieldErrors((e) => ({ ...e, password: undefined })); }}
+        onChangeText={handlePasswordChange}
+        onBlur={() => markTouched('password')}
         isPassword
         autoComplete="password-new"
-        error={fieldErrors.password}
+        returnKeyType="next"
+        onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
+        error={touchedFields.has('password') ? fieldErrors.password : undefined}
+        editable={!loading && !googleLoading}
       />
-      <PasswordStrength password={password} />
+      <PasswordStrength password={password} showRequirements={password.length > 0} />
       <AuthInput
+        ref={confirmPasswordInputRef}
         label={t('auth.confirm_password', 'Confirm password')}
         icon="🔒"
         value={confirmPassword}
-        onChangeText={(v) => { setConfirmPassword(v); setFieldErrors((e) => ({ ...e, confirmPassword: undefined })); }}
+        onChangeText={handleConfirmPasswordChange}
+        onBlur={() => markTouched('confirmPassword')}
         isPassword
         autoComplete="password-new"
-        error={fieldErrors.confirmPassword}
+        returnKeyType="done"
+        onSubmitEditing={() => {
+          Keyboard.dismiss();
+          handleSignUp();
+        }}
+        error={touchedFields.has('confirmPassword') ? fieldErrors.confirmPassword : undefined}
+        success={confirmPassword.length > 0 && password === confirmPassword}
+        editable={!loading && !googleLoading}
       />
 
       <AgeVerificationCheckbox

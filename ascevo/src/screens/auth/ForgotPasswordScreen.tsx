@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Keyboard } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import {
   AuthLayout,
@@ -25,12 +25,20 @@ export default function ForgotPasswordScreen({ onNavigateToSignIn }: Props) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [fieldError, setFieldError] = useState<string | undefined>();
+  const [attemptCount, setAttemptCount] = useState(0);
 
   useEffect(() => {
     syncWebPath('/forgot-password');
   }, []);
 
+  const isRateLimited = attemptCount >= 3;
+
   async function handleSubmit() {
+    if (isRateLimited) {
+      setError('Too many attempts. Please wait a moment before trying again.');
+      return;
+    }
+
     const emailErr = validateEmail(email);
     if (emailErr) {
       setFieldError(emailErr);
@@ -44,11 +52,23 @@ export default function ForgotPasswordScreen({ onNavigateToSignIn }: Props) {
       await sendPasswordResetEmail(email.trim().toLowerCase());
       setSuccess(true);
     } catch (e: any) {
-      setError(e.message);
+      setAttemptCount((c) => c + 1);
+      const message = e.message;
+      if (message.toLowerCase().includes('network') || message.toLowerCase().includes('connection')) {
+        setError('Something went wrong. Check your connection and try again.');
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
   }
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    setFieldError(undefined);
+    if (error) setError('');
+  };
 
   if (success) {
     return (
@@ -81,13 +101,17 @@ export default function ForgotPasswordScreen({ onNavigateToSignIn }: Props) {
         label={t('auth.email', 'Email address')}
         icon="✉"
         value={email}
-        onChangeText={(v) => { setEmail(v); setFieldError(undefined); }}
+        onChangeText={handleEmailChange}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
         returnKeyType="go"
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={() => {
+          Keyboard.dismiss();
+          handleSubmit();
+        }}
         error={fieldError}
+        editable={!loading}
       />
 
       <AuthButton
@@ -95,6 +119,7 @@ export default function ForgotPasswordScreen({ onNavigateToSignIn }: Props) {
         onPress={handleSubmit}
         loading={loading}
         loadingLabel={t('auth.sending', 'Sending...')}
+        disabled={isRateLimited}
       />
 
       <AuthLink

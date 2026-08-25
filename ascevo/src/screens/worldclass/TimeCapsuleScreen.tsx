@@ -18,50 +18,6 @@ import {
   markCapsuleOpened,
   isPremiumUser,
   type TimeCapsuleRecord,
-} from '../../services/growthovoExperienceService';
-import PaywallModal from '../../components/PaywallModal';
-
-interface Props {
-  onClose: () => void;
-  onCheckout: () => void;
-}
-
-const UNLOCK_OPTIONS = [
-  { label: '1 month', months: 1 },
-  { label: '3 months', months: 3 },
-  { label: '6 months', months: 6 },
-  { label: '1 year', months: 12 },
-];
-
-function daysUntil(unlockAt: string): number {
-  return Math.max(0, Math.ceil((new Date(unlockAt).getTime() - Date.now()) / 86400000));
-}
-
-function monthsAgo(createdAt: string): number {
-  const diff = Date.now() - new Date(createdAt).getTime();
-  return Math.max(1, Math.round(diff / (30 * 86400000)));
-}
-
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  ScrollView,
-  Animated,
-} from 'react-native';
-import { colors, typography, spacing, radius } from '../../theme';
-import { useAppContext } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
-import {
-  getTimeCapsules,
-  saveTimeCapsule,
-  markCapsuleOpened,
-  isPremiumUser,
-  type TimeCapsuleRecord,
   getUserName,
 } from '../../services/growthovoExperienceService';
 import PaywallModal from '../../components/PaywallModal';
